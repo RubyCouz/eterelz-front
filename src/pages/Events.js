@@ -95,21 +95,22 @@ console.log(token)
                 return res.json()
             })
             .then(resData => {
-
                 console.log(resData)
-                // this.setState(prevState => {
-                //     const updatedEvents = [...prevState.events]
-                //     updatedEvents.push({
-                //          _id: resData.data.createEvent._id,
-                //         event_name: resData.createEvent.event_name,
-                //         event_desc: resData.createEvent.event_desc,
-                //         event_date: resData.createEvent.event_date,
-                //         creator: {
-                //             _id: this.context.userId
-                //         }
-                //     })
-                //     return {events: updatedEvents}
-                // })
+                console.log(resData.createEvent)
+                console.log(resData.createEvent.event_name)
+                this.setState(prevState => {
+                    const updatedEvents = [...prevState.events]
+                    updatedEvents.push({
+                         _id: resData.data.createEvent._id,
+                        event_name: resData.data.createEvent.event_name,
+                        event_desc: resData.data.createEvent.event_desc,
+                        event_date: resData.data.createEvent.event_date,
+                        creator: {
+                            _id: this.context.userId
+                        }
+                    })
+                    return {events: updatedEvents}
+                })
             })
             .catch(err => {
                 console.log(err)
