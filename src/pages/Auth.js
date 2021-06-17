@@ -43,9 +43,7 @@ let user_login = ''
                         user_email: $user_email,
                         user_password: $user_password
                         ) {
-                        userId
                         token
-                        tokenExpiration
                         }
                     }
                 `,
@@ -96,8 +94,6 @@ let user_login = ''
                 if (resData.data.login) {
                     this.context.login(
                         resData.data.login.token,
-                        resData.data.login.userId,
-                        resData.data.login.tokenExpiration
                     )
                 }
             })

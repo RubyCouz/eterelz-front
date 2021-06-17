@@ -11,20 +11,23 @@ import './App.css'
 class App extends Component {
     state = {
         token: null,
-        userId: null
+        playload: null
     }
 
-    login = (token, userId, tokenExpiration) => {
+    login = (token) => {
+        const arrayJWT = token.split('.')
+        const playload = JSON.parse(window.atob(arrayJWT[1]))
+
         this.setState({
             token: token,
-            userId: userId
+            playload: playload,
         })
     }
 
     logout = () => {
         this.setState({
             token: null,
-            userId: null
+            playload: null
         })
     }
 
@@ -35,7 +38,7 @@ class App extends Component {
                 <AuthContext.Provider
                     value={{
                         token: this.state.token,
-                        userId: this.state.userId,
+                        playload: this.state.playload,
                         login: this.login,
                         logout: this.logout
                     }}

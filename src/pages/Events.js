@@ -106,7 +106,7 @@ console.log(token)
                         event_desc: resData.data.createEvent.event_desc,
                         event_date: resData.data.createEvent.event_date,
                         creator: {
-                            _id: this.context.userId
+                            _id: this.context.playload.userId
                         }
                     })
                     return {events: updatedEvents}
@@ -229,7 +229,7 @@ console.log(token)
                         <Spinner/> :
                         <EventList
                             events={this.state.events}
-                            authUserId={this.context.userId}
+                            authUserId={this.context.playload ? this.context.playload.userId : null}
                             onViewDetail={this.showDetailHandler}
                         />
                     }
