@@ -4,7 +4,8 @@ import AuthPage from './pages/Auth'
 import AuthContext from './context/auth-context'
 import MainNavigation from './Components/Navigation/MainNavigation'
 import EventsPage from './pages/Events'
-
+import { ApolloProvider } from '@apollo/client'
+import { graphqlConfig } from './context/apollo-context'
 
 import './App.css'
 
@@ -15,16 +16,20 @@ class App extends Component {
     }
 
     login = (token) => {
-        const arrayJWT = token.split('.')
-        const playload = JSON.parse(window.atob(arrayJWT[1]))
+        if (token != undefined) {
+            const arrayJWT = token.split('.')
+            const playload = JSON.parse(window.atob(arrayJWT[1]))
+            window.localStorage.setItem('token', token);
 
-        this.setState({
-            token: token,
-            playload: playload,
-        })
+            this.setState({
+                token: token,
+                playload: playload,
+            })
+        }
     }
 
     logout = () => {
+        window.localStorage.removeItem('token');
         this.setState({
             token: null,
             playload: null
@@ -43,7 +48,8 @@ class App extends Component {
                         logout: this.logout
                     }}
                 >
-                    <MainNavigation/>
+                    <ApolloProvider client={graphqlConfig}>
+                        <MainNavigation/>
                         <main className="main-content">
                             <Switch>
                                 {/*rdeirection vers connexion si deconnexion*/}
@@ -59,6 +65,7 @@ class App extends Component {
                                 {!this.state.token && <Redirect to="/auth" exact/>}
                             </Switch>
                         </main>
+                    </ApolloProvider>
                 </AuthContext.Provider>
             </BrowserRouter>
         )
