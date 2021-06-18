@@ -36,6 +36,11 @@ class App extends Component {
         })
     }
 
+    componentDidMount(){
+        const tokenStorage = window.localStorage.getItem('token');
+        this.login(tokenStorage)
+
+    }
 
     render() {
         return (
