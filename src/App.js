@@ -16,7 +16,7 @@ class App extends Component {
     }
 
     login = (token) => {
-        if (token != undefined) {
+        if (token) {
             const arrayJWT = token.split('.')
             const playload = JSON.parse(window.atob(arrayJWT[1]))
             window.localStorage.setItem('token', token);
@@ -39,7 +39,6 @@ class App extends Component {
     componentDidMount(){
         const tokenStorage = window.localStorage.getItem('token');
         this.login(tokenStorage)
-
     }
 
     render() {
