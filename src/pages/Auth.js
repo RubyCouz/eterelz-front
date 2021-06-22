@@ -79,6 +79,7 @@ let user_login = ''
         fetch('http://localhost:8080/api', {
             method: 'POST',
             body: JSON.stringify(requestBody),
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             }
