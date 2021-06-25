@@ -43,6 +43,7 @@ let user_login = ''
                         user_email: $user_email,
                         user_password: $user_password
                         ) {
+                        
                         token
                         }
                     }
@@ -94,8 +95,11 @@ let user_login = ''
             .then(resData => {
                 if (resData.data.login) {
                     this.context.login(
+                        // resData.data.login._id,
+                        // resData.data.login.user_role,
                         resData.data.login.token,
                     )
+                    console.log(this.context.login)
                 }
             })
             .catch(err => {

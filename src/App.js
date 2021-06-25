@@ -1,14 +1,16 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
 import {BrowserRouter, Route, Redirect, Switch, NavLink} from 'react-router-dom'
+import HomePage from './pages/Home'
 import AuthPage from './pages/Auth'
 import AuthContext from './context/auth-context'
 import MainNavigation from './Components/Navigation/MainNavigation'
 import EventsPage from './pages/Events'
+import BackOffice from './pages/BackOffice'
 import {ApolloProvider} from '@apollo/client'
 import {graphqlConfig} from './context/apollo-context'
 
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -30,7 +32,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
 import './App.css'
-import {Button} from "@material-ui/core";
+import {Button, MenuItem} from "@material-ui/core";
+import {AccountCircle} from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -94,10 +97,10 @@ const useStyles = makeStyles((theme) => ({
 export default function App() {
     const [state, setState] = useState({
         token: null,
-        playload: null
+        playload: null,
     })
 
-    const login = (token) => {
+    const login = (token, userId, userRole) => {
         if (token) {
             const arrayJWT = token.split('.')
             const playload = JSON.parse(window.atob(arrayJWT[1]))
@@ -135,6 +138,7 @@ export default function App() {
         setOpen(false);
     };
 
+    console.log(state.playload)
 
     return (
         <BrowserRouter>
@@ -150,7 +154,7 @@ export default function App() {
                     <MainNavigation/>
 
                     <div className={classes.root}>
-                        <CssBaseline />
+                        <CssBaseline/>
                         <AppBar
                             position="fixed"
                             className={clsx(classes.appBar, {
@@ -165,12 +169,25 @@ export default function App() {
                                     edge="start"
                                     className={clsx(classes.menuButton, open && classes.hide)}
                                 >
-                                    <MenuIcon />
+                                    <MenuIcon/>
                                 </IconButton>
                                 <Typography variant="h6" noWrap>
-                                    Persistent drawer
+                                    EterelZ
                                 </Typography>
+                                <MenuItem>
+                                    <NavLink to="/auth">
+                                        <IconButton
+                                            aria-label="account of current user"
+                                            aria-controls="primary-search-account-menu"
+                                            aria-haspopup="true"
+                                            color="inherit"
+                                        >
+                                            <AccountCircle/>
+                                        </IconButton>
+                                    </NavLink>
+                                </MenuItem>
                             </Toolbar>
+
                         </AppBar>
                         <Drawer
                             className={classes.drawer}
@@ -183,29 +200,29 @@ export default function App() {
                         >
                             <div className={classes.drawerHeader}>
                                 <IconButton onClick={handleDrawerClose}>
-                                    {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                                    {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
                                 </IconButton>
                             </div>
-                            <Divider />
+                            <Divider/>
                             <List>
-                                {!state.token &&
-                                <ListItem button key="auth">
-                                    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>
-                                    <NavLink to="/auth">Connexion</NavLink>
-                                </ListItem>
-                                }
                                 {state.token &&
-                                    <React.Fragment>
-                                        {/*<ListItem button key="engagement">*/}
-                                        {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
-                                        {/*    <NavLink>Participation aux events</NavLink>*/}
-                                        {/*</ListItem>*/}
-                                        <ListItem button key="logout">
-                                            <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
-                                            <ListItemText primary="Déconnexion" onClick={logout}/>
-                                        </ListItem>
-                                    </React.Fragment>
+                                <React.Fragment>
+                                    {/*<ListItem button key="engagement">*/}
+                                    {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
+                                    {/*    <NavLink>Participation aux events</NavLink>*/}
+                                    {/*</ListItem>*/}
+                                    <ListItem button key="logout">
+                                        <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
+                                        <ListItemText primary="Déconnexion" onClick={logout}/>
+                                    </ListItem>
+                                </React.Fragment>
 
+                                }
+                                {(state.token && state.playload.userRole === 'admin') &&
+                                <ListItem button key="backOffice">
+                                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                                    <NavLink to="/backOffice">BackOffice</NavLink>
+                                </ListItem>
                                 }
                                 <ListItem button key="events">
                                     <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
@@ -213,30 +230,32 @@ export default function App() {
                                 </ListItem>
 
                             </List>
-                            <Divider />
+                            <Divider/>
                         </Drawer>
                         <main
                             className={clsx(classes.content, {
                                 [classes.contentShift]: open,
                             })}
                         >
-                            <div className={classes.drawerHeader} />
+                            <div className={classes.drawerHeader}/>
                             <Switch>
-                                {/*rdeirection vers connexion si deconnexion*/}
+                                {(!state.token && <Redirect from='/backOffice' to='/auth' exact/>)}
+                                {state.token && <Route path="/backOffice" component={BackOffice}/>   }
+                                {/*redirection vers connexion si deconnexion*/}
                                 {!state.token && <Redirect from="/bookings" to="/auth" exact/>}
                                 {/*redirection sur la page events en page d'accueil si le token de connexion est présent*/}
                                 {state.token && <Redirect from="/" to="/events" exact/>}
                                 {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
                                 {state.token && <Redirect from="/auth" to="/events" exact/>}
-                                {!state.token && <Route path="/auth" component={AuthPage}/>}
+                                {!state.token && <Route path="/home" component={HomePage}/>}
                                 <Route path="/events" component={EventsPage}/>
+                                <Route path="/auth" component={AuthPage}/>
                                 {/*{this.state.token && <Route path="/bookings" component={BookingsPage}/>}*/}
                                 {/*affichage par défaut de la connexion si le token de connexion n'est pas présent*/}
-                                {!state.token && <Redirect to="/auth" exact/>}
+                                {/*{!state.token && <Redirect to="/auth" exact/>}*/}
                             </Switch>
                         </main>
                     </div>
-                    );
 
 
                     <main className="main-content">
