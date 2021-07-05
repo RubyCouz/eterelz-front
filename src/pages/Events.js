@@ -31,7 +31,7 @@ const LIST_EVENTS = gql`
             ...EventQuery
         }
     }
-`;
+`
 
 const CREATE_EVENTS = gql`
     ${EVENT_QUERY}
@@ -94,7 +94,7 @@ export default function EventsPage(props) {
             }
         }
     )
-
+console.log(data)
     return ( 
         <>
             <h1>Liste des Events</h1>
