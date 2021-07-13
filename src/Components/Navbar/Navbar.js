@@ -35,7 +35,7 @@ import {
 
 import AuthContext from '../../context/auth-context'
 
-const drawerWidth = 240;
+const drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     menuButton: {
-        marginRight: 36,
+        marginRight: 24,
     },
     hide: {
         display: 'none',
@@ -65,14 +65,19 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap',
     },
     drawerOpen: {
+        paddingLeft: 7,
         width: drawerWidth,
         background:'#27272580', //secondary color
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
+        [theme.breakpoints.down("xs")]: {
+            paddingLeft: 0,
+        },
     },
     drawerClose: {
+        paddingLeft: 7,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -81,6 +86,9 @@ const useStyles = makeStyles((theme) => ({
         background:'transparent',
         "border-right":'none',
         width: theme.spacing(7),
+        [theme.breakpoints.down("xs")]: {
+            paddingLeft: 0,
+        },
     },
     toolbar: {
         display: 'flex',
@@ -90,6 +98,13 @@ const useStyles = makeStyles((theme) => ({
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
     },
+    listItem: {
+        paddingTop: 6,
+        paddingBottom: 6,
+    },
+    logo: {
+        height: 50,
+    }
 }));
 
 export default function Navbar() {
@@ -136,6 +151,7 @@ export default function Navbar() {
                     <img 
                         src="./img/themes/logo.png"
                         alt="Logo EterelZ"
+                        className={classes.logo}
                     />
                     <MenuItem>
                         <NavLink to="/auth">
@@ -169,44 +185,51 @@ export default function Navbar() {
                     }),
                 }}
             >
-                <div className={classes.toolbar}>
-                    <IconButton onClick={handleDrawerClose}>
+                <div
+                    className={classes.toolbar}
+                >
+                    <IconButton
+                        onClick={handleDrawerClose}
+                    >
                         {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
                     </IconButton>
                 </div>
                 <Divider/>
                 <List color="secondary">
-                    {auth.token &&
-                    <>
-                        {/*<ListItem button key="engagement">*/}
-                        {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
-                        {/*    <NavLink>Participation aux events</NavLink>*/}
-                        {/*</ListItem>*/}
-                        <ListItem button key="logout" onClick={auth.logout}>
-                            <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
-                            <ListItemText primary="Déconnexion"/>
-                        </ListItem>
-                    </>
-
+                    {
+                        auth.token &&
+                            <>
+                                {/*<ListItem button key="engagement">*/}
+                                {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
+                                {/*    <NavLink>Participation aux events</NavLink>*/}
+                                {/*</ListItem>*/}
+                                <ListItem button key="logout" onClick={auth.logout} className={classes.listItem}>
+                                    <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
+                                    <ListItemText primary="Déconnexion"/>
+                                </ListItem>
+                            </>
                     }
-                    {(auth.token && auth.playload.userRole === 'admin') &&
-                    <ListItem
-                        button
-                        key="backOffice"
-                        component={NavLink}
-                        to="/backOffice"
-                        onClick={handleDrawerClose}
-                    >
-                        <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
-                        <ListItemText primary="BackOffice"/>
-                    </ListItem>
+                    {
+                        (auth.token && auth.playload.userRole === 'admin') &&
+                            <ListItem
+                                button
+                                key="backOffice"
+                                component={NavLink}
+                                to="/backOffice"
+                                onClick={handleDrawerClose}
+                                className={classes.listItem}
+                            >
+                                <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                                <ListItemText primary="BackOffice"/>
+                            </ListItem>
                     }
                     <ListItem 
                         button
                         key="events"
                         component={NavLink}
                         to="/events"
-                        onClick={handleDrawerClose}  
+                        onClick={handleDrawerClose}
+                        className={classes.listItem}
                     >
                         <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
                         <ListItemText primary="Events"/>
