@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useContext, useRef} from 'react'
-import {BrowserRouter, Route, Redirect, Switch, NavLink} from 'react-router-dom'
+import React, {useState, useEffect} from 'react'
+import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import {ApolloProvider} from '@apollo/client'
 import {graphqlConfig} from './context/apollo-context'
 
@@ -9,7 +9,6 @@ import {graphqlConfig} from './context/apollo-context'
 import HomePage from './pages/Home'
 import AuthPage from './pages/Auth'
 import AuthContext from './context/auth-context'
-import MainNavigation from './Components/Navigation/MainNavigation'
 import EventsPage from './pages/Events'
 import BackOffice from './pages/BackOffice'
 import Navbar from './Components/Navbar/Navbar'
@@ -91,8 +90,6 @@ export default function App() {
 
     const classes = useStyles();
 
-    console.log(state.playload)
-
     return (
         <BrowserRouter>
             <AuthContext.Provider
@@ -103,16 +100,22 @@ export default function App() {
                     logout: logout
                 }}
             >
-                <ApolloProvider client={graphqlConfig}>
-                    <ThemeProvider theme={theme}>
+                <ApolloProvider
+                    client={graphqlConfig}
+                >
+                    <ThemeProvider
+                        theme={theme}
+                    >
                         <Navbar />
-
-                        <div className={classes.root}>
-                    
+                        <div
+                            className={classes.root}
+                        >
                             <main
                                 className={classes.content}
                             >
-                                <div className = { classes.toolbar } />
+                                <div
+                                    className = { classes.toolbar }
+                                />
                                 <Switch>
                                     {(!state.token && <Redirect from='/backOffice' to='/auth' exact/>)}
                                     {state.token && <Route path="/backOffice" component={BackOffice}/>   }
@@ -131,15 +134,9 @@ export default function App() {
                                 </Switch>
                             </main>
                         </div>
-
-
-                        <main className="main-content">
-
-                        </main>
                     </ThemeProvider>
                 </ApolloProvider>
             </AuthContext.Provider>
         </BrowserRouter>
     )
 }
-
