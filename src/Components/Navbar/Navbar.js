@@ -3,7 +3,6 @@ import clsx from 'clsx'
 
 import {
     NavLink,
-    useLocation,
 } from 'react-router-dom'
 
 import {
@@ -15,16 +14,14 @@ import {
     Menu as MenuIcon,
     ChevronLeft as ChevronLeftIcon,
     ChevronRight as ChevronRightIcon,
-    HomeOutlined as HomeOutlinedIcon,
-    RowingOutlined as RowingOutlinedIcon,
+    EventNoteTwoTone as EventNoteTwoToneIcon,
+    ExitToAppTwoTone as ExitToAppTwoToneIcon,
+    AccountCircle as AccountCircleIcon,
 } from '@material-ui/icons'
 
 import {
-    Box,
-    Grid,
-    Button,
     CssBaseline,
-    Typography,
+    MenuItem,
     Drawer,
     AppBar,
     Toolbar,
@@ -34,10 +31,9 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    ButtonGroup,
 } from "@material-ui/core"
 
-
+import AuthContext from '../../context/auth-context'
 
 const drawerWidth = 240;
 
@@ -97,17 +93,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar() {
-    let location = useLocation();
-    let path = location.pathname
-
-    path = path === "/" ? "" : path
-
-
-
     const classes = useStyles();
     const theme = useTheme();
+
     const [open, setOpen] = React.useState(false);
-    
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -117,10 +106,8 @@ export default function Navbar() {
         setOpen(false);
     };
 
-    let userRole = false
-
-
-
+    const auth = useContext(AuthContext)
+    
     return (
         <>
             <CssBaseline/>
@@ -146,43 +133,23 @@ export default function Navbar() {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="space-between"
-                        alignItems="center"
-                    >
+                    <img 
+                        src="./img/themes/logo.png"
+                        alt="Logo EterelZ"
+                    />
+                    <MenuItem>
+                        <NavLink to="/auth">
+                            <IconButton
+                                aria-label="account of current user"
+                                aria-controls="primary-search-account-menu"
+                                aria-haspopup="true"
+                                color="inherit"
+                            >
+                                <AccountCircleIcon/>
+                            </IconButton>
+                        </NavLink>
+                    </MenuItem>
 
-                            <img src="./img/themes/logo.png" alt="Logo EterelZ" />
-
-                        <Box
-                            visibility = { userRole === "ROLE_ADMIN" ? "visible": "hidden"}
-                        >
-                            <NavLink to={"/admin"}>
-                                <Button
-                                    variant="outlined"
-                                    key={"BackOffice"}
-                                >
-                                    Back-office
-                                </Button>
-                            </NavLink>
-                        </Box>
-                       
-                        <Box>
-                            <ButtonGroup
-                                color="secondary"
-                                variant="outlined"
-                                aria-label="outlined secondary button group"
-                            > 
-                                <Button
-                                    component={NavLink}
-                                    to={ userRole ? "/account" : path + "/login" }
-                                >
-                                    { userRole ? "Compte" : "Connexion" }
-                                </Button>
-                            </ButtonGroup>
-                        </Box>
-                    </Grid>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -209,25 +176,40 @@ export default function Navbar() {
                 </div>
                 <Divider/>
                 <List color="secondary">
+                    {auth.token &&
+                    <>
+                        {/*<ListItem button key="engagement">*/}
+                        {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
+                        {/*    <NavLink>Participation aux events</NavLink>*/}
+                        {/*</ListItem>*/}
+                        <ListItem button key="logout" onClick={auth.logout}>
+                            <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
+                            <ListItemText primary="Déconnexion"/>
+                        </ListItem>
+                    </>
+
+                    }
+                    {(auth.token && auth.playload.userRole === 'admin') &&
                     <ListItem
                         button
-                        key={"Home"}
+                        key="backOffice"
                         component={NavLink}
-                        to="/"
+                        to="/backOffice"
                         onClick={handleDrawerClose}
                     >
-                        <ListItemIcon><HomeOutlinedIcon/></ListItemIcon>
-                        <ListItemText color="secondary" primary="Home"/>
+                        <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                        <ListItemText primary="BackOffice"/>
                     </ListItem>
+                    }
                     <ListItem 
-                        button 
-                        key={"Test"}
+                        button
+                        key="events"
                         component={NavLink}
-                        to="/test" 
-                        onClick={handleDrawerClose}
+                        to="/events"
+                        onClick={handleDrawerClose}  
                     >
-                        <ListItemIcon><RowingOutlinedIcon/></ListItemIcon>
-                        <ListItemText primary={"Test"}/>
+                        <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                        <ListItemText primary="Events"/>
                     </ListItem>
                 </List>
             </Drawer>
