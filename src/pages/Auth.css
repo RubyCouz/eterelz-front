@@ -3,3 +3,18 @@
     max-width: 80%;
     margin: 5rem auto;
 }
+
+.errormessage{
+    font-weight: bold;
+    color: red;
+}
+
+button{
+    background: #7ddc32;
+    padding: 1.5%;
+    margin-top: 2%;
+}
+
+.test{
+    margin-left: 100%;
+}
