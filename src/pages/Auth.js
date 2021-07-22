@@ -16,7 +16,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 // Alert
 function Alert(props) {
-    console.log("passe par alert function");
+    // console.log("passe par alert function");
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
@@ -75,35 +75,39 @@ export default function FullWidthTabs() {
     const context = useContext(AuthContext);
 
     //style des tabs
-    const classes = useStyles();
-    const theme = useTheme();
+    let classes = useStyles();
+    let theme = useTheme();
     const [value, setValue] = React.useState(0);
 
     // const connexion
-    const email = useRef('');
-    const password = useRef('');
+    let email = useRef('');
+    let password = useRef('');
 
     // const inscription
-    const reg_email = useRef('');
-    const reg_password = useRef('');
-    const reg_pseudo = useRef('');
-    const reg_password_verif = useRef('');
+    let reg_email = useRef('');
+    let reg_password = useRef('');
+    let reg_pseudo = useRef('');
+    let reg_password_verif = useRef('');
 
     // création des statements et récupération des "seteur" (state = état, objet accessible uniquement pour le composant "x" permet de stocker une donnée)
-    const [state, setState] = useState({
-        isLogin : true,
+    const [state, setState] = React.useState({
         alert_message : useRef(''),
         severity : ''
     })
 
+    //initialisation de la requête sur true
+    let request = true;
+    //initialisation du message d'alert
+
+
     //Entre crochet entre le [ empêche la saisie de caractère
-    const filter_pseudo = new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$");
+    let filter_pseudo = new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$");
 
     //regex email
-    const filter_email = new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$");
+    let filter_email = new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$");
 
     //regex password
-    const filter_password = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
+    let filter_password = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
 
 
     // état de l'alerte
@@ -111,55 +115,60 @@ export default function FullWidthTabs() {
 
     //si onsubmit, formulaire viens chercher cet fonction (formulaire connexion)
     const handleSubmit = (event) => {
-        console.log("Submit connexion");
+        // console.log("Submit connexion");
         event.preventDefault();
 
-        const user_email = email.current.value;
-        const user_password = password.current.value;
+        let user_email = email.current.value;
+        let user_password = password.current.value;
 
 
         //test la regex filter email sur la valeur de l'input reg_email
-        const valid_email = filter_email.test(email.current.value);
+        let valid_email = filter_email.test(email.current.value);
 
         //test la regex filter email sur la valeur de l'input reg_email
-        const valid_password = filter_password.test(password.current.value);
+        let valid_password = filter_password.test(password.current.value);
 
         state.severity = 'error';
             //si user email vide
         if(user_email === ""){
-            state.isLogin = false;
+            request = false;
+            // console.log(request)
             state.alert_message = 'Veuilliez saisir votre adresse email';
+            // setState({...state,alert_message: useRef('TEST') })
             handleClick();
-            console.log('email vide');
+            // console.log('email vide');
         }
 
         //si password vide
         if(user_password === ""){
-            state.isLogin = false;
+            request = false;
+
             state.alert_message = 'Veuilliez saisir votre mot de passse';
             handleClick();
-            console.log('mdp vide');
+            // console.log('mdp vide');
         }
         //enlève les espaces
         if (user_email.trim().length === 0 || user_password.trim().length === 0) {
             return
         }
         if(valid_email === false){
-            state.isLogin = false;
+            request = false;
             state.alert_message = 'Email incorrect';
+            // console.log(user_email);
             handleClick();
-            console.log('regex email');
+            // console.log('regex email');
         }
         if(valid_password === false){
-            state.isLogin = false;
+            request = false;
             state.alert_message = 'Votre mot de passe contient au moins une MAJUSCULE, une minuscule et un chiffre';
+            // console.log(user_password);
             handleClick();
-            console.log('regex password');
+            // console.log('regex password');
         }
 
-        if(state.isLogin === true){
+        if(request === true){
             //requête envoyé à api
-            console.log('entré requête connexion');
+            // console.log('entré requête connexion');
             let requestBody = {
                 query: `
                     query Login($user_email: String!, $user_password: String!) {
@@ -197,25 +206,29 @@ export default function FullWidthTabs() {
                     return res.json()
                 })
                 .then(resData => {
+                    // console.log(resData)
                     if (resData.data.login) {
                         context.login(
                             // resData.data.login._id,
                             // resData.data.login.user_role,
                             resData.data.login.token,
                         )
-                        console.log(context.login)
+                        // console.log(context.login)
                     }
                 })
                 .catch(err => {
-                    console.log(err)
+                    // console.log(err)
+
                 })
 
         }
         else{
-            state.isLogin = false;
+            request = false;
             state.alert_message = 'Email ou mot de passe incorrect';
             handleClick();
-            console.log('requête isLogin = false');
+            // console.log('requête requestn = false');
+            // console.log(user_email);
+            // console.log(user_password);
         }
     }
 
@@ -225,50 +238,51 @@ export default function FullWidthTabs() {
         event.preventDefault();
 
         //récupère les "valeurs" passent par la ref dans input
-        const  reg_user_pseudo = reg_pseudo.current.value;
-        const reg_user_email = reg_email.current.value;
-        const reg_user_password = reg_password.current.value;
-        const reg_user_password_verif = reg_password_verif.current.value;
+        let  reg_user_pseudo = reg_pseudo.current.value;
+        let reg_user_email = reg_email.current.value;
+        let reg_user_password = reg_password.current.value;
+        let reg_user_password_verif = reg_password_verif.current.value;
 
         //test la regex filter pseudo sur la valeur de l'input reg_pseudo
-        const valid_pseudo = filter_pseudo.test(reg_pseudo.current.value);
+        let valid_pseudo = filter_pseudo.test(reg_pseudo.current.value);
 
         //test la regex filter email sur la valeur de l'input reg_email
-        const valid_email = filter_email.test(reg_email.current.value);
+        let valid_email = filter_email.test(reg_email.current.value);
 
         //test la regex filter password sur la valeur de l'input reg_password
-        const valid_password = filter_password.test(reg_password.current.value);
+        let valid_password = filter_password.test(reg_password.current.value);
 
 
         state.severity="error";
         //Si  pseudo vide
 
         if(reg_user_pseudo===""){
-            console.log("pseudo vide");
+            // console.log("pseudo vide");
             state.alert_message = "Veuilliez renseigner votre pseudo";
             handleClick();
-            state.isLogin = false;
+            request = false;
+            // console.log(request)
         }
         //Si email vide
         if(reg_user_email===""){
-            console.log("email vide");
+            // console.log("email vide");
             state.alert_message = "Veuilliez renseigner votre adresse email";
             handleClick();
-            state.isLogin = false;
+            request = false;
         }
         //Si password vide
         if(reg_user_password===""){
-            console.log("password");
+            // console.log("password");
             state.alert_message = "Veuilliez renseigner votre mot de passe";
             handleClick();
-            state.isLogin = false;
+            request = false;
         }
         //Si password valid vide
         if(reg_user_password_verif===""){
-            console.log("valid password vide");
+            // console.log("valid password vide");
             state.alert_message = "Veuilliez renseigner votre mot de passe";
             handleClick();
-            state.isLogin = false;
+            request = false;
         }
         // trim retire les "bmancs" espace tabulation ect ...
         if (reg_user_email.trim().length === 0 || reg_user_password.trim().length === 0) {
@@ -277,49 +291,49 @@ export default function FullWidthTabs() {
 
         //si mdp 1 différents de mdp 2
         if (reg_user_password_verif !== reg_user_password){
-            state.isLogin = false;
-            console.log('mdp 1 et 2 différents');
+            request = false;
+            // console.log('mdp 1 et 2 différents');
             state.alert_message = "mots de passes différents";
             handleClick();
         }
-        //else obligatoire, si relance de la requête après un isLogin = false
+        //else obligatoire, si relance de la requête après un requestn = false
         else {
-            state.isLogin = true;
-            console.log('true 2 mdp identique');
+            request = true;
+            // console.log('true 2 mdp identique');
         }
         //test regEx pseudo
         if(valid_pseudo===false){
-            console.log('regEx Pseudo incorect');
-            state.isLogin = false;
+            // console.log('regEx Pseudo incorect');
+            request = false;
             state.alert_message = "Votre pseudo ne doit pas contenir de caractères spéciaux";
             handleClick();
         }
         //test regEx  email
         if(valid_email === false){
-            console.log('regex email non respecté');
+            // console.log('regex email non respecté');
             state.alert_message = "Adresse email incorrecte";
             handleClick();
-            state.isLogin = false;
+            request = false;
         }
         // mdp sous 8 charactère
         if(reg_user_password.length < 8){
-            console.log('mdp sous 8 charactère');
-            console.log('nombre charactère = '+reg_user_password.length);
+            // console.log('mdp sous 8 charactère');
+            // console.log('nombre charactère = '+reg_user_password.length);
             state.alert_message = "Votre mot de passe doit contenir au minimum 8 caractères";
             handleClick();
-            state.isLogin = false;
+            request = false;
+            // console.log(reg_user_password)
         }
         //test regEx password
         else if(valid_password === false){
-            console.log('regex password non respecté');
-            state.isLogin = false;
+            // console.log('regex password non respecté');
+            request = false;
             state.alert_message = "Votre mot de passe doit contenir au moins une MAJUSCULE, une minuscule et un chiffre";
             handleClick();
         }
 
-
-            if(state.isLogin === true){
-                console.log('lance la requête isLogin = true');
+            if(request === true){
+                // console.log('lance la requête request = true');
 
                 let requestRegister = {
                     query: `
@@ -359,45 +373,58 @@ export default function FullWidthTabs() {
                     return res.json()
                 })
                 .then(resData => {
+                    if (resData.errors) {
+                        // console.log(resData.errors[0].message);
+                        state.alert_message = resData.errors[0].message;
+                        handleClick();
+                    }
+                    else{
+                        state.severity = "success"
+                        state.alert_message = "Validation de l'inscription"
+                        handleClick()
+                    }
                     if (resData.data.login) {
+                        // console.log(resData.errors[0].message)
                         context.login(
                             // resData.data.login._id,
                             // resData.data.login.user_role,
                             resData.data.login.token,
                         )
-                        console.log(context.login)
+                        // console.log(context.login)
                     }
                 })
                 .catch(err => {
                     console.log(err)
                 })
-                state.severity = "success"
-                state.alert_message = "Validation de l'inscription"
-                handleClick()
+
+                // state.severity = "success"
+                // state.alert_message = "Validation de l'inscription"
+                // handleClick()
 
         }
+
 
     }
     //changement de tabs
     const handleChange = (event, newValue) => {
         setValue(newValue);
-        console.log('hangle change');
+        // console.log('hangle change');
     };
 
     const handleChangeIndex = (index) => {
         setValue(index);
-        console.log('hangle change index');
+        // console.log('hangle change index');
     };
 
     const handleClick = () => {
         setOpen(true);
-        console.log('passe par Handleclick function (setOpen : true)');
+        // console.log('passe par Handleclick function (setOpen : true)');
     };
 
     const handleClose = (event, reason) => {
-        console.log('passe par Handleclose function (setOpen : false)');
+        // console.log('passe par Handleclose function (setOpen : false)');
         if (reason === 'clickaway') {
-            console.log('passe par Handleclose function si retouche au bouton');
+            // console.log('passe par Handleclose function si retouche au bouton');
             return;
         }
 
