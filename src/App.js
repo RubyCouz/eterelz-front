@@ -22,36 +22,6 @@ import {
 
 import './App.css'
 
-const theme = createMuiTheme({
-    palette: {
-      type: 'dark',
-      primary: {
-        main: '#272725',
-      },
-      secondary: {
-        main: '#1A8BCD',
-      },
-      background: {
-        default: '#272725',
-      },
-    },
-  });
-  
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-    },
-    toolbar: {
-      padding: theme.spacing(0, 1),
-      ...theme.mixins.toolbar,
-    },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(0, 0, 0 , 0)
-    },
-  }));
-  
-
 export default function App() {
     const [state, setState] = useState({
         token: null,
@@ -84,8 +54,6 @@ export default function App() {
         login(tokenStorage)
     }, [])
 
-    const classes = useStyles();
-
     return (
         <BrowserRouter>
             <AuthContext.Provider
@@ -99,23 +67,7 @@ export default function App() {
                 <ApolloProvider
                     client={graphqlConfig}
                 >
-                    <ThemeProvider
-                        theme={theme}
-                    >
-                        <Navbar />
-                        <div
-                            className={classes.root}
-                        >
-                            <main
-                                className={classes.content}
-                            >
-                                <div
-                                    className = { classes.toolbar }
-                                />
-
-                            </main>
-                        </div>
-                    </ThemeProvider>
+                    <Navbar />
                 </ApolloProvider>
             </AuthContext.Provider>
         </BrowserRouter>
