@@ -1,60 +1,61 @@
-import React, { useContext } from 'react'
-import clsx from 'clsx'
-
+import React, {useContext, useEffect, useState} from 'react';
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import {MenuItem} from "@material-ui/core";
 import {
-    NavLink,
-} from 'react-router-dom'
-
-import {
-    makeStyles,
-    useTheme,
-} from '@material-ui/core/styles'
-
-import {
-    Menu as MenuIcon,
-    ChevronLeft as ChevronLeftIcon,
-    ChevronRight as ChevronRightIcon,
-    EventNoteTwoTone as EventNoteTwoToneIcon,
-    ExitToAppTwoTone as ExitToAppTwoToneIcon,
     AccountCircle as AccountCircleIcon,
-} from '@material-ui/icons'
-
-import {
-    CssBaseline,
-    MenuItem,
-    Drawer,
-    AppBar,
-    Toolbar,
-    List,
-    Divider,
-    IconButton,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-} from "@material-ui/core"
-
+    EventNoteTwoTone as EventNoteTwoToneIcon,
+    ExitToAppTwoTone as ExitToAppTwoToneIcon
+} from "@material-ui/icons";
 import AuthContext from '../../context/auth-context'
+import BackOffice from "../../pages/BackOffice";
+import HomePage from "../../pages/Home";
+import EventsPage from "../../pages/Events";
+import AuthPage from "../../pages/Auth";
+import {NavLink} from 'react-router-dom'
+import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 
-const drawerWidth = 240
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+    },
     appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
+        transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
     appBarShift: {
-        marginLeft: drawerWidth,
         width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
+        marginLeft: drawerWidth,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
     menuButton: {
-        marginRight: 24,
+        marginRight: theme.spacing(2),
+    },
+    logo: {
+        width: '150px',
     },
     hide: {
         display: 'none',
@@ -62,55 +63,71 @@ const useStyles = makeStyles((theme) => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
-        whiteSpace: 'nowrap',
     },
-    drawerOpen: {
-        paddingLeft: 7,
+    drawerPaper: {
         width: drawerWidth,
-        background:'#27272580', //secondary color
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        [theme.breakpoints.down("xs")]: {
-            paddingLeft: 0,
-        },
     },
-    drawerClose: {
-        paddingLeft: 7,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        overflowX: 'hidden',
-        background:'transparent',
-        "border-right":'none',
-        width: theme.spacing(7),
-        [theme.breakpoints.down("xs")]: {
-            paddingLeft: 0,
-        },
-    },
-    toolbar: {
+    drawerHeader: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-end',
         padding: theme.spacing(0, 1),
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
+        justifyContent: 'flex-end',
     },
-    listItem: {
-        paddingTop: 6,
-        paddingBottom: 6,
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: -drawerWidth,
     },
-    logo: {
-        height: 50,
-    }
+    contentShift: {
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 0,
+    },
 }));
 
-export default function Navbar() {
+export default function PersistentDrawerLeft() {
+
+    const [state, setState] = useState({
+        token: null,
+        playload: null,
+    })
+
+    const login = (token, userId, userRole) => {
+        if (token) {
+            const arrayJWT = token.split('.')
+            const playload = JSON.parse(window.atob(arrayJWT[1]))
+            window.localStorage.setItem('token', token);
+
+            setState({
+                token: token,
+                playload: playload,
+            })
+        }
+    }
+
+    const logout = () => {
+        window.localStorage.removeItem('token');
+        setState({
+            token: null,
+            playload: null
+        })
+    }
+
+    useEffect(() => {
+        const tokenStorage = window.localStorage.getItem('token');
+        login(tokenStorage)
+    }, [])
+
     const classes = useStyles();
     const theme = useTheme();
-
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
@@ -120,84 +137,70 @@ export default function Navbar() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-
     const auth = useContext(AuthContext)
-    
     return (
         <>
-            <CssBaseline/>
-            <AppBar
-                position="fixed"
-                className={
-                    clsx(classes.appBar, {
+            <div className={classes.root}>
+                <CssBaseline />
+                <AppBar
+                    position="fixed"
+                    className={clsx(classes.appBar, {
                         [classes.appBarShift]: open,
-                    })
-                }
-            >
-                <Toolbar>
-                    <IconButton
-                        color = "inherit"
-                        aria-label = "open drawer"
-                        onClick = {handleDrawerOpen}
-                        edge = "start"
-                        className = {
-                            clsx(classes.menuButton, {
-                                [classes.hide]: open,
-                            })
-                        }
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                    <img 
-                        src="./img/themes/logo.png"
-                        alt="Logo EterelZ"
-                        className={classes.logo}
-                    />
-                    <MenuItem>
-                        <NavLink to="/auth">
-                            <IconButton
-                                aria-label="account of current user"
-                                aria-controls="primary-search-account-menu"
-                                aria-haspopup="true"
-                                color="inherit"
-                            >
-                                <AccountCircleIcon/>
-                            </IconButton>
-                        </NavLink>
-                    </MenuItem>
-
-                </Toolbar>
-            </AppBar>
-            <Drawer
-                elevation={0}
-                color="primary" 
-                variant="permanent"
-                /*className={
-                    clsx(classes.drawer, {
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open,
-                    })
-                }*/
-                classes={{
-                    paperAnchorDockedLeft: clsx({
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open,
-                    }),
-                }}
-            >
-                <div
-                    className={classes.toolbar}
+                    })}
                 >
-                    <IconButton
-                        onClick={handleDrawerClose}
-                    >
-                        {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
-                    </IconButton>
-                </div>
-                <Divider/>
-                <List color="secondary">
-                    {
-                        auth.token &&
+                    <Toolbar>
+                        <IconButton
+                            color = "inherit"
+                            aria-label = "open drawer"
+                            onClick = {handleDrawerOpen}
+                            edge = "start"
+                            className = {
+                                clsx(classes.menuButton, {
+                                    [classes.hide]: open,
+                                })
+                            }
+                        >
+                            <MenuIcon/>
+                        </IconButton>
+                        <img
+                            src="./img/themes/logo.png"
+                            alt="Logo EterelZ"
+                            className={classes.logo}
+                        />
+                        <MenuItem>
+                            <NavLink to="/auth">
+                                <IconButton
+                                    aria-label="account of current user"
+                                    aria-controls="primary-search-account-menu"
+                                    aria-haspopup="true"
+                                    color="inherit"
+                                >
+                                    <AccountCircleIcon/>
+                                </IconButton>
+                            </NavLink>
+                        </MenuItem>
+
+                    </Toolbar>
+
+                </AppBar>
+                <Drawer
+                    className={classes.drawer}
+                    variant="persistent"
+                    anchor="left"
+                    open={open}
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                >
+                    <div className={classes.drawerHeader}>
+                        <IconButton onClick={handleDrawerClose}>
+                            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        </IconButton>
+                    </div>
+                    <Divider />
+                    <List color="secondary">
+                        {
+                            auth.token &&
                             <>
                                 {/*<ListItem button key="engagement">*/}
                                 {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
@@ -208,9 +211,9 @@ export default function Navbar() {
                                     <ListItemText primary="Déconnexion"/>
                                 </ListItem>
                             </>
-                    }
-                    {
-                        (auth.token && auth.playload.userRole === 'admin') &&
+                        }
+                        {
+                            (auth.token && auth.playload.userRole === 'admin') &&
                             <ListItem
                                 button
                                 key="backOffice"
@@ -222,24 +225,48 @@ export default function Navbar() {
                                 <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
                                 <ListItemText primary="BackOffice"/>
                             </ListItem>
-                    }
-                    <ListItem 
-                        button
-                        key="events"
-                        component={NavLink}
-                        to="/events"
-                        onClick={handleDrawerClose}
-                        className={classes.listItem}
-                    >
-                        <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
-                        <ListItemText primary="Events"/>
-                    </ListItem>
-                </List>
-            </Drawer>
+                        }
+                        <ListItem
+                            button
+                            key="events"
+                            component={NavLink}
+                            to="/events"
+                            onClick={handleDrawerClose}
+                            className={classes.listItem}
+                        >
+                            <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                            <ListItemText primary="Events"/>
+                        </ListItem>
+                    </List>
+                </Drawer>
+
+
+
+                <main
+                    className={clsx(classes.content, {
+                        [classes.contentShift]: open,
+                    })}
+                >
+                    <div className={classes.drawerHeader} />
+                    <Switch>
+                        {(!state.token && <Redirect from='/backOffice' to='/auth' exact/>)}
+                        {state.token && <Route path="/backOffice" component={BackOffice}/>   }
+                        {/*redirection vers connexion si deconnexion*/}
+                        {!state.token && <Redirect from="/bookings" to="/auth" exact/>}
+                        {/*redirection sur la page events en page d'accueil si le token de connexion est présent*/}
+                        {state.token && <Redirect from="/" to="/events" exact/>}
+                        {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
+                        {state.token && <Redirect from="/auth" to="/events" exact/>}
+                        {!state.token && <Route path="/home" component={HomePage}/>}
+                        <Route path="/events" component={EventsPage}/>
+                        <Route path="/auth" component={AuthPage}/>
+                        {/*{this.state.token && <Route path="/bookings" component={BookingsPage}/>}*/}
+                        {/*affichage par défaut de la connexion si le token de connexion n'est pas présent*/}
+                        {/*{!state.token && <Redirect to="/auth" exact/>}*/}
+                    </Switch>
+                </main>
+            </div>
+
         </>
-
-    )
+    );
 }
-
-
-
