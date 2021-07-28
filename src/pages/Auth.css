@@ -9,12 +9,12 @@
     color: red;
 }
 
-button{
-    background: #7ddc32;
+input{
+    background: #2d63b3;
     padding: 1.5%;
     margin-top: 2%;
 }
 
-.test{
+.snackbar_register{
     margin-left: 100%;
 }

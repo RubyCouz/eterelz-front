@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react'
+import React, {useContext, useState} from 'react'
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -13,6 +13,9 @@ import './Auth.css'
 import AuthContext from '../context/auth-context'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import TextField from '@material-ui/core/TextField';
+import {Redirect} from "react-router-dom";
+
 
 // Alert
 function Alert(props) {
@@ -55,6 +58,10 @@ function a11yProps(index) {
         'aria-controls': `full-width-tabpanel-${index}`,
     };
 }
+//methode pour refresh la page
+// function refreshPage() {
+//     window.location.reload(false);
+// }
 
 //Style et thème de la navbar
 const useStyles = makeStyles((theme) => ({
@@ -69,125 +76,168 @@ const useStyles = makeStyles((theme) => ({
             marginTop: theme.spacing(2),
         },
     },
+    margin: {
+        margin: theme.spacing(1),
+    },
+    error: {
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    },
 }));
 
+const initialState = {
+    alert_message : '',
+    severity : '',
+    reg_user_pseudo: '',
+    reg_user_email: '',
+    reg_user_password: '',
+    reg_user_password_confirm: '',
+    log_user_email: '',
+    log_user_password : ''
+}
+
+
 export default function FullWidthTabs() {
+
+    //Déclaration des regex
+    const regexlist = {
+        reg_user_pseudo : new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$"),
+        reg_user_email : new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
+        reg_user_password : new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
+        reg_user_password_confirm : new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
+        log_user_email : new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
+        log_user_password : new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
+    }
+
     const context = useContext(AuthContext);
 
     //style des tabs
     let classes = useStyles();
     let theme = useTheme();
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
 
-    // const connexion
-    let email = useRef('');
-    let password = useRef('');
 
-    // const inscription
-    let reg_email = useRef('');
-    let reg_password = useRef('');
-    let reg_pseudo = useRef('');
-    let reg_password_verif = useRef('');
+
+
+    const handleInputChange = (event) => {
+        const target = event.target;
+        const value =  target.value;
+        const name = target.name;
+        const regall = !regexlist[name].test(value)
+        setState({
+            ...state,[name]: value
+        });
+        //Le name + 'Error' permet de renvoyer le nom de l'erreur
+        setError({
+            ...error,
+            [name+'_error'] : regall
+        });
+        //Le name + 'Error' permet de renvoyer le nom de l'erreur
+        setLogError({
+            ...logError,
+            [name+'_error'] : regall
+        });
+    };
+
+
 
     // création des statements et récupération des "seteur" (state = état, objet accessible uniquement pour le composant "x" permet de stocker une donnée)
-    const [state, setState] = React.useState({
-        alert_message : useRef(''),
-        severity : ''
+    const [state, setState] = useState(initialState)
+
+    //State etat des erreur pour lancement requête
+    const [requestError] = useState({
+        errorValue : false,
+        requestRegister : false,
+        requestLogin : false,
+        logErrorValue : false
     })
 
-    //initialisation de la requête sur true
-    let request = true;
-    //initialisation du message d'alert
+    //State etat des textfield register
+    const [error, setError] = useState({
+        reg_user_pseudo_error: false,
+        reg_user_email_error: false,
+        reg_user_password_error: false,
+        reg_user_password_confirm_error: false,
+    })
 
+    //State etat des textfield login
+    const [logError, setLogError] = useState({
+        log_user_email_error : false,
+        log_user_password_error: false
+    })
 
-    //Entre crochet entre le [ empêche la saisie de caractère
-    let filter_pseudo = new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$");
+    //état de la route
+    const [route , setRoute] = useState(false)
 
-    //regex email
-    let filter_email = new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$");
+    requestError.requestRegister = true
+    //parcours l'objet error et vérifie si un élément retourne false
+    for (const i in error) {
+        // console.log('ici')
+        requestError.errorValue = error[i];
+        // console.log(`${i}: ${error[i]}`);
+        // console.log(requestError.errorValue)
+        if(requestError.errorValue === true){
+            // console.log('coucou')
+            requestError.requestRegister = false
+            // console.log(requestError.requestRegister + " request error")
+        }
+    }
+    requestError.requestLogin = true
+    //parcours l'objet logError et vérifie si un élément retourne false
+    for (const i in logError) {
+        // console.log('ici')
+        requestError.logErrorValue = logError[i];
+        // console.log(`${i}: ${logError[i]}`);
+        // console.log(requestError.logErrorValue)
+        if(requestError.logErrorValue === true){
+            // console.log('coucou')
+            requestError.requestLogin = false
+            // console.log(requestError.requestLogin + " request error")
+        }
+    }
 
-    //regex password
-    let filter_password = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$");
-
+    const cancel = () => {
+        setState(initialState)
+        // console.log(state)
+        // console.log(initialState)
+    }
 
     // état de l'alerte
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] =useState(false);
 
     //si onsubmit, formulaire viens chercher cet fonction (formulaire connexion)
-    const handleSubmit = (event) => {
+    const loginSubmit = () => {
         // console.log("Submit connexion");
-        event.preventDefault();
-
-        let user_email = email.current.value;
-        let user_password = password.current.value;
-
-
-        //test la regex filter email sur la valeur de l'input reg_email
-        let valid_email = filter_email.test(email.current.value);
-
-        //test la regex filter email sur la valeur de l'input reg_email
-        let valid_password = filter_password.test(password.current.value);
-
+        //initialise couleur error pour alert snackbar
         state.severity = 'error';
-            //si user email vide
-        if(user_email === ""){
-            request = false;
-            // console.log(request)
-            state.alert_message = 'Veuilliez saisir votre adresse email';
-            // setState({...state,alert_message: useRef('TEST') })
-            handleClick();
-            // console.log('email vide');
-        }
 
-        //si password vide
-        if(user_password === ""){
-            request = false;
-
-            state.alert_message = 'Veuilliez saisir votre mot de passse';
-            handleClick();
-            // console.log('mdp vide');
-        }
         //enlève les espaces
-        if (user_email.trim().length === 0 || user_password.trim().length === 0) {
+        if (state.log_user_email.trim().length === 0 || state.log_user_password.trim().length === 0) {
             return
         }
-        if(valid_email === false){
-            request = false;
-            state.alert_message = 'Email incorrect';
-            // console.log(user_email);
-            handleClick();
-            // console.log('regex email');
-        }
-        if(valid_password === false){
-            request = false;
-            state.alert_message = 'Votre mot de passe contient au moins une MAJUSCULE, une minuscule et un chiffre';
-            // console.log(user_password);
-            handleClick();
-            // console.log('regex password');
-        }
 
-        if(request === true){
+        if(requestError.requestLogin === true){
             //requête envoyé à api
             // console.log('entré requête connexion');
             let requestBody = {
                 query: `
                     query Login($user_email: String!, $user_password: String!) {
                         login(
-                           
+
                             user_email: $user_email,
                             user_password: $user_password
                             ) {
-                            
+
                             token
                             }
                         }
                     `,
                 variables: {
-                    user_email: user_email,
-                    user_password: user_password
+                    user_email: state.log_user_email,
+                    user_password: state.log_user_password
                 }
             }
-
             //connexion api et envoie en post les infos format json
             fetch('http://localhost:8080/api', {
                 method: 'POST',
@@ -196,7 +246,6 @@ export default function FullWidthTabs() {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-
             })
                 //si erreur
                 .then(res => {
@@ -206,6 +255,13 @@ export default function FullWidthTabs() {
                     return res.json()
                 })
                 .then(resData => {
+                    //si erreur
+                    if (resData.errors) {
+                        // console.log(resData.errors[0].message);
+                        state.severity = 'error'
+                        state.alert_message = resData.errors[0].message;
+                        handleClick();
+                    }
                     // console.log(resData)
                     if (resData.data.login) {
                         context.login(
@@ -215,126 +271,44 @@ export default function FullWidthTabs() {
                         )
                         // console.log(context.login)
                     }
+                    //si tout est bon
+                    if (!resData.errors) {
+                        // let route = (<Redirect to="/"/>)
+                        // route()
+                        setRoute(true)
+                        console.log('test route error')
+                    }
                 })
                 .catch(err => {
-                    // console.log(err)
-
+                    console.log(err)
+                    console.log('passe par err')
+                    state.severity = 'error'
+                    state.alert_message = 'Information incorrect'
+                    handleClick()
                 })
-
         }
         else{
-            request = false;
             state.alert_message = 'Email ou mot de passe incorrect';
             handleClick();
-            // console.log('requête requestn = false');
-            // console.log(user_email);
-            // console.log(user_password);
         }
     }
 
     //formulaire validation inscription
 
-    const registrationSubmit = (event) =>{
-        event.preventDefault();
-
-        //récupère les "valeurs" passent par la ref dans input
-        let  reg_user_pseudo = reg_pseudo.current.value;
-        let reg_user_email = reg_email.current.value;
-        let reg_user_password = reg_password.current.value;
-        let reg_user_password_verif = reg_password_verif.current.value;
-
-        //test la regex filter pseudo sur la valeur de l'input reg_pseudo
-        let valid_pseudo = filter_pseudo.test(reg_pseudo.current.value);
-
-        //test la regex filter email sur la valeur de l'input reg_email
-        let valid_email = filter_email.test(reg_email.current.value);
-
-        //test la regex filter password sur la valeur de l'input reg_password
-        let valid_password = filter_password.test(reg_password.current.value);
-
-
-        state.severity="error";
-        //Si  pseudo vide
-
-        if(reg_user_pseudo===""){
-            // console.log("pseudo vide");
-            state.alert_message = "Veuilliez renseigner votre pseudo";
-            handleClick();
-            request = false;
-            // console.log(request)
-        }
-        //Si email vide
-        if(reg_user_email===""){
-            // console.log("email vide");
-            state.alert_message = "Veuilliez renseigner votre adresse email";
-            handleClick();
-            request = false;
-        }
-        //Si password vide
-        if(reg_user_password===""){
-            // console.log("password");
-            state.alert_message = "Veuilliez renseigner votre mot de passe";
-            handleClick();
-            request = false;
-        }
-        //Si password valid vide
-        if(reg_user_password_verif===""){
-            // console.log("valid password vide");
-            state.alert_message = "Veuilliez renseigner votre mot de passe";
-            handleClick();
-            request = false;
-        }
+    const registrationSubmit = () =>{
         // trim retire les "bmancs" espace tabulation ect ...
-        if (reg_user_email.trim().length === 0 || reg_user_password.trim().length === 0) {
+        if (state.reg_user_email.trim().length === 0 || state.reg_user_password.trim().length === 0) {
             return
         }
-
         //si mdp 1 différents de mdp 2
-        if (reg_user_password_verif !== reg_user_password){
-            request = false;
+        if (state.reg_user_password_confirm !== state.reg_user_password){
             // console.log('mdp 1 et 2 différents');
             state.alert_message = "mots de passes différents";
+            requestError.requestRegister = false
             handleClick();
         }
-        //else obligatoire, si relance de la requête après un requestn = false
-        else {
-            request = true;
-            // console.log('true 2 mdp identique');
-        }
-        //test regEx pseudo
-        if(valid_pseudo===false){
-            // console.log('regEx Pseudo incorect');
-            request = false;
-            state.alert_message = "Votre pseudo ne doit pas contenir de caractères spéciaux";
-            handleClick();
-        }
-        //test regEx  email
-        if(valid_email === false){
-            // console.log('regex email non respecté');
-            state.alert_message = "Adresse email incorrecte";
-            handleClick();
-            request = false;
-        }
-        // mdp sous 8 charactère
-        if(reg_user_password.length < 8){
-            // console.log('mdp sous 8 charactère');
-            // console.log('nombre charactère = '+reg_user_password.length);
-            state.alert_message = "Votre mot de passe doit contenir au minimum 8 caractères";
-            handleClick();
-            request = false;
-            // console.log(reg_user_password)
-        }
-        //test regEx password
-        else if(valid_password === false){
-            // console.log('regex password non respecté');
-            request = false;
-            state.alert_message = "Votre mot de passe doit contenir au moins une MAJUSCULE, une minuscule et un chiffre";
-            handleClick();
-        }
-
-            if(request === true){
+            if(requestError.requestRegister === true){
                 // console.log('lance la requête request = true');
-
                 let requestRegister = {
                     query: `
                     mutation CreateUser($user_login: String!, $user_email: String!, $user_password: String!) {
@@ -349,14 +323,14 @@ export default function FullWidthTabs() {
                         user_email
                         }
                     }
+                    
                     `,
                     variables: {
-                        user_login: reg_user_pseudo,
-                        user_email: reg_user_email,
-                        user_password: reg_user_password
+                        user_login: state.reg_user_pseudo,
+                        user_email: state.reg_user_email,
+                        user_password: state.reg_user_password
                     }
                 }
-
             fetch('http://localhost:8080/api', {
                 method: 'POST',
                 body: JSON.stringify(requestRegister),
@@ -364,7 +338,6 @@ export default function FullWidthTabs() {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-
             })
                 .then(res => {
                     if(res.status !== 200 && res.status !== 201) {
@@ -375,10 +348,11 @@ export default function FullWidthTabs() {
                 .then(resData => {
                     if (resData.errors) {
                         // console.log(resData.errors[0].message);
+                        state.severity = 'error'
                         state.alert_message = resData.errors[0].message;
                         handleClick();
                     }
-                    else{
+                    else {
                         state.severity = "success"
                         state.alert_message = "Validation de l'inscription"
                         handleClick()
@@ -392,18 +366,23 @@ export default function FullWidthTabs() {
                         )
                         // console.log(context.login)
                     }
+                    if (!resData.errors) {
+                        setRoute(true)
+                        console.log('test route error')
+                    }
                 })
                 .catch(err => {
                     console.log(err)
                 })
-
-                // state.severity = "success"
-                // state.alert_message = "Validation de l'inscription"
-                // handleClick()
-
+                state.severity = "success"
+                state.alert_message = "Validation de l'inscription"
+                handleClick()
         }
-
-
+            else{
+                state.severity = 'error';
+                state.alert_message = 'Information incorrect';
+                handleClick();
+            }
     }
     //changement de tabs
     const handleChange = (event, newValue) => {
@@ -430,12 +409,9 @@ export default function FullWidthTabs() {
 
         setOpen(false);
     };
-
     //retour tabs
     return (
         <div className={classes.root}>
-
-
             <AppBar position="static" color="default">
                 <Tabs
                     value={value}
@@ -457,41 +433,112 @@ export default function FullWidthTabs() {
             >
                 <TabPanel value={value} index={0} dir={theme.direction}>
                     <h1>Connexion</h1>
-                    <form className="auth-form" onSubmit={handleSubmit}>
+                    <form className="auth-form">
                         <div className="form-control">
-                            <label htmlFor="user_email" >Email</label>
-                            <input type="email" id="user_email"  ref={email}/>
-                            <label htmlFor="user_password">Password  </label>
-                            <input type="password" id="user_pasword"  ref={password}/>
-                            <button type="submit">Submit</button>
-                            <button type="reset">Annuler</button>
-                        </div>
-                        <div className={classes.snackbar}>
-                            <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-                                <Alert onClose={handleClose} severity={state.severity} >
-                                    {state.alert_message}
-                                </Alert>
-                            </Snackbar>
+                            <div>
+                                <TextField
+                                    id="standard-error-helper-text"
+                                    label="Email"
+                                    name="log_user_email"
+                                    type="text"
+                                    helperText="Entrer votre email"
+                                    onChange={handleInputChange}
+                                    value={state.log_user_email}
+                                    fullWidth={true}
+                                    required
+                                    error={logError.log_user_email_error}
+                                    />
+                                    <TextField
+                                        id="standard-error-helper-text"
+                                        label="Mot de passe"
+                                        name="log_user_password"
+                                        type="password"
+                                        helperText="8 caractères, une majuscule, une minuscule et un chiffre obligatoires."
+                                        onChange={handleInputChange}
+                                        value={state.log_user_password}
+                                        fullWidth={true}
+                                        required
+                                        error={logError.log_user_password_error}
+                                    />
+                                </div>
+                            <div>
+                                {route &&  <Redirect to="/events"/> }
+                                <input type='button' value='Login' onClick={loginSubmit}/>
+                                <input type="button" value='Annuler' onClick={cancel}/>
+                            </div>
+                            <div className={classes.snackbar}>
+                                <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+                                    <Alert onClose={handleClose} severity={state.severity} >
+                                        {state.alert_message}
+                                    </Alert>
+                                </Snackbar>
+                            </div>
                         </div>
                     </form>
                 </TabPanel>
+
                 <TabPanel value={value} index={1} dir={theme.direction}>
                     <h1>Inscription</h1>
-                    <form className="auth-form" onSubmit={registrationSubmit}>
+                    <form className="auth-form">
                         <div className="form-control">
-                            <label htmlFor="reg_user_pseudo" >Pseudo</label>
-                            {/*Ajouter la ref*/}
-                            <input type="pseudo" id="reg_user_pseudo"  ref={reg_pseudo}/>
-                            <label htmlFor="reg_user_email" >Email</label>
-                            <input type="email" id="reg_user_email"  ref={reg_email}/>
-                            <label htmlFor="reg_user_password">Password  </label>
-                            <input type="password" id="reg_user_password"  ref={reg_password}/>
-                            <label htmlFor="reg_user_password">Confirm password  </label>
-                            <input type="password" id="reg_user_password_verif"  ref={reg_password_verif}/>
-                            <button type="submit" >Submit</button>
-                            <button type="reset">Annuler</button>
+                            <TextField
+                                id="standard-error-helper-text"
+                                label="Pseudo"
+                                name="reg_user_pseudo"
+                                type="text"
+                                helperText="Caractères spéciaux non autorisés"
+                                onChange={handleInputChange}
+                                value={state.reg_user_pseudo}
+                                fullWidth={true}
+                                required
+                                error={error.reg_user_pseudo_error}
+                            />
+                            <TextField
+                                id="standard-error-helper-text"
+                                label="Email"
+                                name="reg_user_email"
+                                type="text"
+                                helperText="Entrer votre email"
+                                onChange={handleInputChange}
+                                value={state.reg_user_email}
+                                fullWidth={true}
+                                required
+                                error={error.reg_user_email_error}
+                            />
+                            <div>
+                                <TextField
+                                    id="standard-error-helper-text"
+                                    label="Mot de passe"
+                                    name="reg_user_password"
+                                    type="password"
+                                    helperText="8 caractères, une majuscule, une minuscule et un chiffre obligatoires."
+                                    onChange={handleInputChange}
+                                    value={state.reg_user_password}
+                                    fullWidth={true}
+                                    required
+                                    error={error.reg_user_password_error}
+                                />
+                                <TextField
+                                    id="standard-error-helper-text"
+                                    label="Vérification de mot de passe"
+                                    name="reg_user_password_confirm"
+                                    type="password"
+                                    helperText="Entrer une seconde fois votre mot de passe."
+                                    onChange={handleInputChange}
+                                    value={state.reg_user_password_confirm}
+                                    fullWidth={true}
+                                    required
+                                    error={error.reg_user_password_confirm_error}
+                                />
+                            </div>
+                            <div>
+                                {route &&  <Redirect to="/events"/> }
+                                <input type='button' value='Register' onClick={registrationSubmit}/>
+                                <input type="button" value='Annuler' onClick={cancel}/>
+                            </div>
+
                             <div className={classes.snackbar}>
-                                <Snackbar className="test" open={open} autoHideDuration={5000} onClose={handleClose}>
+                                <Snackbar className="snackbar_register" open={open} autoHideDuration={5000} onClose={handleClose}>
                                     <Alert onClose={handleClose} severity={state.severity} >
                                         {state.alert_message}
                                     </Alert>
