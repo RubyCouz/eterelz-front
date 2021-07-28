@@ -102,40 +102,11 @@ export default function PersistentDrawerLeft() {
 // création state darkmode
     const [darkMode, setDarkMode] = useState(false);
 
-    const [state, setState] = useState({
-        token: null,
-        playload: null,
-    })
     const theme = createMuiTheme({
         palette: {
             type: darkMode ? 'dark' : 'light'
         }
     })
-    const login = (token, userId, userRole) => {
-        if (token) {
-            const arrayJWT = token.split('.')
-            const playload = JSON.parse(window.atob(arrayJWT[1]))
-            window.localStorage.setItem('token', token);
-
-            setState({
-                token: token,
-                playload: playload,
-            })
-        }
-    }
-
-    const logout = () => {
-        window.localStorage.removeItem('token');
-        setState({
-            token: null,
-            playload: null
-        })
-    }
-
-    useEffect(() => {
-        const tokenStorage = window.localStorage.getItem('token');
-        login(tokenStorage)
-    }, [])
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -277,15 +248,15 @@ export default function PersistentDrawerLeft() {
                     >
                         <div className={classes.drawerHeader} />
                         <Switch>
-                            {(!state.token && <Redirect from='/backOffice' to='/auth' exact/>)}
-                            {state.token && <Route path="/backOffice" component={BackOffice}/>   }
+                            {(!auth.token && <Redirect from='/backOffice' to='/auth' exact/>)}
+                            {auth.token && <Route path="/backOffice" component={BackOffice}/>   }
                             {/*redirection vers connexion si deconnexion*/}
-                            {!state.token && <Redirect from="/bookings" to="/auth" exact/>}
+                            {!auth.token && <Redirect from="/bookings" to="/auth" exact/>}
                             {/*redirection sur la page events en page d'accueil si le token de connexion est présent*/}
-                            {state.token && <Redirect from="/" to="/events" exact/>}
+                            {auth.token && <Redirect from="/" to="/events" exact/>}
                             {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
-                            {state.token && <Redirect from="/auth" to="/events" exact/>}
-                            {!state.token && <Route path="/home" component={HomePage}/>}
+                            {auth.token && <Redirect from="/auth" to="/events" exact/>}
+                            {!auth.token && <Route path="/home" component={HomePage}/>}
                             <Route path="/events" component={EventsPage}/>
                             <Route path="/auth" component={AuthPage}/>
                             {/*{this.state.token && <Route path="/bookings" component={BookingsPage}/>}*/}
