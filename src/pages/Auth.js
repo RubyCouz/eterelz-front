@@ -16,7 +16,6 @@ import MuiAlert from '@material-ui/lab/Alert';
 import TextField from '@material-ui/core/TextField';
 import {Redirect} from "react-router-dom";
 
-
 // Alert
 function Alert(props) {
     // console.log("passe par alert function");
@@ -58,10 +57,6 @@ function a11yProps(index) {
         'aria-controls': `full-width-tabpanel-${index}`,
     };
 }
-//methode pour refresh la page
-// function refreshPage() {
-//     window.location.reload(false);
-// }
 
 //Style et thème de la navbar
 const useStyles = makeStyles((theme) => ({
@@ -97,7 +92,6 @@ const initialState = {
     log_user_password : ''
 }
 
-
 export default function FullWidthTabs() {
 
     //Déclaration des regex
@@ -116,9 +110,6 @@ export default function FullWidthTabs() {
     let classes = useStyles();
     let theme = useTheme();
     const [value, setValue] = useState(0);
-
-
-
 
     const handleInputChange = (event) => {
         const target = event.target;
@@ -139,8 +130,6 @@ export default function FullWidthTabs() {
             [name+'_error'] : regall
         });
     };
-
-
 
     // création des statements et récupération des "seteur" (state = état, objet accessible uniquement pour le composant "x" permet de stocker une donnée)
     const [state, setState] = useState(initialState)
@@ -463,8 +452,8 @@ export default function FullWidthTabs() {
                                 </div>
                             <div>
                                 {route &&  <Redirect to="/events"/> }
-                                <input type='button' value='Login' onClick={loginSubmit}/>
-                                <input type="button" value='Annuler' onClick={cancel}/>
+                                <input className='input-auth' type='button' value='Login' onClick={loginSubmit}/>
+                                <input className='input-auth' type="button" value='Annuler' onClick={cancel}/>
                             </div>
                             <div className={classes.snackbar}>
                                 <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
@@ -533,8 +522,8 @@ export default function FullWidthTabs() {
                             </div>
                             <div>
                                 {route &&  <Redirect to="/events"/> }
-                                <input type='button' value='Register' onClick={registrationSubmit}/>
-                                <input type="button" value='Annuler' onClick={cancel}/>
+                                <input className='input-auth' type='button' value='Register' onClick={registrationSubmit}/>
+                                <input className='input-auth' type="button" value='Annuler' onClick={cancel}/>
                             </div>
 
                             <div className={classes.snackbar}>
