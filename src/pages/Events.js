@@ -4,6 +4,14 @@ import Spinner from '../Components/Spinner/Spinner'
 import Modal from '../Components/Modal/Modal'
 import BackDrop from '../Components/Backdrop/Backdrop'
 import EventList from '../Components/Events/EventList/EventList'
+
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import NavigationIcon from '@material-ui/icons/Navigation';
+
+
 import './Events.css'
 import {
     gql,
@@ -57,16 +65,19 @@ export default function EventsPage(props) {
         isLoading: false,
         selectedEvent: null
     })
-  
+
+    //fonction fermeture d'une modal
     const modalCancelHandler = () => {
         const cancelModal = {creating: false,  selectedEvent: null}
         setState({...state, ...cancelModal})
     }
 
+    //fonction de création d'un évent
     const startCreateEventHandler = () => {
         setState({...state , creating: true})
     }
 
+    //fonction d'affichage des détails d'un évent
     const showDetailHandler = eventId => {
         const selectedEvent = data.events.find(e => e._id === eventId)
         setState({...state, selectedEvent: selectedEvent})
@@ -99,10 +110,12 @@ console.log(data)
         <>
             <h1>Liste des Events</h1>
             {
+                //condition de création OU de sélection d'un évent
                 (state.creating || state.selectedEvent) && 
                     <BackDrop/>
             }
-            {   
+            {
+                //Modal de création d'un évent
                 state.creating &&
                     <Modal
                         title = "Création d'un event"
@@ -142,6 +155,7 @@ console.log(data)
                     </Modal>
             }
             {
+                //Vue modal d'un event crée
                 state.selectedEvent &&
                     <Modal
                         title = {state.selectedEvent.event_name}
@@ -157,9 +171,12 @@ console.log(data)
             }
             {
                 context.token &&
+                    //Si connecter afficher la création d'évent
                     <div className="events-control">
                         <p>Créez Votre Event !!!</p>
-                        <button className="btn" onClick={startCreateEventHandler}>Création d'event</button>
+                        <Fab color="primary" aria-label="add" onClick={startCreateEventHandler}>
+                            <AddIcon />
+                        </Fab>
                     </div>
             }
             <section>
