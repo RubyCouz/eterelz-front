@@ -32,6 +32,7 @@ import AuthPage from "../../pages/Auth";
 import {NavLink} from 'react-router-dom'
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import Switche from '@material-ui/core/Switch';
+import {blue, deepPurple, lightBlue, purple} from "@material-ui/core/colors";
 const drawerWidth = 240;
 
 
@@ -100,11 +101,20 @@ const useStyles = makeStyles((theme) => ({
 export default function PersistentDrawerLeft() {
 
 // création state darkmode
-    const [darkMode, setDarkMode] = useState(false);
+    const [darkState, setDarkMode] = useState(false);
 
+    const palletType = darkState ? "dark" : "light"
+    const mainPrimaryColor = darkState ? purple[600] : blue[600]
+    const mainSecondaryColor = darkState ? lightBlue[600] : deepPurple[500]
     const theme = createMuiTheme({
         palette: {
-            type: darkMode ? 'dark' : 'light'
+            type: palletType,
+            primary: {
+                main: mainPrimaryColor
+            },
+            secondary: {
+                main: mainSecondaryColor
+            }
         }
     })
 
@@ -116,8 +126,7 @@ export default function PersistentDrawerLeft() {
     };
 
     const handleMode = () => {
-        setDarkMode(!darkMode)
-        console.log(darkMode)
+        setDarkMode(!darkState)
     }
 
     const handleDrawerClose = () => {
@@ -133,6 +142,7 @@ export default function PersistentDrawerLeft() {
                 <div className={classes.root}>
                     <CssBaseline />
                     <AppBar
+                        color="primary"
                         position="fixed"
                         className={clsx(classes.appBar, {
                             [classes.appBarShift]: open,

@@ -2,15 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import {ApolloProvider} from '@apollo/client'
 import {graphqlConfig} from './context/apollo-context'
-
-
-
-
-import HomePage from './pages/Home'
-import AuthPage from './pages/Auth'
 import AuthContext from './context/auth-context'
-import EventsPage from './pages/Events'
-import BackOffice from './pages/BackOffice'
 import Navbar from './Components/Navbar/Navbar'
 
 import {

@@ -15,6 +15,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import TextField from '@material-ui/core/TextField';
 import {Redirect} from "react-router-dom";
+import Button from '@material-ui/core/Button';
+
 
 // Alert
 function Alert(props) {
@@ -452,8 +454,8 @@ export default function FullWidthTabs() {
                                 </div>
                             <div>
                                 {route &&  <Redirect to="/events"/> }
-                                <input className='input-auth' type='button' value='Login' onClick={loginSubmit}/>
-                                <input className='input-auth' type="button" value='Annuler' onClick={cancel}/>
+                                <Button className="input-auth" onClick={loginSubmit} variant="contained" color="primary">Login</Button>
+                                <input className='input-auth' type="button" value="Annuler" onClick={cancel}/>
                             </div>
                             <div className={classes.snackbar}>
                                 <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
