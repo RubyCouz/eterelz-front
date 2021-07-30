@@ -18,22 +18,24 @@ import {
 } from '@apollo/client'
 
 import CreateIcon from '@material-ui/icons/Create'
-
+import templateRegex from '../../Data/template-regex'
 
 export default function TableRowEdit(props) {
 
-  //const { nameQuery, tableRowOption , idUser, defaultValue, setDefaultValue } = props
-  const { nameQuery, nameColumn, modifiedValue, idUser, data, setDefaultValue, process } = props
+  const { queryName, nameColumn, modifiedValue, idUser, data, setDefaultValue, process, regex } = props
 
-  //const { ModalAlertSetData } = useContext( AccountContext );
   const [ showField, setShowField ] = useState(false)
   const ShowField = () => {
     setShowField( !showField )
   }
 
+  //Champ du text
   const [ entryValue, setEntryValue ] = useState()
+  const changeField = (event)=> {
+    setEntryValue(event.target.value)
+  }
 
-  // Actualise la value entrée grâce au context value
+  // Actualise les valeur utilise le process si disponible 
   useEffect(
     () => {
       let value = data
@@ -45,159 +47,54 @@ export default function TableRowEdit(props) {
     [data]
   )
 
-  // Modifie le champs
-  const changeField = (event)=> {
-    setEntryValue(event.target.value)
-  }
-
-  /*
-  // Envoie de la données modifier vers l'api
-  const sendData = () => {
-
-    setShowField( !showField )
-
-    if ( entryValue === defaultValue[nameQuery] ) {
-      ModalAlertSetData({
-        severity: "error",
-        data: <Typography>Même valeur, aucune modification a était effectuée</Typography>
-      })
-      return
-    } else if ( !entryValue ) {
-      ModalAlertSetData({
-        severity: "error",
-        data: <Typography>Aucune donnée impossible, modification refusé</Typography>
-      })
-      setEntryValue(defaultValue[nameQuery])
-      return
-    }
-    const valueData = typeof entryValue === "string" ? `"${entryValue}"` : entryValue
-    const queryColumnMutation = `${ nameQuery } : ${ valueData }`
-
-
-    const axios = require('axios').default;
-    axios({
-        data: {
-            query: `
-                mutation{
-                    updateEterUser(
-                        input:{
-                          id: "${ idUser }"
-                          ${ queryColumnMutation }
-                        }
-                    )
-                    {
-                        eterUser{userMail}
-                    }
-                }
-            `
-        },
-        method: 'post',
-        url: 'https://localhost:8000/api/graphql',
-    })
-    .then( ( data ) => {
-        if(data.data.errors){
-          throw new Error();
-        } else {
-          ModalAlertSetData({
-            severity: "success",
-            data: <Typography>Modification effectuée</Typography>
-          })
-          setDefaultValue( { ...defaultValue, [nameQuery]:entryValue} )
-        }
-    })
-    .catch( () => {
-        ModalAlertSetData({
-            severity: "error",
-            data: <Typography>Les modification n'ont pas pu êtres valider</Typography>
-        })
-        setEntryValue(defaultValue[nameQuery])
-    })
-
-  }
-  */
-
-  function sendData() {
-
-  }
-
-/*
-  const GET_ = gql`
-    mutation($id: ID!, $type: String!){
-        updateEterUser(
-            input:{
-              id: ${ idUser }
-              ${ queryColumnMutation }
-            }
-        )
-        {
-            eterUser{userMail}
-        }
-    }
-  `
-
-
-
-  const [mutate, { data, error }] = useMutation(
-    ADD_TODO,
-    {
-      update (cache, { data }) {
-        // We use an update function here to write the 
-        // new value of the GET_ALL_TODOS query.
-        const newTodoFromResponse = data?.addTodo.todo;
-        const existingTodos = cache.readQuery<GetAllTodos>({
-          query: GET_ALL_TODOS,
-        });
-
-        if (existingTodos && newTodoFromResponse) {
-          cache.writeQuery({
-            query: GET_ALL_TODOS,
-            data: {
-              todos: [
-                ...existingTodos?.todos,
-                newTodoFromResponse,
-              ],
-            },
-          });
-        }
+  //Query générée pour le champ
+  const UPDATE_VAR = gql`
+    mutation ($id: ID!, $var: String!){
+      updateUser(_id: $id, updateUserInput:{ ${queryName}: $var}){
+        ${queryName}
       }
     }
-  )
-
-*/
-
-/*
-  const CREATE_EVENTS = gql`
-      mutation CreateEvent($id: ID!) {
-          createEvent(
-            eventInput: {
-              _id: $id
-            }
-          )
-          {
-            _id
-          }
-      }
   `;
 
-  const [modalConfirmHandler] = useMutation(
-    CREATE_EVENTS,
-    {
-        onCompleted: (dataMutationEvent) => {
-          if (dataMutationEvent.createEvent !== undefined) {
-              let listEvents = state.events
+  //Mutation
+  const [sendValidData] = useMutation(UPDATE_VAR)
 
-              listEvents.push(dataMutationEvent.createEvent)
-              setState({...state, events : listEvents})
+  //Temporaire
+  const [error, setError] = useState()
 
-              modalCancelHandler()
-          }
-        }
+  //Verification avant l'envoie de la mutation
+  function sendData(){
+
+    let error = false
+    let errorText = []
+    if ( entryValue === data ) {
+      errorText.push(<Typography>Même valeur, aucune modification a était effectuée</Typography>)
+      error = true
+    } else if ( !entryValue ) {
+      errorText.push(<Typography>Aucune donnée la modification est refusé</Typography>)
+      error = true
+    } else if (templateRegex[regex]) {
+      if (!templateRegex[regex].regex.test(entryValue)){
+        errorText.push(<Typography>{templateRegex[regex].message}</Typography>)
+        error = true
+      }
     }
-  )
-*/
+    
+    if (error) {
+      setError(errorText)
+      setShowField(false)
+      setEntryValue(data)
+    } else {
+      sendValidData({
+        variables: {
+          id: idUser,
+          var: entryValue,
+        },
+      })
+    }
+  }
 
-
-
+  //Touche entrée
   function handleKeyPress(e){
     if(e.keyCode === 13) {
       e.target.blur()
@@ -207,8 +104,8 @@ export default function TableRowEdit(props) {
   return (
     <TableRow
       hover
-      key = { nameQuery }
-      onClick = { !( modifiedValue === false) ? ShowField : undefined }
+      key = { queryName }
+      onClick = { !( modifiedValue === false) && !showField ? ShowField : undefined }
     >
       <TableCell
         component = "th"
@@ -227,7 +124,7 @@ export default function TableRowEdit(props) {
                 value = { entryValue }
                 onChange = { changeField }
                 autoFocus
-                onBlur = { sendData }
+                onBlur = { () => {sendData()} }
                 onKeyDown = { handleKeyPress }
                 size = "small"
               />
@@ -251,6 +148,12 @@ export default function TableRowEdit(props) {
           : 
             undefined
         }
+      </TableCell>
+      <TableCell
+        size = "small"
+        padding= "default"
+      >
+        {error}
       </TableCell>
     </TableRow>
   )
