@@ -18,13 +18,14 @@ import {
 
 import TabPanel from './TabPanel'
 
+// Mettre la date en forme
 const date = (date) => {
   const dateObjet = new Date(date)
   const options = {year: "numeric", month: "numeric", day: "numeric"};
   return dateObjet.toLocaleString("fr-FR", options)
 }
 
-// Fonction pour calculer le temps entre deux date utiliser dans le template
+// Fonction pour calculer le temps entre deux date
 const time = (date) => {
   const nowTime = new Date()
   const inscDate = new Date(date)
@@ -88,6 +89,7 @@ const templateData = {
           content : {   
               user_email : {
                   nameColumn : 'Adresse email',
+                  regex : 'email',
               },
               user_gender : {
                   nameColumn : 'Genre',
@@ -119,6 +121,7 @@ const templateData = {
         content : {
           user_password : {
             nameColumn : 'Mot de passe',
+            regex : 'password',
           },
         }
     },
