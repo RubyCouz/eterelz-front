@@ -63,8 +63,6 @@ function a11yProps(index) {
 //Style et thème de la navbar
 const useStyles = makeStyles((theme) => ({
     root: {
-
-        backgroundColor: theme.palette.background.paper,
         width: '100%',
     },
     snackbar: {
@@ -452,11 +450,11 @@ export default function FullWidthTabs() {
                                         error={logError.log_user_password_error}
                                     />
                                 </div>
-                            <div>
+                            <Box display="flex" style={{ width: '100%'}}>
                                 {route &&  <Redirect to="/events"/> }
-                                <Button className="input-auth" onClick={loginSubmit} variant="contained" color="primary">Login</Button>
-                                <input className='input-auth' type="button" value="Annuler" onClick={cancel}/>
-                            </div>
+                                    <Button value="Annuler" onClick={cancel} variant="outlined" justifyContent="flex-start">Cancel</Button>
+                                    <Button onClick={loginSubmit} variant="contained" color="primary" justifyContent="flex-end">Login</Button>
+                            </Box>
                             <div className={classes.snackbar}>
                                 <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
                                     <Alert onClose={handleClose} severity={state.severity} >
@@ -524,8 +522,8 @@ export default function FullWidthTabs() {
                             </div>
                             <div>
                                 {route &&  <Redirect to="/events"/> }
-                                <input className='input-auth' type='button' value='Register' onClick={registrationSubmit}/>
-                                <input className='input-auth' type="button" value='Annuler' onClick={cancel}/>
+                                <Button onClick={registrationSubmit} variant="contained" color="primary">Register</Button>
+                                <Button onClick={cancel} variant="outlined">Cancel</Button>
                             </div>
 
                             <div className={classes.snackbar}>

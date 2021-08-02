@@ -32,7 +32,7 @@ import AuthPage from "../../pages/Auth";
 import {NavLink} from 'react-router-dom'
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import Switche from '@material-ui/core/Switch';
-import {blue, deepPurple, lightBlue, purple} from "@material-ui/core/colors";
+import {blue, deepPurple, lightBlue, purple, red} from "@material-ui/core/colors";
 const drawerWidth = 240;
 
 
@@ -106,6 +106,7 @@ export default function PersistentDrawerLeft() {
     const palletType = darkState ? "dark" : "light"
     const mainPrimaryColor = darkState ? purple[600] : blue[600]
     const mainSecondaryColor = darkState ? lightBlue[600] : deepPurple[500]
+    const mainErrorColor = darkState ? red[600] : red[400]
     const theme = createMuiTheme({
         palette: {
             type: palletType,
@@ -114,7 +115,10 @@ export default function PersistentDrawerLeft() {
             },
             secondary: {
                 main: mainSecondaryColor
-            }
+            },
+            status: {
+                error: mainErrorColor
+            },
         }
     })
 

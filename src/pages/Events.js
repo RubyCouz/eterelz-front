@@ -4,7 +4,7 @@ import Spinner from '../Components/Spinner/Spinner'
 import Modal from '../Components/Modal/Modal'
 import BackDrop from '../Components/Backdrop/Backdrop'
 import EventList from '../Components/Events/EventList/EventList'
-
+import AuthNavbar from '../Components/Navbar/AuthNavbar'
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -18,6 +18,8 @@ import {
     useQuery,
     useMutation
 } from '@apollo/client'
+import {createMuiTheme} from "@material-ui/core/styles";
+import {blue, deepPurple, lightBlue, purple, red} from "@material-ui/core/colors";
 
 const EVENT_QUERY = gql`
     fragment EventQuery on Event{
@@ -106,8 +108,28 @@ export default function EventsPage(props) {
         }
     )
 console.log(data)
+    const [darkState, setDarkMode] = useState(false);
+    const theme = createMuiTheme({
+        palette: {
+            type: darkState ? 'dark' : 'light',
+            primary: {
+                main: darkState ? purple[600] : blue[600]
+            },
+            secondary: {
+                main: darkState ? lightBlue[600] : deepPurple[500]
+            },
+            status: {
+                error: darkState ? red[600] : red[400]
+            },
+        }
+    })
+    const handleMode = () => {
+        setDarkMode(!darkState)
+        console.log(darkState)
+    }
     return ( 
         <>
+            <AuthNavbar theme={theme} changeMode={handleMode}/>
             <h1>Liste des Events</h1>
             {
                 //condition de création OU de sélection d'un évent

@@ -3,6 +3,7 @@
  * récupération de données d'un composant et les rendre accessible
  */
 import React from 'react'
+import {Redirect} from "react-router-dom";
 /**
  * création du context
  * export => peut être importer ailleurs
