@@ -29,6 +29,7 @@ import BackOffice from "../../pages/BackOffice";
 import HomePage from "../../pages/Home";
 import EventsPage from "../../pages/Events";
 import AuthPage from "../../pages/Auth";
+import AccountPage from '../../pages/Account/Account'
 import {NavLink} from 'react-router-dom'
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import Switche from '@material-ui/core/Switch';
@@ -262,15 +263,17 @@ export default function PersistentDrawerLeft() {
                     >
                         <div className={classes.drawerHeader} />
                         <Switch>
-                            {(!auth.token && <Redirect from='/backOffice' to='/auth' exact/>)}
+                            {!auth.token && <Redirect from='/backOffice' to='/auth' exact/>}
                             {auth.token && <Route path="/backOffice" component={BackOffice}/>   }
                             {/*redirection vers connexion si deconnexion*/}
                             {!auth.token && <Redirect from="/bookings" to="/auth" exact/>}
                             {/*redirection sur la page events en page d'accueil si le token de connexion est présent*/}
                             {auth.token && <Redirect from="/" to="/events" exact/>}
-                            {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
-                            {auth.token && <Redirect from="/auth" to="/events" exact/>}
+                            {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la de compte*/}
+                            {auth.token && <Redirect from="/auth" to="/account" exact/>}
+                            {!auth.token && <Redirect from='/account' to='/auth' exact/>}
                             {!auth.token && <Route path="/home" component={HomePage}/>}
+                            <Route path="/account" component={AccountPage}/>
                             <Route path="/events" component={EventsPage}/>
                             <Route path="/auth" component={AuthPage}/>
                             {/*{this.state.token && <Route path="/bookings" component={BookingsPage}/>}*/}
