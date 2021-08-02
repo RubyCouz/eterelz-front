@@ -36,6 +36,7 @@ export default function App() {
                 playload: playload,
             })
         }
+
     }
 
     const logout = () => {
@@ -55,7 +56,6 @@ export default function App() {
 
 
 
-
     return (
         <BrowserRouter>
             <AuthContext.Provider
@@ -70,19 +70,20 @@ export default function App() {
                     client={graphqlConfig}
                 >
                     <Switch>
-                        {/*{(!auth.token && <Redirect from="/backOffice" to="/auth" exact/>)}*/}
-                        {auth.token && <Route path="/backOffice" component={BackOffice}/>}
+                        {(!state.token && <Redirect from="/backOffice" to="/auth" exact/>)}
+                        <Route path="/backOffice" component={BackOffice}/>
                         {/*redirection vers connexion si deconnexion*/}
-                        {!auth.token && <Redirect from="/bookings" to="/auth" exact/>}
+                        {!state.token && <Redirect from="/backoffice" to="/auth" exact/>}
+                        {!state.token && <Redirect from="/bookings" to="/auth" exact/>}
                         {/*redirection sur la page events en page d'accueil si le token de connexion est présent*/}
-                        {auth.token && <Redirect from="/" to="/events" exact/>}
+                        {state.token && <Redirect from="/" to="/events" exact/>}
                         {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
-                        {auth.token && <Redirect from="/auth" to="/events" exact/>}
-                        {/*{!auth.token && <Redirect from="/events" to="/home" exact/>}*/}
-                        {!auth.token && <Route path="/home" component={HomePage}/>}
-                        {!auth.token && <Redirect from="/" to="/home" exact/>}
+                        {state.token && <Redirect from="/auth" to="/events" exact/>}
+                        {!state.token && <Redirect from="/events" to="/home" exact/>}
+                        {!state.token && <Route path="/home" component={HomePage}/>}
+                        {!state.token && <Redirect from="/" to="/home" exact/>}
+                         <Route path="/events" component={EventsPage}/>
 
-                        <Route path="/events" component={EventsPage}/>
                         <Route path="/auth" component={AuthPage}/>
                         {/*{this.state.token && <Route path="/bookings" component={BookingsPage}/>}*/}
                         {/*affichage par défaut de la connexion si le token de connexion n'est pas présent*/}

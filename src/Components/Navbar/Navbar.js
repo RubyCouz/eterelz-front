@@ -1,31 +1,20 @@
-import React, {useContext, useState} from 'react';
-import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import clsx from 'clsx';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-import Button from '@material-ui/core/Button'
-import List from '@material-ui/core/List'
-import Divider from '@material-ui/core/Divider'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu'
+import React, {useContext, useState} from 'react'
+import PropTypes from 'prop-types'
+import SwipeableViews from 'react-swipeable-views'
+import {makeStyles, useTheme} from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
 import IconButton from "@material-ui/core/IconButton"
-import {NavLink, Redirect, Route, Switch} from "react-router-dom"
+import {NavLink} from "react-router-dom"
 import {
     AccountCircle as AccountCircleIcon,
     EventNoteTwoTone as EventNoteTwoToneIcon,
     ExitToAppTwoTone as ExitToAppTwoToneIcon
 } from "@material-ui/icons";
-import {createMuiTheme, CssBaseline, MenuItem, ThemeProvider} from "@material-ui/core"
+import { CssBaseline, MenuItem, ThemeProvider} from "@material-ui/core"
 import Toolbar from "@material-ui/core/Toolbar";
 import AuthContext from "../../context/auth-context";
 import ModeButton from '../ModeButton/ModeButton'
@@ -76,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
     logo: {
         width: '150px',
     },
+    tabs: {
+        color: "whitesmoke"
+    }
 }));
 
 export default function Navbar(props) {
@@ -91,61 +83,6 @@ export default function Navbar(props) {
 
         setState({...state, [anchor]: open});
     }
-    const list = (anchor) => (
-        <div
-            className={clsx(classes.list, {
-                [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-            })}
-            role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
-        >
-            <div className={classes.drawerHeader}>
-
-            </div>
-            <Divider/>
-            <List color="secondary">
-                {
-                    auth.token &&
-                    <>
-                        {/*<ListItem button key="engagement">*/}
-                        {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
-                        {/*    <NavLink>Participation aux events</NavLink>*/}
-                        {/*</ListItem>*/}
-                        <ListItem button key="logout" onClick={auth.logout} className={classes.listItem}>
-                            <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
-                            <ListItemText primary="Déconnexion"/>
-                        </ListItem>
-                    </>
-                }
-                {
-                    (auth.token && auth.playload.userRole === 'admin') &&
-                    <ListItem
-                        button
-                        key="backOffice"
-                        component={NavLink}
-                        to="/backOffice"
-                        onClick={toggleDrawer(anchor, false)}
-                        className={classes.listItem}
-                    >
-                        <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
-                        <ListItemText primary="BackOffice"/>
-                    </ListItem>
-                }
-                <ListItem
-                    button
-                    key="events"
-                    component={NavLink}
-                    to="/events"
-                    onClick={toggleDrawer(anchor, false)}
-                    className={classes.listItem}
-                >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
-                    <ListItemText primary="Events"/>
-                </ListItem>
-            </List>
-        </div>
-    )
     const handleChange = (event, newValue) => {
         setValue(newValue);
     }
@@ -164,7 +101,6 @@ export default function Navbar(props) {
                     <AppBar
                         position="static"
                         color="primary"
-
                     >
                         <Toolbar>
 
@@ -176,18 +112,16 @@ export default function Navbar(props) {
                             <Tabs
                                 value={value}
                                 onChange={handleChange}
-                                indicatorColor="primary"
-                                textColor="primary"
+                                indicatorColor="secondary"
+                                textColor="inherit"
                                 variant="fullWidth"
                                 aria-label="full width tabs example"
                             >
-
                                 <Tab label="Tournois / Event" {...a11yProps(0)} />
                                 <Tab label="Les Streams" {...a11yProps(1)} />
                                 <Tab label="Jeux" {...a11yProps(2)} />
                                 <Tab label="La commu EterelZ" {...a11yProps(3)} />
                             </Tabs>
-
                             <MenuItem>
                                 <NavLink to="/auth">
                                     <IconButton
@@ -199,7 +133,6 @@ export default function Navbar(props) {
                                         <AccountCircleIcon/>
                                     </IconButton>
                                 </NavLink>
-
                             </MenuItem>
                             <MenuItem>
                                 <ModeButton changeMode={props.changeMode}/>
