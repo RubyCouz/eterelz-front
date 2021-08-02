@@ -21,6 +21,7 @@ import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Spinner from '../Components/Spinner/Spinner'
+import AuthNavbar from '../Components/Navbar/AuthNavbar'
 
 import {
     gql,
@@ -47,10 +48,6 @@ const LIST_USERS = gql`
         }
     }
 `
-
-
-
-
 
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
@@ -177,48 +174,52 @@ const useToolbarStyles = makeStyles((theme) => ({
     title: {
         flex: '1 1 100%',
     },
-}));
+}))
 
 const EnhancedTableToolbar = (props) => {
-    const classes = useToolbarStyles();
-    const { numSelected } = props;
+    const classes = useToolbarStyles()
+    const { numSelected } = props
 
     return (
-        <Toolbar
-            className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
-            {numSelected > 0 ? (
-                <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-                    {numSelected} selected
-                </Typography>
-            ) : (
-                <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                    Nutrition
-                </Typography>
-            )}
+        <>
+            <AuthNavbar/>
+            <Toolbar
+                className={clsx(classes.root, {
+                    [classes.highlight]: numSelected > 0,
+                })}
+            >
+                {numSelected > 0 ? (
+                    <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
+                        {numSelected} selected
+                    </Typography>
+                ) : (
+                    <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+                        Nutrition
+                    </Typography>
+                )}
 
-            {numSelected > 0 ? (
-                <Tooltip title="Delete">
-                    <IconButton aria-label="delete">
-                        <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
-            ) : (
-                <Tooltip title="Filter list">
-                    <IconButton aria-label="filter list">
-                        <FilterListIcon />
-                    </IconButton>
-                </Tooltip>
-            )}
-        </Toolbar>
-    );
-};
+                {numSelected > 0 ? (
+                    <Tooltip title="Delete">
+                        <IconButton aria-label="delete">
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                ) : (
+                    <Tooltip title="Filter list">
+                        <IconButton aria-label="filter list">
+                            <FilterListIcon />
+                        </IconButton>
+                    </Tooltip>
+                )}
+            </Toolbar>
+        </>
+
+    )
+}
 
 EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
-};
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -242,7 +243,7 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
-}));
+}))
 
 export default function BackOffice() {
 
@@ -265,7 +266,7 @@ export default function BackOffice() {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
-    };
+    }
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -274,7 +275,7 @@ export default function BackOffice() {
             return;
         }
         setSelected([]);
-    };
+    }
 
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
@@ -290,28 +291,28 @@ export default function BackOffice() {
             newSelected = newSelected.concat(
                 selected.slice(0, selectedIndex),
                 selected.slice(selectedIndex + 1),
-            );
+            )
         }
 
         setSelected(newSelected);
-    };
+    }
 
     const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+        setPage(newPage)
+    }
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+        setPage(0)
+    }
 
     const handleChangeDense = (event) => {
-        setDense(event.target.checked);
-    };
+        setDense(event.target.checked)
+    }
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
+    const isSelected = (name) => selected.indexOf(name) !== -1
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
     return (
         <section>
@@ -369,7 +370,7 @@ export default function BackOffice() {
                                                             <TableCell align="right">{row.carbs}</TableCell>
                                                             <TableCell align="right">{row.protein}</TableCell>
                                                         </TableRow>
-                                                    );
+                                                    )
                                                 })}
                                             {emptyRows > 0 && (
                                                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>

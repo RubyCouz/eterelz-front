@@ -1,10 +1,8 @@
 import React, {useContext, useState} from 'react';
-// import { alpha, makeStyles } from '@material-ui/core/styles';
-import {makeStyles} from '@material-ui/core/styles'
+import {makeStyles, ThemeProvider, CssBaseline} from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import Menu from '@material-ui/core/Menu';
@@ -20,17 +18,21 @@ import useScrollTrigger from '@material-ui/core/useScrollTrigger'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Zoom from '@material-ui/core/Zoom'
 import ModeButton from '../ModeButton/ModeButton'
-import {createMuiTheme, CssBaseline, MenuItem, ThemeProvider} from "@material-ui/core"
+import {MenuItem} from "@material-ui/core"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import clsx from "clsx";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import {EventNoteTwoTone as EventNoteTwoToneIcon, ExitToAppTwoTone as ExitToAppTwoToneIcon} from "@material-ui/icons";
+import {
+    EventNoteTwoTone as EventNoteTwoToneIcon,
+    ExitToAppTwoTone as ExitToAppTwoToneIcon
+} from "@material-ui/icons";
 import ListItemText from "@material-ui/core/ListItemText";
 import {NavLink} from "react-router-dom";
 import AuthContext from "../../context/auth-context";
+import ThemeContext from "../../context/theme-context";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -293,10 +295,12 @@ export default function AuthNavbar(props) {
             </MenuItem>
         </Menu>
     );
+    const changeTheme = useContext(ThemeContext)
     const auth = useContext(AuthContext)
     return (
-        <ThemeProvider theme={props.theme}>
+        <>
             <div className={classes.grow}>
+                <CssBaseline/>
                 <AppBar position="static">
                     <Toolbar>
                         <IconButton
@@ -343,7 +347,7 @@ export default function AuthNavbar(props) {
                         <div className={classes.grow}/>
                         <div className={classes.sectionDesktop}>
                             <IconButton>
-                                <ModeButton changeMode={props.changeMode}/>
+                                <ModeButton changeMode={changeTheme.theme}/>
                             </IconButton>
                             <IconButton aria-label="show 4 new mails" color="inherit">
                                 <Badge badgeContent={4} color="secondary">
@@ -387,7 +391,6 @@ export default function AuthNavbar(props) {
                     </Fab>
                 </ScrollTop>
             </div>
-
-        </ThemeProvider>
-    );
+        </>
+    )
 }

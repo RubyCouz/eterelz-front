@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react'
 import PropTypes from 'prop-types'
 import SwipeableViews from 'react-swipeable-views'
-import {makeStyles, useTheme, ThemeProvider} from '@material-ui/core/styles'
+import {makeStyles, useTheme} from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -15,7 +15,6 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-
 
 // Alert
 function Alert(props) {
@@ -102,10 +101,10 @@ export default function FullWidthTabs(props) {
         log_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
     }
 
-    const context = useContext(AuthContext);
+    const context = useContext(AuthContext)
 
     //style des tabs
-    let classes = useStyles();
+    let classes = useStyles()
     let theme = useTheme();
     const [value, setValue] = useState(0);
 
@@ -344,7 +343,6 @@ export default function FullWidthTabs(props) {
     };
     //retour tabs
     return (
-        <ThemeProvider theme={props.theme}>
             <div className={classes.root}>
                 <AppBar position="static" color="default">
                     <Tabs
@@ -485,7 +483,6 @@ export default function FullWidthTabs(props) {
                     </TabPanel>
                 </SwipeableViews>
             </div>
-        </ThemeProvider>
     );
 }
 
