@@ -89,11 +89,30 @@ const initialState = {
     log_user_password: ''
 }
 
+const initialError = {
+    reg_user_pseudo_error: false,
+    reg_user_email_error: false,
+    reg_user_password_error: false,
+    reg_user_password_confirm_error: false,
+}
+
+const initialLogError = {
+    log_user_email_error: false,
+    log_user_password_error: false
+}
+
+const initialRequestError = {
+    errorValue: false,
+    requestRegister: false,
+    requestLogin: false,
+    logErrorValue: false
+}
+
 export default function FullWidthTabs(props) {
 
     //Déclaration des regex
     const regexlist = {
-        reg_user_pseudo: new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$"),
+        reg_user_pseudo:  new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$"),
         reg_user_email: new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
         reg_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
         reg_user_password_confirm: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
@@ -132,26 +151,13 @@ export default function FullWidthTabs(props) {
     const [state, setState] = useState(initialState)
 
     //State etat des erreur pour lancement requête
-    const [requestError] = useState({
-        errorValue: false,
-        requestRegister: false,
-        requestLogin: false,
-        logErrorValue: false
-    })
+    const [requestError,setRequestError] = useState(initialRequestError)
 
     //State etat des textfield register
-    const [error, setError] = useState({
-        reg_user_pseudo_error: false,
-        reg_user_email_error: false,
-        reg_user_password_error: false,
-        reg_user_password_confirm_error: false,
-    })
+    const [error, setError] = useState(initialError)
 
     //State etat des textfield login
-    const [logError, setLogError] = useState({
-        log_user_email_error: false,
-        log_user_password_error: false
-    })
+    const [logError, setLogError] = useState(initialLogError)
 
     requestError.requestRegister = true
     //parcours l'objet error et vérifie si un élément retourne false
@@ -172,7 +178,13 @@ export default function FullWidthTabs(props) {
 
     const cancel = () => {
         setState(initialState)
+        setError(initialError)
+        setLogError(initialLogError)
+        setRequestError(initialRequestError)
     }
+
+
+
 
     // état de l'alerte
     const [open, setOpen] = useState(false);
@@ -324,6 +336,7 @@ export default function FullWidthTabs(props) {
     //changement de tabs
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        cancel()
     };
 
     const handleChangeIndex = (index) => {
@@ -385,7 +398,7 @@ export default function FullWidthTabs(props) {
                                         label="Mot de passe"
                                         name="log_user_password"
                                         type="password"
-                                        helperText="8 caractères, une majuscule, une minuscule et un chiffre obligatoires."
+                                        helperText="Mot de passe doit contenir 8 caractères, une majuscule, une minuscule et un chiffre."
                                         onChange={handleInputChange}
                                         value={state.log_user_password}
                                         fullWidth={true}
@@ -444,7 +457,7 @@ export default function FullWidthTabs(props) {
                                         label="Mot de passe"
                                         name="reg_user_password"
                                         type="password"
-                                        helperText="8 caractères, une majuscule, une minuscule et un chiffre obligatoires."
+                                        helperText="Mot de passe doit contenir 8 caractères, une majuscule, une minuscule et un chiffre"
                                         onChange={handleInputChange}
                                         value={state.reg_user_password}
                                         fullWidth={true}
