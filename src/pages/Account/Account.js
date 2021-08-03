@@ -16,6 +16,8 @@ import {
     Box,  
 } from '@material-ui/core'
 
+import AuthNavbar from '../../Components/Navbar/AuthNavbar'
+
 import TabPanel from './TabPanel'
 
 // Mettre la date en forme
@@ -155,7 +157,7 @@ export default function Account() {
   const id = authContext.playload ? authContext.playload.userId : false
   
   //Requête
-  const [getUser, { loading, data }] = useLazyQuery(USER)
+  const [getUser, { data }] = useLazyQuery(USER)
   
   //Requête executé si l'id a une valeur et change
   useEffect(() => {
@@ -173,8 +175,8 @@ export default function Account() {
     setCurrentIndex(newValue);
   }
 
-// Création des onglets au premier cycle
-const tabs = useMemo(
+  // Création des onglets au premier cycle
+  const tabs = useMemo(
     () => {
 
       function a11yProps(index) {
@@ -251,25 +253,28 @@ const tabs = useMemo(
   )
 
   return(
-      <Box>
-        <Grid
-            container
-            direction = 'column'
-            justify = 'center'
-            alignItems = 'center'
-        >
-            <Tabs
-              onChange = { handleChange }
-              aria-label = 'Vertical tabs'
-              //className = { classes.tabs }
-              variant = 'scrollable'
-              scrollButtons = 'auto'
-              value = { currentIndex }
-            >
-              { tabs }
-            </Tabs>
-            { tabsPanels }
-        </Grid>
-      </Box>
+      <>
+        <AuthNavbar/>
+        <Box>
+          <Grid
+              container
+              direction = 'column'
+              justify = 'center'
+              alignItems = 'center'
+          >
+              <Tabs
+                onChange = { handleChange }
+                aria-label = 'Vertical tabs'
+                //className = { classes.tabs }
+                variant = 'scrollable'
+                scrollButtons = 'auto'
+                value = { currentIndex }
+              >
+                { tabs }
+              </Tabs>
+              { tabsPanels }
+          </Grid>
+        </Box>
+      </>
   )
 }

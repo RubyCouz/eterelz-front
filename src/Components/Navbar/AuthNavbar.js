@@ -247,8 +247,8 @@ export default function AuthNavbar(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem component={NavLink} to="/account" >Profile</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Item inutile</MenuItem>
         </Menu>
     );
 

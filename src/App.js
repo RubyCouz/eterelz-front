@@ -13,6 +13,7 @@ import BackOffice from "./pages/BackOffice"
 import HomePage from "./pages/Home"
 import EventsPage from "./pages/Events"
 import AuthPage from "./pages/Auth"
+import AccountPage from "./pages/Account/Account"
 import {blue, deepPurple, lightBlue, purple, red} from "@material-ui/core/colors"
 
 export default function App() {
@@ -98,6 +99,7 @@ export default function App() {
                                 {state.token && <Redirect from="/" to="/events" exact/>}
                                 {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
                                 {state.token && <Redirect from="/auth" to="/events" exact/>}
+                                {state.token && <Route path="/account" component={AccountPage}/>}
                                 {state.token && <Redirect from="/home" to="/events" exact/>}
                                 {!state.token && <Redirect from="/events" to="/home" exact/>}
                                 {!state.token && <Route path="/home" component={HomePage}/>}
