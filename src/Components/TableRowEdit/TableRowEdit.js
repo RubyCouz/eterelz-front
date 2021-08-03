@@ -57,16 +57,29 @@ export default function TableRowEdit(props) {
   `;
 
   //Mutation
-  const [sendValidData] = useMutation(UPDATE_VAR)
+  const [sendValidData] = useMutation(UPDATE_VAR,
+    {
+      onCompleted: (dataUpdate) => {
+          if (dataUpdate.updateUser){
+            //setEntryValue(dataUpdate.updateUser[queryName])
+            //Il faudrait data = entryValue
+            setError(<Typography>Donnée accepté</Typography>)
+          } else {
+            setError(<Typography>Erreur</Typography>)
+          }
+      }
+    })
 
   //Temporaire
   const [error, setError] = useState()
 
   //Verification avant l'envoie de la mutation
   function sendData(){
+    setShowField(false)
 
     let error = false
     let errorText = []
+
     if ( entryValue === data ) {
       errorText.push(<Typography>Même valeur, aucune modification a était effectuée</Typography>)
       error = true
@@ -82,7 +95,6 @@ export default function TableRowEdit(props) {
     
     if (error) {
       setError(errorText)
-      setShowField(false)
       setEntryValue(data)
     } else {
       sendValidData({
