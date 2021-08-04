@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext} from 'react'
 import PropTypes from 'prop-types'
 import SwipeableViews from 'react-swipeable-views'
 import {makeStyles} from '@material-ui/core/styles'
@@ -12,7 +12,7 @@ import {NavLink} from "react-router-dom"
 import {
     AccountCircle as AccountCircleIcon
 } from "@material-ui/icons";
-import {CssBaseline, MenuItem, ThemeProvider} from "@material-ui/core"
+import { MenuItem } from "@material-ui/core"
 import Toolbar from "@material-ui/core/Toolbar";
 import AuthContext from "../../context/auth-context";
 import ModeButton from '../ModeButton/ModeButton'
@@ -93,7 +93,6 @@ export default function Navbar(props) {
     return (
         <>
             <div className={classes.root}>
-                <CssBaseline/>
                 <AppBar
                     position="static"
                     color="primary"
