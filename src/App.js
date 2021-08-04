@@ -110,27 +110,22 @@ export default function App() {
                         >
                             <ThemeProvider theme={theme}>
                                 <CssBaseline/>
-                                <Switch>
-                                    {(!state.token && <Redirect from="/backOffice" to="/auth" exact/>)}
-                                    <Route path="/backOffice" component={BackOffice}/>
-                                    {/*redirection vers connexion si deconnexion*/}
-                                    {!state.token && <Redirect from="/backoffice" to="/auth" exact/>}
-                                    {!state.token && <Redirect from="/bookings" to="/auth" exact/>}
-                                    {/*redirection sur la page events en page d'accueil si le token de connexion est présent*/}
-                                    {state.token && <Redirect from="/" to="/events" exact/>}
-                                    {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
-                                    {state.token && <Redirect from="/auth" to="/events" exact/>}
-                                    {state.token && <Route path="/account" component={AccountPage}/>}
-                                    {state.token && <Redirect from="/home" to="/events" exact/>}
-                                    {!state.token && <Redirect from="/events" to="/home" exact/>}
-                                    {!state.token && <Route path="/home" component={HomePage}/>}
-                                    {!state.token && <Redirect from="/" to="/home" exact/>}
+                                <Switch>                                  
+                                    {state.token ? [ 
+                                        <Redirect from="/" to="/events" exact/>, /*redirection sur la page events en page d'accueil si le token de connexion est présent*/
+                                        <Redirect from="/auth" to="/events" exact/>, /*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/
+                                        <Redirect from="/home" to="/events" exact/>,
+                                        <Route path="/account" component={AccountPage}/>,
+                                        state.playload.userRole === "admin" && <Route path="/backOffice" component={BackOffice}/>
+                                    ]:[
+                                        <Redirect from="/account" to="/auth" exact/>,
+                                        <Redirect from="/backOffice" to="/auth" exact/>,
+                                        <Redirect from="/events" to="/home" exact/>,
+                                        <Redirect from="/" to="/home" exact/>,
+                                        <Route path="/home" component={HomePage}/>,
+                                        <Route path="/auth" component={AuthPage}/>,
+                                    ]}
                                     <Route path="/events" component={EventsPage}/>
-
-                                    <Route path="/auth" component={AuthPage}/>
-                                    {/*{this.state.token && <Route path="/bookings" component={BookingsPage}/>}*/}
-                                    {/*affichage par défaut de la connexion si le token de connexion n'est pas présent*/}
-                                    {/*{!state.token && <Redirect to="/auth" exact/>}*/}
                                 </Switch>
                             </ThemeProvider>
                         </ThemeContext.Provider>
