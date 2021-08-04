@@ -1,26 +1,40 @@
 import React, {useState, useEffect, useContext} from 'react'
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import {ApolloProvider} from '@apollo/client'
-import {graphqlConfig} from './context/apollo-context'
-import AuthContext from './context/auth-context'
-import ThemeContext from './context/theme-context'
+
 import {
     ThemeProvider,
     createMuiTheme,
 } from '@material-ui/core/styles'
+import {
+    blue,
+    deepPurple,
+    lightBlue,
+    purple,
+    red
+} from "@material-ui/core/colors"
+
 import './App.css'
+
 import BackOffice from "./pages/BackOffice"
 import HomePage from "./pages/Home"
 import EventsPage from "./pages/Events"
 import AuthPage from "./pages/Auth"
 import AccountPage from "./pages/Account/Account"
-import {blue, deepPurple, lightBlue, purple, red} from "@material-ui/core/colors"
+
+import AuthContext from './context/auth-context'
+import ThemeContext from './context/theme-context'
+import {graphqlConfig} from './context/apollo-context'
+import AvatarContext from './context/avatar-context'
 
 export default function App() {
     const [state, setState] = useState({
         token: null,
         playload: null,
     })
+
+    const [avatar, setAvatar] = useState({id: null})
+
 
     const login = (token, userId, userRole) => {
         if (token) {
@@ -80,42 +94,47 @@ export default function App() {
                     logout: logout
                 }}
             >
-                <ApolloProvider
-                    client={graphqlConfig}
+                <AvatarContext.Provider
+                    value = {{
+                        avatar: avatar,
+                        setAvatar: setAvatar,
+                    }}
                 >
-                    <ThemeContext.Provider
-                        value={{
-                            theme:handleMode
-                        }}
+                    <ApolloProvider
+                        client={graphqlConfig}
                     >
-                        <ThemeProvider theme={theme}>
-                            <Switch>
-                                {(!state.token && <Redirect from="/backOffice" to="/auth" exact/>)}
-                                <Route path="/backOffice" component={BackOffice}/>
-                                {/*redirection vers connexion si deconnexion*/}
-                                {!state.token && <Redirect from="/backoffice" to="/auth" exact/>}
-                                {!state.token && <Redirect from="/bookings" to="/auth" exact/>}
-                                {/*redirection sur la page events en page d'accueil si le token de connexion est présent*/}
-                                {state.token && <Redirect from="/" to="/events" exact/>}
-                                {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
-                                {state.token && <Redirect from="/auth" to="/events" exact/>}
-                                {state.token && <Route path="/account" component={AccountPage}/>}
-                                {state.token && <Redirect from="/home" to="/events" exact/>}
-                                {!state.token && <Redirect from="/events" to="/home" exact/>}
-                                {!state.token && <Route path="/home" component={HomePage}/>}
-                                {!state.token && <Redirect from="/" to="/home" exact/>}
-                                <Route path="/events" component={EventsPage}/>
+                        <ThemeContext.Provider
+                            value={{
+                                theme:handleMode
+                            }}
+                        >
+                            <ThemeProvider theme={theme}>
+                                <Switch>
+                                    {(!state.token && <Redirect from="/backOffice" to="/auth" exact/>)}
+                                    <Route path="/backOffice" component={BackOffice}/>
+                                    {/*redirection vers connexion si deconnexion*/}
+                                    {!state.token && <Redirect from="/backoffice" to="/auth" exact/>}
+                                    {!state.token && <Redirect from="/bookings" to="/auth" exact/>}
+                                    {/*redirection sur la page events en page d'accueil si le token de connexion est présent*/}
+                                    {state.token && <Redirect from="/" to="/events" exact/>}
+                                    {/*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/}
+                                    {state.token && <Redirect from="/auth" to="/events" exact/>}
+                                    {state.token && <Route path="/account" component={AccountPage}/>}
+                                    {state.token && <Redirect from="/home" to="/events" exact/>}
+                                    {!state.token && <Redirect from="/events" to="/home" exact/>}
+                                    {!state.token && <Route path="/home" component={HomePage}/>}
+                                    {!state.token && <Redirect from="/" to="/home" exact/>}
+                                    <Route path="/events" component={EventsPage}/>
 
-                                <Route path="/auth" component={AuthPage}/>
-                                {/*{this.state.token && <Route path="/bookings" component={BookingsPage}/>}*/}
-                                {/*affichage par défaut de la connexion si le token de connexion n'est pas présent*/}
-                                {/*{!state.token && <Redirect to="/auth" exact/>}*/}
-                            </Switch>
-                        </ThemeProvider>
-                    </ThemeContext.Provider>
-
-
-                </ApolloProvider>
+                                    <Route path="/auth" component={AuthPage}/>
+                                    {/*{this.state.token && <Route path="/bookings" component={BookingsPage}/>}*/}
+                                    {/*affichage par défaut de la connexion si le token de connexion n'est pas présent*/}
+                                    {/*{!state.token && <Redirect to="/auth" exact/>}*/}
+                                </Switch>
+                            </ThemeProvider>
+                        </ThemeContext.Provider>
+                    </ApolloProvider>
+                </AvatarContext.Provider>
             </AuthContext.Provider>
         </BrowserRouter>
     )

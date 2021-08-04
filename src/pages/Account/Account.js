@@ -19,6 +19,7 @@ import {
 import AuthNavbar from '../../Components/Navbar/AuthNavbar'
 
 import TabPanel from './TabPanel'
+import AvatarContext from '../../context/avatar-context'
 
 // Mettre la date en forme
 const date = (date) => {
@@ -158,14 +159,22 @@ export default function Account() {
   
   //Requête
   const [getUser, { data }] = useLazyQuery(USER)
+
+  const avatar = useContext(AvatarContext)
   
   //Requête executé si l'id a une valeur et change
   useEffect(() => {
-    if (id) {
+
+    const avatarId = avatar.avatar ? avatar.avatar.id : false
+
+    if (avatarId) {
+      getUser({
+        variables: { id: avatarId },
+      })
+    } else if (id) {
       getUser({
         variables: { id },
-        }
-      )
+      })
     }
   }, [id] )
 

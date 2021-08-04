@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -15,6 +15,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { green } from "@material-ui/core/colors";
 import TablePaginationActions from "@material-ui/core/TablePagination/TablePaginationActions";
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
+import AvatarContext from "../context/avatar-context";
+import { NavLink } from "react-router-dom";
 /**********************************************************************************************************************/
 //Requête Apollo
 const USER_QUERY = gql`
@@ -115,6 +117,8 @@ export default function BackOffice() {
     );
   };
 
+  const avatar = useContext(AvatarContext)
+
   return (
     <>
     <AuthNavbar/>
@@ -164,8 +168,10 @@ export default function BackOffice() {
                         <IconButton
                           aria-label="edit"
                           onClick={() => {
-                            handleEdit(user);
+                            avatar.setAvatar({id: user._id})
                           }}
+                          component={NavLink}
+                          to="/account"
                         >
                           <EditIcon style={{ color: green[500] }} />
                         </IconButton>
