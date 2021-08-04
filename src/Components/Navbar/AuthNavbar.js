@@ -179,7 +179,13 @@ export default function AuthNavbar(props) {
                         {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
                         {/*    <NavLink>Participation aux events</NavLink>*/}
                         {/*</ListItem>*/}
-                        <ListItem button key="logout" onClick={auth.logout} className={classes.listItem}>
+                        <ListItem
+                            button key="logout"
+                            onClick={auth.logout}
+                            className={classes.listItem}
+                            component={NavLink}
+                            to="/home"
+                        >
                             <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
                             <ListItemText primary="Déconnexion"/>
                         </ListItem>
