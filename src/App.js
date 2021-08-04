@@ -12,7 +12,8 @@ import {
     lightBlue,
     purple,
     red
-} from "@material-ui/core/colors"
+} from '@material-ui/core/colors'
+import { CssBaseline } from '@material-ui/core'
 
 import './App.css'
 
@@ -26,7 +27,6 @@ import AuthContext from './context/auth-context'
 import ThemeContext from './context/theme-context'
 import {graphqlConfig} from './context/apollo-context'
 import AvatarContext from './context/avatar-context'
-import { CssBaseline } from '@material-ui/core'
 
 export default function App() {
     const [state, setState] = useState({
@@ -64,7 +64,6 @@ export default function App() {
         login(tokenStorage)
     }, [])
 
-    const auth = useContext(AuthContext)
     const [darkState, setDarkMode] = useState(true);
     const theme = createMuiTheme({
         palette: {
