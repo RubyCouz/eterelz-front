@@ -27,7 +27,6 @@ const date = (date) => {
   const options = {year: "numeric", month: "numeric", day: "numeric"};
   return dateObjet.toLocaleString("fr-FR", options)
 }
-
 // Fonction pour calculer le temps entre deux date
 const time = (date) => {
   const nowTime = new Date()
@@ -35,20 +34,17 @@ const time = (date) => {
 
   let difference = nowTime - inscDate
 
-
   let resultat
   
-  
-  if ( difference ) {
-    if ( difference / ( 1000 * 3600 * 730 * 365 ) >= 1 ) {
-      resultat = `${ Math.trunc( difference / ( 1000 * 3600 * 730 * 365 ) ) } ans`
-    } else if ( difference / ( 1000 * 3600 * 730 ) >= 1 ) {
-      resultat = `${ Math.trunc( difference / ( 1000 * 3600 * 730 ) ) } mois`
+  if (difference) {
+    if (difference / (1000 * 3600 * 730 * 365) >= 1) {
+      resultat = `${ Math.trunc( difference / (1000 * 3600 * 730 * 365))} ans`
+    } else if (difference / ( 1000 * 3600 * 730) >= 1 ) {
+      resultat = `${ Math.trunc(difference / (1000 * 3600 * 730))} mois`
     } else {
-      resultat = `${ Math.trunc( difference / ( 1000 * 3600 * 24 ) ) } jours`
+      resultat = `${ Math.trunc(difference / (1000 * 3600 * 24))} jours`
     }
   }
-
 
   return difference ? resultat : date
 }
@@ -56,11 +52,19 @@ const time = (date) => {
 const templateData = {
   index : {
       0 : {
+          name: 'Paramêtres du compte',
+          content : {
+              user_isDark: {
+                  nameColumn: 'Mode dark',
+              }
+          }
+      },
+      1 : {
           name : 'Résumé du compte',
           content : {
               user_login : {
                   nameColumn : 'Utilisateur',
-                  modifiedValue : false,
+                  modifiedValue : true,
               },
               /*userDescription : {
                   nameColumn : "Description",
@@ -87,8 +91,8 @@ const templateData = {
             },*/
           },
       },
-      1 : {
-          name : 'Données personnels',
+      2 : {
+          name : 'Données personnelles',
           content : {   
               user_email : {
                   nameColumn : 'Adresse email',
@@ -111,15 +115,15 @@ const templateData = {
               },
           }
       },
-      2 : {
-          name : 'Réseaux social',
+      3 : {
+          name : 'Réseaux sociaux',
           content : {
               user_discord : {
                   nameColumn : 'Discord',
               },
           }
       },
-      3 : {
+      4 : {
         name : 'Confidentialité',
         content : {
           user_password : {
@@ -144,6 +148,7 @@ const USER = gql`
             user_city
             user_gender
             user_state
+            user_isDark
             createdAt
             updatedAt
         }
@@ -156,12 +161,10 @@ export default function Account() {
 
   // On attend que le context soit défini
   const id = authContext.playload ? authContext.playload.userId : false
-  
   //Requête
   const [getUser, { data }] = useLazyQuery(USER)
 
   const avatar = useContext(AvatarContext)
-  
   //Requête executé si l'id a une valeur et change
   useEffect(() => {
 
@@ -178,16 +181,13 @@ export default function Account() {
     }
   }, [id] )
 
-
   const [ currentIndex, setCurrentIndex]  = useState(0);
   const handleChange = (event, newValue) => { 
     setCurrentIndex(newValue);
   }
-
   // Création des onglets au premier cycle
   const tabs = useMemo(
     () => {
-
       function a11yProps(index) {
         return {
           id: `vertical-tab-${index}`,
@@ -201,9 +201,9 @@ export default function Account() {
         ([keyObject, valueObject]) => {
           tabs.push(
             <Tab
-              label = { valueObject[ 'name' ] }
-              key = { keyObject }
-              { ...a11yProps( parseInt( keyObject ) ) } 
+              label={ valueObject[ 'name' ]}
+              key={ keyObject }
+              {...a11yProps( parseInt( keyObject ))}
             />
           )
         }
@@ -212,29 +212,25 @@ export default function Account() {
     }
     , []
   )
-
   //Création des fenêtres de contenue
   const tabsPanels = useMemo(
     () => {
       let tabsPanels = []
 
-      Object.entries( templateData[ "index" ] ).forEach(
-        ( [ keyObject, valueObject ] ) => {
-
+      Object.entries(templateData[ "index" ]).forEach(
+        ([keyObject, valueObject]) => {
 
           const windowData = templateData[ "index" ][ keyObject ].content
-
-
           let tabPaneldata = []
 
           if (data){
             Object.entries( windowData ).forEach(
               ( [ windowKey, valueObject2 ] ) => {
-                if (data.user[ windowKey ]) {
+                if (data.user[ windowKey ] !== null) {
                   let objet = {}
                   objet =  windowData[ windowKey ]
-                  objet[ 'queryName' ] = windowKey 
-                  objet[ 'data' ] = data.user[ windowKey ]
+                  objet['queryName'] = windowKey
+                  objet['data'] = data.user[ windowKey ]
                   tabPaneldata.push(objet)
                 }
               }
@@ -243,20 +239,18 @@ export default function Account() {
           
           tabsPanels.push(
             <TabPanel
-              key = { keyObject }
-              value = { currentIndex }
-              index = { parseInt( keyObject ) }
-              data = { tabPaneldata }
-              idUser = { id }
+              key={ keyObject }
+              value={ currentIndex }
+              index={ parseInt( keyObject ) }
+              data={ tabPaneldata }
+              idUser={ id }
               /*defaultValue = { data }
               setDefaultValue = { setData }*/
             />
           )
         } 
       )
-
       return tabsPanels
-
     }
     , [ data, currentIndex, id ]
   )
@@ -267,17 +261,17 @@ export default function Account() {
         <Box>
           <Grid
               container
-              direction = 'column'
-              justify = 'center'
-              alignItems = 'center'
+              direction="column"
+              justify="center"
+              alignItems= "center"
           >
               <Tabs
-                onChange = { handleChange }
-                aria-label = 'Vertical tabs'
+                onChange={ handleChange }
+                aria-label="Vertical tabs"
                 //className = { classes.tabs }
-                variant = 'scrollable'
-                scrollButtons = 'auto'
-                value = { currentIndex }
+                variant="scrollable"
+                scrollButtons="auto"
+                value={ currentIndex }
               >
                 { tabs }
               </Tabs>

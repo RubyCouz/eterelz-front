@@ -42,7 +42,8 @@ export default function App() {
             const arrayJWT = token.split('.')
             const playload = JSON.parse(window.atob(arrayJWT[1]))
             window.localStorage.setItem('token', token);
-
+            console.log(playload.user_isDark)
+            setDarkMode(playload.user_isDark)
             setState({
                 token: token,
                 playload: playload,
@@ -64,7 +65,7 @@ export default function App() {
         login(tokenStorage)
     }, [])
 
-    const [darkState, setDarkMode] = useState(true);
+    const [darkState, setDarkMode] = useState(false);
     const theme = createMuiTheme({
         palette: {
             type: darkState ? 'dark' : 'light',
@@ -105,7 +106,8 @@ export default function App() {
                     >
                         <ThemeContext.Provider
                             value={{
-                                theme:handleMode
+                                theme: handleMode,
+                                darkMode: darkState
                             }}
                         >
                             <ThemeProvider theme={theme}>

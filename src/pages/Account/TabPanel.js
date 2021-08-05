@@ -16,22 +16,22 @@ export default function TabPanel(props) {
 
   return (
     <div
-      role = "tabpanel"
-      hidden = { value !== index }
-      id = { `vertical-tabpanel-${index}` }
-      aria-labelledby = { `vertical-tab-${index}` }
+      role="tabpanel"
+      hidden={ value !== index }
+      id={ `vertical-tabpanel-${index}` }
+      aria-labelledby={ `vertical-tab-${index}` }
       { ...other }
     >
       {value === index && (
         <Box
-          p = { 3 }
+          p={ 3 }
         >
           <TableContainer
-            component = { Paper }
+            component={ Paper }
           >
             <Table
-              aria-label = "custom pagination table"
-              size = 'medium'
+              aria-label="custom pagination table"
+              size="medium"
             >
               <TableBody>
                 {
@@ -39,8 +39,8 @@ export default function TabPanel(props) {
                     columnData =>
                       <TableRowEdit
                         {...columnData}
-                        key = { columnData.queryName }
-                        idUser = { idUser }
+                        key={ columnData.queryName }
+                        idUser={ idUser }
                         //setDefaultValue = { setDefaultValue }
                       />
                   )

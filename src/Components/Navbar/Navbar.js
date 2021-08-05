@@ -13,10 +13,9 @@ import {
     AccountCircle as AccountCircleIcon
 } from "@material-ui/icons";
 import { MenuItem } from "@material-ui/core"
-import Toolbar from "@material-ui/core/Toolbar";
-import AuthContext from "../../context/auth-context";
-import ModeButton from '../ModeButton/ModeButton'
-import ThemeContext from "../../context/theme-context";
+import Toolbar from "@material-ui/core/Toolbar"
+import AuthContext from "../../context/auth-context"
+import ThemeContext from "../../context/theme-context"
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -128,9 +127,6 @@ export default function Navbar(props) {
                                     <AccountCircleIcon/>
                                 </IconButton>
                             </NavLink>
-                        </MenuItem>
-                        <MenuItem>
-                            <ModeButton changeMode={changeTheme.theme}/>
                         </MenuItem>
                     </Toolbar>
                 </AppBar>

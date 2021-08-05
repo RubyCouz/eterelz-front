@@ -17,7 +17,6 @@ import PropTypes from 'prop-types';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Zoom from '@material-ui/core/Zoom'
-import ModeButton from '../ModeButton/ModeButton'
 import {MenuItem} from "@material-ui/core"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import clsx from "clsx";
@@ -270,9 +269,6 @@ export default function AuthNavbar(props) {
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <ModeButton changeMode={props.changeMode}/>
-            </MenuItem>
-            <MenuItem>
                 <IconButton aria-label="show 4 new mails" color="inherit">
                     <Badge badgeContent={4} color="secondary">
                         <MailIcon/>
@@ -351,9 +347,6 @@ export default function AuthNavbar(props) {
                         </div>
                         <div className={classes.grow}/>
                         <div className={classes.sectionDesktop}>
-                            <IconButton>
-                                <ModeButton changeMode={changeTheme.theme}/>
-                            </IconButton>
                             <IconButton aria-label="show 4 new mails" color="inherit">
                                 <Badge badgeContent={4} color="secondary">
                                     <MailIcon/>
