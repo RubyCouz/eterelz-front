@@ -30,7 +30,24 @@ import AuthContext from './context/auth-context'
 import ThemeContext from './context/theme-context'
 import {graphqlConfig} from './context/apollo-context'
 import AvatarContext from './context/avatar-context'
+import Routeur from './Components/Routeur/Routeur'
 
+
+const routes = [
+    { type : "redirect",    auth : true,    from : "/",     to : "/events" },
+    { type : "redirect",    auth : true,    from : "/auth", to : "/dashboard" }, 
+    { type : "redirect",    auth : true,    from : "/home", to : "/dashboard" },
+    { type : "route",       auth : true,    path : "/account",      component : AccountPage },
+    { type : "route",       auth : true,    path : "/tournaments",  component : Tournaments },
+    { type : "route",       auth : true,    path : "/dashboard",    component : Dashboard },
+    { type : "route",       auth : true,    path : "/events",       component : EventsPage },
+    { type : "route",       auth : true,    path : "/clan",         component : Clan },
+    { type : "redirect",    auth : false,   from : "/",     to : "/home"},
+    { type : "redirect",    auth : true,    from : "/clan", to : "/auth"},
+    { type : "route",       auth : false,   path : "/auth",        component : AuthPage},
+    { type : "route",       auth : true,    path : "/backOffice",   component : BackOffice, role : "admin", },
+    { type : "route",       auth : false,   path : "/home",         component : HomePage },
+]
 
 export default function App() {
     const [state, setState] = useState({
@@ -143,29 +160,7 @@ export default function App() {
                         >
                             <ThemeProvider theme={darkState ? dark : light}>
                                 <CssBaseline/>
-                                <Switch>                                  
-                                    {state.token ? [ 
-                                        <Redirect from="/" to="/events" exact/>, /*redirection sur la page events en page d'accueil si le token de connexion est présent*/
-                                        <Redirect from="/auth" to="/dashboard" exact/>, /*s'il y a token de connexion et tentative d'accès à la page de connexion => redirection vers la page events*/
-                                        <Redirect from="/home" to="/dashboard" exact/>,
-                                        <Route path="/account" component={AccountPage}/>,
-                                        state.playload.userRole === "admin" && <Route path="/backOffice" component={BackOffice}/>
-                                    ]:[
-                                        <Redirect from="/tournaments" to="/auth" exact/>,
-                                        <Redirect from="/account" to="/auth" exact/>,
-                                        <Redirect from="/backOffice" to="/auth" exact/>,
-                                        <Redirect from="/events" to="/auth" exact/>,
-                                        <Redirect from="/dashboard" to="/auth" exact/>,
-                                        <Redirect from="/" to="/home" exact/>,
-                                        <Redirect from="/clan" to="/auth" exact/>,
-                                        <Route path="/home" component={HomePage}/>,
-                                        <Route path="/auth" component={AuthPage}/>,
-                                    ]}
-                                    <Route path="/clan" component={Clan}/>
-                                    <Route path="/tournaments" component={Tournaments}/>
-                                    <Route path="/dashboard" component={Dashboard}/>
-                                    <Route path="/events" component={EventsPage}/>
-                                </Switch>
+                                <Routeur routes = {routes}/>
                             </ThemeProvider>
                         </ThemeContext.Provider>
                     </ApolloProvider>
@@ -174,3 +169,4 @@ export default function App() {
         </BrowserRouter>
     )
 }
+
