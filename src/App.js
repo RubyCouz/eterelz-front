@@ -13,7 +13,11 @@ import {
     purple,
     red
 } from '@material-ui/core/colors'
-import { CssBaseline } from '@material-ui/core'
+import {
+    CssBaseline,
+    CircularProgress,
+    Box,
+} from '@material-ui/core'
 
 import './App.css'
 
@@ -55,6 +59,8 @@ export default function App() {
         playload: null,
     })
 
+    const [loading, setLoading] = useState(true)
+
     const [avatar, setAvatar] = useState({id: null})
 
 
@@ -73,7 +79,6 @@ export default function App() {
                 playload: playload,
             })
         }
-
     }
 
     const logout = () => {
@@ -89,6 +94,7 @@ export default function App() {
     useEffect(() => {
         const tokenStorage = window.localStorage.getItem('token');
         login(tokenStorage)
+        setLoading(false)
     }, [])
 
     const [darkState, setDarkMode] = useState(false)
@@ -160,7 +166,14 @@ export default function App() {
                         >
                             <ThemeProvider theme={darkState ? dark : light}>
                                 <CssBaseline/>
-                                <Routeur routes = {routes}/>
+                                {
+                                    loading ?
+                                        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                                            <CircularProgress />
+                                        </Box>
+                                    :
+                                        <Routeur routes = {routes}/>
+                                }
                             </ThemeProvider>
                         </ThemeContext.Provider>
                     </ApolloProvider>
