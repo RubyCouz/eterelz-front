@@ -145,6 +145,7 @@ ScrollTop.propTypes = {
     window: PropTypes.func,
 };
 export default function AuthNavbar(props) {
+    const auth = useContext(AuthContext)
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [state, setState] = React.useState({
@@ -171,39 +172,28 @@ export default function AuthNavbar(props) {
             </div>
             <Divider/>
             <List color="secondary">
-                {
-                    auth.token &&
-                    <>
-                        {/*<ListItem button key="engagement">*/}
-                        {/*    <ListItemIcon><AccountBoxTwoToneIcon/></ListItemIcon>*/}
-                        {/*    <NavLink>Participation aux events</NavLink>*/}
-                        {/*</ListItem>*/}
-                        <ListItem
-                            button key="logout"
-                            onClick={auth.logout}
-                            className={classes.listItem}
-                            component={NavLink}
-                            to="/home"
-                        >
-                            <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
-                            <ListItemText primary="Déconnexion"/>
-                        </ListItem>
-                    </>
-                }
-                {
-                    (auth.token && auth.playload.userRole === 'admin') &&
-                    <ListItem
-                        button
-                        key="backOffice"
-                        component={NavLink}
-                        to="/backOffice"
-                        onClick={toggleDrawer(anchor, false)}
-                        className={classes.listItem}
-                    >
-                        <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
-                        <ListItemText primary="BackOffice"/>
-                    </ListItem>
-                }
+                <ListItem
+                    button
+                    key="dashboard"
+                    component={NavLink}
+                    to="/dashboard"
+                    onClick={toggleDrawer(anchor, false)}
+                    className={classes.listItem}
+                >
+                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemText primary="Dashboard"/>
+                </ListItem>
+                <ListItem
+                    button
+                    key="tournaments"
+                    component={NavLink}
+                    to="/tournaments"
+                    onClick={toggleDrawer(anchor, false)}
+                    className={classes.listItem}
+                >
+                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemText primary="Tournaments"/>
+                </ListItem>
                 <ListItem
                     button
                     key="events"
@@ -215,6 +205,34 @@ export default function AuthNavbar(props) {
                     <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
                     <ListItemText primary="Events"/>
                 </ListItem>
+                <ListItem
+                    button
+                    key="clan"
+                    component={NavLink}
+                    to="/clan"
+                    onClick={toggleDrawer(anchor, false)}
+                    className={classes.listItem}
+                >
+                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemText primary="Clan"/>
+                </ListItem>
+                {
+                    (auth.token && auth.playload.userRole === 'admin') &&
+                        <div>
+                            <Divider/>
+                            <ListItem
+                                button
+                                key="backOffice"
+                                component={NavLink}
+                                to="/backOffice"
+                                onClick={toggleDrawer(anchor, false)}
+                                className={classes.listItem}
+                            >
+                                <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                                <ListItemText primary="BackOffice"/>
+                            </ListItem>
+                        </div>
+                }
             </List>
         </div>
     )
@@ -253,7 +271,18 @@ export default function AuthNavbar(props) {
             onClose={handleMenuClose}
         >
             <MenuItem component={NavLink} to="/account" >Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Item inutile</MenuItem>
+            <MenuItem>
+                <ListItem
+                    button key="logout"
+                    onClick={auth.logout}
+                    className={classes.listItem}
+                    component={NavLink}
+                    to="/home"
+                >
+                    <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
+                    <ListItemText primary="Déconnexion"/>
+                </ListItem>
+            </MenuItem>
         </Menu>
     );
 
@@ -297,8 +326,7 @@ export default function AuthNavbar(props) {
             </MenuItem>
         </Menu>
     );
-    const changeTheme = useContext(ThemeContext)
-    const auth = useContext(AuthContext)
+
     return (
         <>
             <div className={classes.grow}>

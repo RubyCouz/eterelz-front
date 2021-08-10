@@ -60,7 +60,6 @@ const CREATE_EVENTS = gql`
 export default function EventsPage(props) {
 
     let classes = useStyles()
-    let theme = useTheme()
     const context = useContext(AuthContext)
 
     const [state, setState] = useState({
@@ -154,7 +153,6 @@ export default function EventsPage(props) {
                             <label htmlFor="event_time">Heure</label>
                             <input type="time" id="event_time" ref={event_time}/>
                         </div>
-
                     </form>
                 </Modal>
             }

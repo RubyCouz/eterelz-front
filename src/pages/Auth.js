@@ -15,6 +15,8 @@ import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 // Alert
 function Alert(props) {
@@ -112,7 +114,7 @@ export default function FullWidthTabs(props) {
 
     //Déclaration des regex
     const regexlist = {
-        reg_user_pseudo:  new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$"),
+        reg_user_pseudo: new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$"),
         reg_user_email: new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
         reg_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
         reg_user_password_confirm: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
@@ -148,10 +150,15 @@ export default function FullWidthTabs(props) {
     };
 
     // création des statements et récupération des "seteur" (state = état, objet accessible uniquement pour le composant "x" permet de stocker une donnée)
-    const [state, setState] = useState(initialState)
-
+    const [state, setState] = useState({
+            stayLogged: true
+        }
+    )
+    const handleStayLogged = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+    };
     //State etat des erreur pour lancement requête
-    const [requestError,setRequestError] = useState(initialRequestError)
+    const [requestError, setRequestError] = useState(initialRequestError)
 
     //State etat des textfield register
     const [error, setError] = useState(initialError)
@@ -184,8 +191,6 @@ export default function FullWidthTabs(props) {
     }
 
 
-
-
     // état de l'alerte
     const [open, setOpen] = useState(false);
 
@@ -214,7 +219,8 @@ export default function FullWidthTabs(props) {
                     `,
                 variables: {
                     user_email: state.log_user_email,
-                    user_password: state.log_user_password
+                    user_password: state.log_user_password,
+                    stayLogged: state.stayLogged
                 }
             }
             //connexion api et envoie en post les infos format json
@@ -227,6 +233,7 @@ export default function FullWidthTabs(props) {
                 }
             })
                 //si erreur
+
                 .then(res => {
                     if (res.status !== 200 && res.status !== 201) {
                         throw new Error('Failed')
@@ -241,6 +248,10 @@ export default function FullWidthTabs(props) {
                         handleClick();
                     }
                     if (resData.data.login) {
+                        // si checkbox cochée
+                        if(state.stayLogged) {
+                            // défintion cookie
+                        }
                         context.login(
                             resData.data.login.token,
                         )
@@ -356,146 +367,157 @@ export default function FullWidthTabs(props) {
     };
     //retour tabs
     return (
-            <div className={classes.root}>
-                <AppBar position="static" color="default">
-                    <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        // variant="fullWidth"
-                        centered
-                        aria-label="full width tabs example"
-                    >
-                        <Tab label="Connexion" icon={<PersonPinIcon/>} {...a11yProps(0)} />
-                        <Tab label="Inscription" icon={<HelpIcon/>} {...a11yProps(1)} />
-                    </Tabs>
-                </AppBar>
-                <SwipeableViews
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={value}
-                    onChangeIndex={handleChangeIndex}
+        <div className={classes.root}>
+            <AppBar position="static" color="default">
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    // variant="fullWidth"
+                    centered
+                    aria-label="full width tabs example"
                 >
-                    <TabPanel value={value} index={0} dir={theme.direction}>
-                        <h1>Connexion</h1>
-                        <form className="auth-form">
-                            <div className="form-control">
-                                <div>
-                                    <TextField
-                                        id="standard-error-helper-text"
-                                        label="Email"
-                                        name="log_user_email"
-                                        type="text"
-                                        helperText="Entrer votre email"
-                                        onChange={handleInputChange}
-                                        value={state.log_user_email}
-                                        fullWidth={true}
-                                        required
-                                        error={logError.log_user_email_error}
-                                    />
-                                    <TextField
-                                        id="standard-error-helper-text"
-                                        label="Mot de passe"
-                                        name="log_user_password"
-                                        type="password"
-                                        helperText="Mot de passe doit contenir 8 caractères, une majuscule, une minuscule et un chiffre."
-                                        onChange={handleInputChange}
-                                        value={state.log_user_password}
-                                        fullWidth={true}
-                                        required
-                                        error={logError.log_user_password_error}
-                                    />
-                                </div>
-                                <Box display="flex" style={{width: '100%'}}>
-                                    <Button value="Annuler" onClick={cancel} variant="outlined"
-                                            justifyContent="flex-start">Cancel</Button>
-                                    <Button onClick={loginSubmit} variant="contained" color="primary"
-                                            justifyContent="flex-end">Login</Button>
-                                </Box>
-                                <div className={classes.snackbar}>
-                                    <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-                                        <Alert onClose={handleClose} severity={state.severity}>
-                                            {state.alert_message}
-                                        </Alert>
-                                    </Snackbar>
-                                </div>
-                            </div>
-                        </form>
-                    </TabPanel>
-
-                    <TabPanel value={value} index={1} dir={theme.direction}>
-                        <h1>Inscription</h1>
-                        <form className="auth-form">
-                            <div className="form-control">
-                                <TextField
-                                    id="standard-error-helper-text"
-                                    label="Pseudo"
-                                    name="reg_user_pseudo"
-                                    type="text"
-                                    helperText="Caractères spéciaux non autorisés"
-                                    onChange={handleInputChange}
-                                    value={state.reg_user_pseudo}
-                                    fullWidth={true}
-                                    required
-                                    error={error.reg_user_pseudo_error}
-                                />
+                    <Tab label="Connexion" icon={<PersonPinIcon/>} {...a11yProps(0)} />
+                    <Tab label="Inscription" icon={<HelpIcon/>} {...a11yProps(1)} />
+                </Tabs>
+            </AppBar>
+            <SwipeableViews
+                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                index={value}
+                onChangeIndex={handleChangeIndex}
+            >
+                <TabPanel value={value} index={0} dir={theme.direction}>
+                    <h1>Connexion</h1>
+                    <form className="auth-form">
+                        <div className="form-control">
+                            <div>
                                 <TextField
                                     id="standard-error-helper-text"
                                     label="Email"
-                                    name="reg_user_email"
+                                    name="log_user_email"
                                     type="text"
                                     helperText="Entrer votre email"
                                     onChange={handleInputChange}
-                                    value={state.reg_user_email}
+                                    value={state.log_user_email}
                                     fullWidth={true}
                                     required
-                                    error={error.reg_user_email_error}
+                                    error={logError.log_user_email_error}
                                 />
-                                <div>
-                                    <TextField
-                                        id="standard-error-helper-text"
-                                        label="Mot de passe"
-                                        name="reg_user_password"
-                                        type="password"
-                                        helperText="Mot de passe doit contenir 8 caractères, une majuscule, une minuscule et un chiffre"
-                                        onChange={handleInputChange}
-                                        value={state.reg_user_password}
-                                        fullWidth={true}
-                                        required
-                                        error={error.reg_user_password_error}
-                                    />
-                                    <TextField
-                                        id="standard-error-helper-text"
-                                        label="Vérification de mot de passe"
-                                        name="reg_user_password_confirm"
-                                        type="password"
-                                        helperText="Entrer une seconde fois votre mot de passe."
-                                        onChange={handleInputChange}
-                                        value={state.reg_user_password_confirm}
-                                        fullWidth={true}
-                                        required
-                                        error={error.reg_user_password_confirm_error}
-                                    />
-                                </div>
-                                <div>
-                                    <Button onClick={registrationSubmit} variant="contained"
-                                            color="primary">Register</Button>
-                                    <Button onClick={cancel} variant="outlined">Cancel</Button>
-                                </div>
-
-                                <div className={classes.snackbar}>
-                                    <Snackbar className="snackbar_register" open={open} autoHideDuration={5000}
-                                              onClose={handleClose}>
-                                        <Alert onClose={handleClose} severity={state.severity}>
-                                            {state.alert_message}
-                                        </Alert>
-                                    </Snackbar>
-                                </div>
+                                <TextField
+                                    id="standard-error-helper-text"
+                                    label="Mot de passe"
+                                    name="log_user_password"
+                                    type="password"
+                                    helperText="Mot de passe doit contenir 8 caractères, une majuscule, une minuscule et un chiffre."
+                                    onChange={handleInputChange}
+                                    value={state.log_user_password}
+                                    fullWidth={true}
+                                    required
+                                    error={logError.log_user_password_error}
+                                />
                             </div>
-                        </form>
-                    </TabPanel>
-                </SwipeableViews>
-            </div>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={state.stayLogged}
+                                        onChange={handleStayLogged}
+                                        name="stayLogged"
+                                        color="primary"
+                                    />
+                                }
+                                label="Restez connecté !!!"
+                            />
+                            <Box display="flex" style={{width: '100%'}}>
+                                <Button value="Annuler" onClick={cancel} variant="outlined"
+                                        justifyContent="flex-start">Cancel</Button>
+                                <Button onClick={loginSubmit} variant="contained" color="primary"
+                                        justifyContent="flex-end">Login</Button>
+                            </Box>
+                            <div className={classes.snackbar}>
+                                <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+                                    <Alert onClose={handleClose} severity={state.severity}>
+                                        {state.alert_message}
+                                    </Alert>
+                                </Snackbar>
+                            </div>
+                        </div>
+                    </form>
+                </TabPanel>
+
+                <TabPanel value={value} index={1} dir={theme.direction}>
+                    <h1>Inscription</h1>
+                    <form className="auth-form">
+                        <div className="form-control">
+                            <TextField
+                                id="standard-error-helper-text"
+                                label="Pseudo"
+                                name="reg_user_pseudo"
+                                type="text"
+                                helperText="Caractères spéciaux non autorisés"
+                                onChange={handleInputChange}
+                                value={state.reg_user_pseudo}
+                                fullWidth={true}
+                                required
+                                error={error.reg_user_pseudo_error}
+                            />
+                            <TextField
+                                id="standard-error-helper-text"
+                                label="Email"
+                                name="reg_user_email"
+                                type="text"
+                                helperText="Entrer votre email"
+                                onChange={handleInputChange}
+                                value={state.reg_user_email}
+                                fullWidth={true}
+                                required
+                                error={error.reg_user_email_error}
+                            />
+                            <div>
+                                <TextField
+                                    id="standard-error-helper-text"
+                                    label="Mot de passe"
+                                    name="reg_user_password"
+                                    type="password"
+                                    helperText="Mot de passe doit contenir 8 caractères, une majuscule, une minuscule et un chiffre"
+                                    onChange={handleInputChange}
+                                    value={state.reg_user_password}
+                                    fullWidth={true}
+                                    required
+                                    error={error.reg_user_password_error}
+                                />
+                                <TextField
+                                    id="standard-error-helper-text"
+                                    label="Vérification de mot de passe"
+                                    name="reg_user_password_confirm"
+                                    type="password"
+                                    helperText="Entrer une seconde fois votre mot de passe."
+                                    onChange={handleInputChange}
+                                    value={state.reg_user_password_confirm}
+                                    fullWidth={true}
+                                    required
+                                    error={error.reg_user_password_confirm_error}
+                                />
+                            </div>
+                            <div>
+                                <Button onClick={registrationSubmit} variant="contained"
+                                        color="primary">Register</Button>
+                                <Button onClick={cancel} variant="outlined">Cancel</Button>
+                            </div>
+
+                            <div className={classes.snackbar}>
+                                <Snackbar className="snackbar_register" open={open} autoHideDuration={5000}
+                                          onClose={handleClose}>
+                                    <Alert onClose={handleClose} severity={state.severity}>
+                                        {state.alert_message}
+                                    </Alert>
+                                </Snackbar>
+                            </div>
+                        </div>
+                    </form>
+                </TabPanel>
+            </SwipeableViews>
+        </div>
     );
 }
 

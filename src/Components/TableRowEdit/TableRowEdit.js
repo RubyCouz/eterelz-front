@@ -21,7 +21,6 @@ import {
 
 import CreateIcon from '@material-ui/icons/Create'
 import templateRegex from '../../Data/template-regex'
-import xtype from 'xtypejs'
 import Switch from "@material-ui/core/Switch"
 import ThemeContext from '../../context/theme-context'
 export default function TableRowEdit(props) {
@@ -123,7 +122,6 @@ export default function TableRowEdit(props) {
         }
     }
 
-    console.log(typeof entryValue)
     return (
         <TableRow
             hover
@@ -146,7 +144,6 @@ export default function TableRowEdit(props) {
                                 sendData()
                             }
                             }
-
                             checked={entryValue}
                             color="default"
                             inputProps={{'aria-label': 'checkbox with default color'}}
