@@ -5,15 +5,15 @@ import React, {
   useState
 } from 'react'
 import {
-    gql,
-    useLazyQuery,
+  gql,
+  useLazyQuery,
 } from '@apollo/client'
 import AuthContext from '../../context/auth-context'
 import {
-    Tabs,
-    Tab,
-    Grid,
-    Box,  
+  Tabs,
+  Tab,
+  Grid,
+  Box,  
 } from '@material-ui/core'
 
 import AuthNavbar from '../../Components/Navbar/AuthNavbar'
@@ -21,137 +21,26 @@ import AuthNavbar from '../../Components/Navbar/AuthNavbar'
 import TabPanel from './TabPanel'
 import AvatarContext from '../../context/avatar-context'
 
-// Mettre la date en forme
-const date = (date) => {
-  const dateObjet = new Date(date)
-  const options = {year: "numeric", month: "numeric", day: "numeric"};
-  return dateObjet.toLocaleString("fr-FR", options)
-}
-// Fonction pour calculer le temps entre deux date
-const time = (date) => {
-  const nowTime = new Date()
-  const inscDate = new Date(date)
-
-  let difference = nowTime - inscDate
-
-  let resultat
-  
-  if (difference) {
-    if (difference / (1000 * 3600 * 730 * 365) >= 1) {
-      resultat = `${ Math.trunc( difference / (1000 * 3600 * 730 * 365))} ans`
-    } else if (difference / ( 1000 * 3600 * 730) >= 1 ) {
-      resultat = `${ Math.trunc(difference / (1000 * 3600 * 730))} mois`
-    } else {
-      resultat = `${ Math.trunc(difference / (1000 * 3600 * 24))} jours`
-    }
-  }
-
-  return difference ? resultat : date
-}
-
-const templateData = {
-  index : {
-      0 : {
-          name: 'Paramêtres du compte',
-          content : {
-              user_isDark: {
-                  nameColumn: 'Mode dark',
-              }
-          }
-      },
-      1 : {
-          name : 'Résumé du compte',
-          content : {
-              user_login : {
-                  nameColumn : 'Utilisateur',
-              },
-              /*userDescription : {
-                  nameColumn : "Description",
-              },*/
-              updatedAt : {
-                  nameColumn : 'Date de mise à jour du compte',
-                  modifiedValue : false,
-                  process: time,
-              },
-              createdAt : {
-                  nameColumn : 'Date inscription',
-                  modifiedValue : false,
-                  process: date,
-              },
-          /*  userLabels : {
-              nameColumn : "Les labels",
-              modifiedValue : false,
-              content: {
-                labelName: {
-                  nameColumn : "Label",
-                  modifiedValue : false,
-                },
-              },
-            },*/
-          },
-      },
-      2 : {
-          name : 'Données personnelles',
-          content : {   
-              user_email : {
-                  nameColumn : 'Adresse email',
-                  regex : 'email',
-              },
-              user_gender : {
-                  nameColumn : 'Genre',
-              },
-              user_address : {
-                  nameColumn : 'Adresse',
-              },
-              user_zip : {
-                  nameColumn : 'Code postale',
-              },
-              user_city : {
-                  nameColumn: 'Ville',
-              },
-              user_state : {
-                  nameColumn: 'Pays',
-              },
-          }
-      },
-      3 : {
-          name : 'Réseaux sociaux',
-          content : {
-              user_discord : {
-                  nameColumn : 'Discord',
-              },
-          }
-      },
-      4 : {
-        name : 'Confidentialité',
-        content : {
-          user_password : {
-            nameColumn : 'Mot de passe',
-            regex : 'password',
-          },
-        }
-    },
-  },
-}
+import { templateData } from '../../Data/template-account'
 
 const USER = gql`
-    query USER( $id: ID!){
-        user(_id: $id ){
-            _id
-            user_login
-            user_email
-            user_password
-            user_discord
-            user_address
-            user_zip
-            user_city
-            user_gender
-            user_state
-            user_isDark
-            createdAt
-            updatedAt
-        }
+  query USER( $id: ID!){
+    user(_id: $id ){
+      _id
+      user_login
+      user_email
+      user_password
+      user_discord
+      user_address
+      user_zip
+      user_city
+      user_gender
+      user_state
+      user_isDark
+      createdAt
+      updatedAt
     }
+  }
 `
 
 export default function Account() {

@@ -24,7 +24,7 @@ import Switch from "@material-ui/core/Switch"
 import ThemeContext from '../../context/theme-context'
 export default function TableRowEdit(props) {
 
-    const {queryName, nameColumn, modifiedValue, idUser, data, setDefaultValue, process, regex} = props
+    const {queryName, nameColumn, modifiedValue, idUser, data, setDefaultValue, processDisplay, processAfterSend, regex} = props
 
     const [showField, setShowField] = useState(false)
     const ShowField = () => {
@@ -38,12 +38,12 @@ export default function TableRowEdit(props) {
         setEntryValue(event.target.value)
     }
 
-    // Actualise les valeur utilise le process si disponible
+    // Actualise la valeur et peu utiliser processDisplay pour la mise en forme  
     useEffect(
         () => {
             let value = data
-            if (process) {
-                value = process(value)
+            if (processDisplay) {
+                value = processDisplay(value)
             }
             setEntryValue(value)
         },
@@ -65,7 +65,15 @@ export default function TableRowEdit(props) {
                 if (dataUpdate.updateUser) {
                     //A modifier (mettre dans le template) (WIP)
                     if (typeof entryValue === 'boolean') {
-                        changeTheme.theme(entryValue)
+                        const valueBoolean = !entryValue
+                        setEntryValue(valueBoolean)
+                        //Comment faire mieux
+                        if (queryName === 'user_isDark'){
+                            changeTheme.theme(valueBoolean)
+                        }
+                        /*if (processAfterSend){
+                            processAfterSend(valueBoolean)
+                        }*/
                     }
                     setError(<Typography>Changement effectué</Typography>)
                 } else {
@@ -89,7 +97,6 @@ export default function TableRowEdit(props) {
 
         if (typeof entryValue === 'boolean') {
           sendData = !entryValue
-          setEntryValue(sendData)
         } else {
           sendData = entryValue
         }
