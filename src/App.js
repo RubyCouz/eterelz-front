@@ -45,8 +45,12 @@ export default function App() {
         if (token) {
             const arrayJWT = token.split('.')
             const playload = JSON.parse(window.atob(arrayJWT[1]))
-            window.localStorage.setItem('token', token);
-            setDarkMode(playload.user_isDark)
+
+            window.localStorage.setItem('token', token)
+
+            let darkModeLS = window.localStorage.getItem('darkMode')
+            handleMode(darkModeLS ? darkModeLS : playload.user_isDark)
+            
             setState({
                 token: token,
                 playload: playload,
@@ -56,7 +60,9 @@ export default function App() {
     }
 
     const logout = () => {
-        window.localStorage.removeItem('token');
+        window.localStorage.removeItem('token')
+        window.localStorage.removeItem('darkMode')
+
         setState({
             token: null,
             playload: null
@@ -68,24 +74,46 @@ export default function App() {
         login(tokenStorage)
     }, [])
 
-    const [darkState, setDarkMode] = useState(false);
-    const theme = createMuiTheme({
+    const [darkState, setDarkMode] = useState(false)
+    
+    const dark = createMuiTheme({
         palette: {
-            type: darkState ? 'dark' : 'light',
+            type: 'dark',
             primary: {
-                main: darkState ? purple[600] : blue[600]
+                main: purple[600]
             },
             secondary: {
-                main: darkState ? lightBlue[600] : deepPurple[500]
+                main:lightBlue[600]
             },
             status: {
-                error: darkState ? red[600] : red[400]
+                error:red[600]
+            },
+        }
+    })
+    
+    const light = createMuiTheme({
+        palette: {
+            type: 'light',
+            primary: {
+                main: blue[600]
+            },
+            secondary: {
+                main: deepPurple[500]
+            },
+            status: {
+                error: red[400]
             },
         }
     })
 
-    const handleMode = () => {
-        setDarkMode(!darkState)
+    const handleMode = (boolean) => {
+        let booleanDarkMode = boolean
+        if (typeof booleanDarkMode === 'string') {
+            booleanDarkMode = (boolean === 'true')
+        }
+
+        setDarkMode(booleanDarkMode)
+        window.localStorage.setItem('darkMode', booleanDarkMode)
     }
 
     return (
@@ -113,7 +141,7 @@ export default function App() {
                                 darkMode: darkState
                             }}
                         >
-                            <ThemeProvider theme={theme}>
+                            <ThemeProvider theme={darkState ? dark : light}>
                                 <CssBaseline/>
                                 <Switch>                                  
                                     {state.token ? [ 

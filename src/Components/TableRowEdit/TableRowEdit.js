@@ -1,5 +1,4 @@
 import React, {
-    useCallback,
     useContext,
     useEffect,
     useState,
@@ -64,17 +63,20 @@ export default function TableRowEdit(props) {
         {
             onCompleted: (dataUpdate) => {
                 if (dataUpdate.updateUser) {
-                    //setEntryValue(dataUpdate.updateUser[queryName])
-                    //Il faudrait data = entryValue
+                    //A modifier (mettre dans le template) (WIP)
+                    if (typeof entryValue === 'boolean') {
+                        changeTheme.theme(entryValue)
+                    }
                     setError(<Typography>Changement effectué</Typography>)
                 } else {
+                    setEntryValue(data)
                     setError(<Typography>Erreur</Typography>)
                 }
             }
         })
 
     const changeTheme = useContext(ThemeContext)
-    //Temporaire
+    //Temporaire (WIP)
     const [error, setError] = useState()
 
     //Verification avant l'envoie de la mutation
@@ -83,18 +85,23 @@ export default function TableRowEdit(props) {
 
         let error = false
         let errorText = []
+        let sendData
+
         if (typeof entryValue === 'boolean') {
-            entryValue = !entryValue
-            setEntryValue(entryValue)
-            changeTheme.theme()
-        } else if (entryValue === data) {
+          sendData = !entryValue
+          setEntryValue(sendData)
+        } else {
+          sendData = entryValue
+        }
+
+        if (sendData === data) {
             errorText.push(<Typography>Même valeur, aucune modification n'a été effectué</Typography>)
             error = true
-        } else if (entryValue === null || entryValue === '' || entryValue === undefined) {
+        } else if (sendData === null || sendData === '' || sendData === undefined) {
             errorText.push(<Typography>Aucune donnée, la modification est refusée</Typography>)
             error = true
         } else if (templateRegex[regex]) {
-            if (!templateRegex[regex].regex.test(entryValue)) {
+            if (!templateRegex[regex].regex.test(sendData)) {
                 errorText.push(<Typography>{templateRegex[regex].message}</Typography>)
                 error = true
             }
@@ -108,7 +115,7 @@ export default function TableRowEdit(props) {
                 variables: {
                     id: idUser,
                     var: {
-                        [queryName] : entryValue
+                        [queryName] : sendData
                     },
                 },
             })
@@ -142,8 +149,7 @@ export default function TableRowEdit(props) {
                         <Switch
                             onChange={() => {
                                 sendData()
-                            }
-                            }
+                            }}
                             checked={entryValue}
                             color="default"
                             inputProps={{'aria-label': 'checkbox with default color'}}
@@ -177,7 +183,6 @@ export default function TableRowEdit(props) {
                 padding="default"
             >
                 {
-                    typeof entryValue !== 'boolean' ??
                     !(modifiedValue === false) ?
                         <CreateIcon fontSize="small"/>
                         :

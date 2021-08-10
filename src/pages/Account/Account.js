@@ -64,7 +64,6 @@ const templateData = {
           content : {
               user_login : {
                   nameColumn : 'Utilisateur',
-                  modifiedValue : true,
               },
               /*userDescription : {
                   nameColumn : "Description",
@@ -162,7 +161,8 @@ export default function Account() {
   // On attend que le context soit défini
   const id = authContext.playload ? authContext.playload.userId : false
   //Requête
-  const [getUser, { data }] = useLazyQuery(USER)
+  const [getUser, { data }] = useLazyQuery(USER,{
+    fetchPolicy: "no-cache"})
 
   const avatar = useContext(AvatarContext)
   //Requête executé si l'id a une valeur et change
