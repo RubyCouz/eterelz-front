@@ -4,7 +4,9 @@ import AuthContext from '../../context/auth-context'
 
 import {Route, Redirect, Switch} from 'react-router-dom'
 
-export default function Routeur({routes}) {
+import DataRouteur from '../../Data/template-routes'
+
+export default function Routeur() {
 
     const authContext = useContext(AuthContext)
 
@@ -12,7 +14,7 @@ export default function Routeur({routes}) {
     const roleJWT = authContext.playload ? authContext.playload.userRole : null
 
     
-    let routeur = routes.map( ({auth, role, path, component, type, from, to}) =>{
+    const routeur = DataRouteur.map( ({auth, role, path, component, type, from, to}) =>{
         let verifyAuth = false
         
         if (typeof auth === 'boolean') {

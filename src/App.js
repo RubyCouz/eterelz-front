@@ -27,7 +27,6 @@ import {graphqlConfig} from './context/apollo-context'
 import AvatarContext from './context/avatar-context'
 
 import Routeur from './Components/Routeur/Routeur'
-import routes from './Data/template-routes'
 
 export default function App() {
     const [state, setState] = useState({
@@ -148,7 +147,7 @@ export default function App() {
                                             <CircularProgress />
                                         </Box>
                                     :
-                                        <Routeur routes = {routes}/>
+                                        <Routeur/>
                                 }
                             </ThemeProvider>
                         </ThemeContext.Provider>
