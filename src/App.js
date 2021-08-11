@@ -26,7 +26,7 @@ import ThemeContext from './context/theme-context'
 import {graphqlConfig} from './context/apollo-context'
 import AvatarContext from './context/avatar-context'
 
-import Routeur from './Components/Routeur/Routeur'
+import Routeur from './pages/Routeur'
 
 export default function App() {
     const [state, setState] = useState({

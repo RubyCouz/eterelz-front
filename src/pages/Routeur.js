@@ -1,10 +1,10 @@
 import React, {useContext} from 'react'
 
-import AuthContext from '../../context/auth-context'
+import AuthContext from '../context/auth-context'
 
 import {Route, Redirect, Switch} from 'react-router-dom'
 
-import DataRouteur from '../../Data/template-routes'
+import DataRouteur from '../Data/template-routes'
 
 export default function Routeur() {
 
