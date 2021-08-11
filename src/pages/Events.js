@@ -1,12 +1,16 @@
 import React, {useState, useContext, useRef} from 'react'
 import AuthContext from '../context/auth-context'
-import Spinner from '../Components/Spinner/Spinner'
 import Modal from '../Components/Modal/Modal'
 import BackDrop from '../Components/Backdrop/Backdrop'
 import EventList from '../Components/Events/EventList/EventList'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
-import Fab from '@material-ui/core/Fab'
+
 import AddIcon from '@material-ui/icons/Add'
+import {
+    Fab,
+    CircularProgress,
+} from '@material-ui/core'
+
 import './Events.css'
 import {
     gql,
@@ -184,7 +188,7 @@ export default function EventsPage(props) {
             <section>
                 {
                     loading ?
-                        <Spinner/> :
+                        <CircularProgress/> :
                         error ?
                             <p>{JSON.stringify(error)}</p> :
                             <EventList
