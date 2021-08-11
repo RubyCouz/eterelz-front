@@ -2,7 +2,7 @@
 import DarkTheme from "../Themes/Dark"
 import LightTheme from "../Themes/Light"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function useThemeEterelz() {
 
@@ -18,6 +18,12 @@ export default function useThemeEterelz() {
         
         window.localStorage.setItem('darkMode', booleanDarkMode)
     }
+
+    useEffect(() => {
+        let darkModeLS = window.localStorage.getItem('darkMode')
+        
+        darkModeLS && setTheme(darkModeLS)
+    }, [])
 
     const theme = darkState ? DarkTheme : LightTheme
 
