@@ -97,12 +97,13 @@ export default function Navbar(props) {
                     color="primary"
                 >
                     <Toolbar>
-
-                        <img
-                            src="./img/themes/logo.png"
-                            alt="Logo EterelZ"
-                            className={classes.logo}
-                        />
+                        <NavLink to="/">
+                            <img
+                                src="./img/themes/logo.png"
+                                alt="Logo EterelZ"
+                                className={classes.logo}
+                            />
+                        </NavLink>
                         <Tabs
                             value={value}
                             onChange={handleChange}

@@ -355,11 +355,13 @@ export default function AuthNavbar(props) {
                                 </React.Fragment>
                             ))}
                         </IconButton>
-                        <img
-                            src="./img/themes/logo.png"
-                            alt="Logo EterelZ"
-                            className={classes.logo}
-                        />
+                        <NavLink to="/">
+                            <img
+                                src="./img/themes/logo.png"
+                                alt="Logo EterelZ"
+                                className={classes.logo}
+                            />
+                        </NavLink>
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>
                                 <SearchIcon/>
