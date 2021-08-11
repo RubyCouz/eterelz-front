@@ -1,18 +1,11 @@
-import React, {useState, useEffect, useContext} from 'react'
-import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
+import React, {useState, useEffect} from 'react'
+import {BrowserRouter} from 'react-router-dom'
 import {ApolloProvider} from '@apollo/client'
 
 import {
     ThemeProvider,
     createMuiTheme,
 } from '@material-ui/core/styles'
-import {
-    blue,
-    deepPurple,
-    lightBlue,
-    purple,
-    red
-} from '@material-ui/core/colors'
 import {
     CssBaseline,
     CircularProgress,
@@ -28,6 +21,8 @@ import AvatarContext from './context/avatar-context'
 
 import Routeur from './pages/Routeur'
 
+import useThemeEterelz from './Hook/useThemeEterelz'
+
 export default function App() {
     const [state, setState] = useState({
         token: null,
@@ -37,7 +32,8 @@ export default function App() {
     const [loading, setLoading] = useState(true)
 
     const [avatar, setAvatar] = useState({id: null})
-
+    
+    const [theme, setTheme] = useThemeEterelz()
 
     const login = (token, userId, userRole) => {
         if (token) {
@@ -47,7 +43,7 @@ export default function App() {
             window.localStorage.setItem('token', token)
 
             let darkModeLS = window.localStorage.getItem('darkMode')
-            handleMode(darkModeLS ? darkModeLS : playload.user_isDark)
+            setTheme(darkModeLS ? darkModeLS : playload.user_isDark)
             
             setState({
                 token: token,
@@ -72,48 +68,6 @@ export default function App() {
         setLoading(false)
     }, [])
 
-    const [darkState, setDarkMode] = useState(false)
-    
-    const dark = createMuiTheme({
-        palette: {
-            type: 'dark',
-            primary: {
-                main: purple[600]
-            },
-            secondary: {
-                main:lightBlue[600]
-            },
-            status: {
-                error:red[600]
-            },
-        }
-    })
-    
-    const light = createMuiTheme({
-        palette: {
-            type: 'light',
-            primary: {
-                main: blue[600]
-            },
-            secondary: {
-                main: deepPurple[500]
-            },
-            status: {
-                error: red[400]
-            },
-        }
-    })
-
-    const handleMode = (boolean) => {
-        let booleanDarkMode = boolean
-        if (typeof booleanDarkMode === 'string') {
-            booleanDarkMode = (boolean === 'true')
-        }
-
-        setDarkMode(booleanDarkMode)
-        window.localStorage.setItem('darkMode', booleanDarkMode)
-    }
-
     return (
         <BrowserRouter>
             <AuthContext.Provider
@@ -135,11 +89,10 @@ export default function App() {
                     >
                         <ThemeContext.Provider
                             value={{
-                                theme: handleMode,
-                                darkMode: darkState
+                                theme: setTheme,
                             }}
                         >
-                            <ThemeProvider theme={darkState ? dark : light}>
+                            <ThemeProvider theme={createMuiTheme(theme)}>
                                 <CssBaseline/>
                                 {
                                     loading ?
@@ -157,4 +110,3 @@ export default function App() {
         </BrowserRouter>
     )
 }
-
