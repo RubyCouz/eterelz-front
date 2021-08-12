@@ -116,11 +116,7 @@ export default function Dashboard() {
         setValue(index);
     };
 
-    // const addGameHandler = () => {
-    //     console.log(context)
-    //     console.log(game_desc.current.value)
-    //     console.log(game_name.current.value)
-    // }
+
 
     const [addGameHandler] = useMutation(
         CREATE_GAME,
@@ -128,7 +124,6 @@ export default function Dashboard() {
             onCompleted: (dataMutationGame) => {
                 if(dataMutationGame.createGame !== undefined) {
                     let listGame = state.games
-                    console.log(listGame)
                     listGame.push(dataMutationGame.createGame)
                     setState({...state, games: listGame})
                 }

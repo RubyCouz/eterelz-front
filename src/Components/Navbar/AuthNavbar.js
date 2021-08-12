@@ -1,37 +1,41 @@
-import React, {useContext} from 'react';
+import React, {useContext} from 'react'
 import {makeStyles} from '@material-ui/core'
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import Fab from "@material-ui/core/Fab";
-import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import InputBase from '@material-ui/core/InputBase'
+import Badge from '@material-ui/core/Badge'
+import Menu from '@material-ui/core/Menu'
+import MenuIcon from '@material-ui/icons/Menu'
+import SearchIcon from '@material-ui/icons/Search'
+import MailIcon from '@material-ui/icons/Mail'
+import NotificationsIcon from '@material-ui/icons/Notifications'
+import MoreIcon from '@material-ui/icons/MoreVert'
+import Fab from '@material-ui/core/Fab'
+import PropTypes from 'prop-types'
 import useScrollTrigger from '@material-ui/core/useScrollTrigger'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Zoom from '@material-ui/core/Zoom'
-import {MenuItem} from "@material-ui/core"
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import clsx from "clsx";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {MenuItem} from '@material-ui/core'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import clsx from 'clsx'
+import Divider from '@material-ui/core/Divider'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
 import {
-    EventNoteTwoTone as EventNoteTwoToneIcon,
     ExitToAppTwoTone as ExitToAppTwoToneIcon
-} from "@material-ui/icons";
-import ListItemText from "@material-ui/core/ListItemText";
-import {NavLink} from "react-router-dom";
-import AuthContext from "../../context/auth-context";
-import ThemeContext from "../../context/theme-context";
+} from '@material-ui/icons'
+import ListItemText from '@material-ui/core/ListItemText'
+import {NavLink} from 'react-router-dom'
+import AuthContext from '../../context/auth-context'
+import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded'
+import SportsEsportsRoundedIcon from '@material-ui/icons/SportsEsportsRounded'
+import GamepadIcon from '@material-ui/icons/Gamepad'
+import GroupIcon from '@material-ui/icons/Group'
+import ListIcon from '@material-ui/icons/List'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -180,7 +184,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><DashboardRoundedIcon/></ListItemIcon>
                     <ListItemText primary="Dashboard"/>
                 </ListItem>
                 <ListItem
@@ -191,7 +195,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><SportsEsportsRoundedIcon/></ListItemIcon>
                     <ListItemText primary="Tournaments"/>
                 </ListItem>
                 <ListItem
@@ -202,7 +206,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><GamepadIcon/></ListItemIcon>
                     <ListItemText primary="Events"/>
                 </ListItem>
                 <ListItem
@@ -213,7 +217,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><GroupIcon/></ListItemIcon>
                     <ListItemText primary="Clan"/>
                 </ListItem>
                 <ListItem
@@ -239,50 +243,24 @@ export default function AuthNavbar(props) {
                                 onClick={toggleDrawer(anchor, false)}
                                 className={classes.listItem}
                             >
-                                <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                                <ListItemIcon><ListIcon/></ListItemIcon>
                                 <ListItemText primary="BackOffice"/>
                             </ListItem>
                         </div>
                 }
-            </List>
-        </div>
-    )
-
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-    const handleProfileMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    };
-
-    const handleMobileMenuOpen = (event) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
-
-    const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-            id={menuId}
-            keepMounted
-            transformOrigin={{vertical: 'top', horizontal: 'right'}}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem component={NavLink} to="/account" >Profile</MenuItem>
-            <MenuItem>
+                <Divider/>
+                <ListItem
+                    button
+                    key="profil"
+                    component={NavLink}
+                    to="/account"
+                    onClick={toggleDrawer(anchor, false)}
+                    className={classes.listItem}
+                >
+                    <ListItemIcon><AccountCircleIcon/></ListItemIcon>
+                    <ListItemText primary="Profil"/>
+                </ListItem>
+                <Divider/>
                 <ListItem
                     button key="logout"
                     onClick={auth.logout}
@@ -293,9 +271,23 @@ export default function AuthNavbar(props) {
                     <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
                     <ListItemText primary="Déconnexion"/>
                 </ListItem>
-            </MenuItem>
-        </Menu>
-    );
+            </List>
+        </div>
+    )
+
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    const handleMobileMenuClose = () => {
+        setMobileMoreAnchorEl(null);
+    };
+
+
+    const handleMobileMenuOpen = (event) => {
+        setMobileMoreAnchorEl(event.currentTarget);
+    };
+
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
@@ -323,17 +315,6 @@ export default function AuthNavbar(props) {
                     </Badge>
                 </IconButton>
                 <p>Notifications</p>
-            </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle/>
-                </IconButton>
-                <p>Profile</p>
             </MenuItem>
         </Menu>
     );
@@ -398,16 +379,6 @@ export default function AuthNavbar(props) {
                                     <NotificationsIcon/>
                                 </Badge>
                             </IconButton>
-                            <IconButton
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <AccountCircle/>
-                            </IconButton>
                         </div>
                         <div className={classes.sectionMobile}>
                             <IconButton
@@ -423,7 +394,6 @@ export default function AuthNavbar(props) {
                     </Toolbar>
                 </AppBar>
                 {renderMobileMenu}
-                {renderMenu}
                 <ScrollTop {...props}>
                     <Fab color="secondary" size="small" aria-label="scroll back to top">
                         <KeyboardArrowUpIcon/>
