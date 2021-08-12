@@ -1,43 +1,40 @@
-import React, {useContext} from 'react';
+import React, {useContext} from 'react'
 import {makeStyles} from '@material-ui/core'
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import Fab from "@material-ui/core/Fab";
-import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import InputBase from '@material-ui/core/InputBase'
+import Badge from '@material-ui/core/Badge'
+import Menu from '@material-ui/core/Menu'
+import MenuIcon from '@material-ui/icons/Menu'
+import SearchIcon from '@material-ui/icons/Search'
+import MailIcon from '@material-ui/icons/Mail'
+import NotificationsIcon from '@material-ui/icons/Notifications'
+import MoreIcon from '@material-ui/icons/MoreVert'
+import Fab from '@material-ui/core/Fab'
+import PropTypes from 'prop-types'
 import useScrollTrigger from '@material-ui/core/useScrollTrigger'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import Zoom from '@material-ui/core/Zoom'
-import {MenuItem} from "@material-ui/core"
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import clsx from "clsx";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {MenuItem} from '@material-ui/core'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import clsx from 'clsx'
+import Divider from '@material-ui/core/Divider'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
 import {
-    EventNoteTwoTone as EventNoteTwoToneIcon,
     ExitToAppTwoTone as ExitToAppTwoToneIcon
-} from "@material-ui/icons";
-import ListItemText from "@material-ui/core/ListItemText";
-import {NavLink} from "react-router-dom";
-import AuthContext from "../../context/auth-context";
-import ThemeContext from "../../context/theme-context";
-import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
-import SportsEsportsRoundedIcon from '@material-ui/icons/SportsEsportsRounded';
-import GamepadIcon from '@material-ui/icons/Gamepad';
-import GroupIcon from '@material-ui/icons/Group';
-import ListIcon from '@material-ui/icons/List';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+} from '@material-ui/icons'
+import ListItemText from '@material-ui/core/ListItemText'
+import {NavLink} from 'react-router-dom'
+import AuthContext from '../../context/auth-context'
+import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded'
+import SportsEsportsRoundedIcon from '@material-ui/icons/SportsEsportsRounded'
+import GamepadIcon from '@material-ui/icons/Gamepad'
+import GroupIcon from '@material-ui/icons/Group'
+import ListIcon from '@material-ui/icons/List'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 
 const useStyles = makeStyles((theme) => ({
