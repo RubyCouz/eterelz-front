@@ -6,6 +6,7 @@ import AccountPage from '../pages/Account/Account'
 import DashboardPage from '../pages/Dashboard'
 import TournamentsPage from '../pages/Tournaments'
 import ClanPage from '../pages/Clan'
+import Streams from '../pages/Streams'
 
 
 const dataRouteur = [
@@ -22,6 +23,7 @@ const dataRouteur = [
     { type : 'route',       auth : false,   path : '/auth',         component : AuthPage},
     { type : 'route',       auth : true,    path : '/backOffice',   component : BackOfficePage, role : 'admin', },
     { type : 'route',       auth : false,   path : '/home',         component : HomePage },
+    { type : 'route',       auth : true,    path : '/streams',      component : Streams }
 ]
 
 export default dataRouteur

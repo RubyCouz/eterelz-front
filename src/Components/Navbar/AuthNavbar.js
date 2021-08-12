@@ -216,6 +216,17 @@ export default function AuthNavbar(props) {
                     <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
                     <ListItemText primary="Clan"/>
                 </ListItem>
+                <ListItem
+                    button
+                    key="streams"
+                    component={NavLink}
+                    to="/streams"
+                    onClick={toggleDrawer(anchor, false)}
+                    className={classes.listItem}
+                >
+                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemText primary="Streams"/>
+                </ListItem>
                 {
                     (auth.token && auth.playload.userRole === 'admin') &&
                         <div>
