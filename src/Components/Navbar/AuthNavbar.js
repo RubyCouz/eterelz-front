@@ -35,6 +35,7 @@ import GamepadIcon from '@material-ui/icons/Gamepad'
 import GroupIcon from '@material-ui/icons/Group'
 import ListIcon from '@material-ui/icons/List'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import EventNoteTwoToneIcon from '@material-ui/icons/EventNoteTwoTone'
 
 
 const useStyles = makeStyles((theme) => ({
