@@ -32,6 +32,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import {NavLink} from "react-router-dom";
 import AuthContext from "../../context/auth-context";
 import ThemeContext from "../../context/theme-context";
+import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
+import SportsEsportsRoundedIcon from '@material-ui/icons/SportsEsportsRounded';
+import GamepadIcon from '@material-ui/icons/Gamepad';
+import GroupIcon from '@material-ui/icons/Group';
+import ListIcon from '@material-ui/icons/List';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -180,7 +187,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><DashboardRoundedIcon/></ListItemIcon>
                     <ListItemText primary="Dashboard"/>
                 </ListItem>
                 <ListItem
@@ -191,7 +198,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><SportsEsportsRoundedIcon/></ListItemIcon>
                     <ListItemText primary="Tournaments"/>
                 </ListItem>
                 <ListItem
@@ -202,7 +209,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><GamepadIcon/></ListItemIcon>
                     <ListItemText primary="Events"/>
                 </ListItem>
                 <ListItem
@@ -213,7 +220,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><GroupIcon/></ListItemIcon>
                     <ListItemText primary="Clan"/>
                 </ListItem>
                 {
@@ -228,7 +235,7 @@ export default function AuthNavbar(props) {
                                 onClick={toggleDrawer(anchor, false)}
                                 className={classes.listItem}
                             >
-                                <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                                <ListItemIcon><ListIcon/></ListItemIcon>
                                 <ListItemText primary="BackOffice"/>
                             </ListItem>
                         </div>
@@ -242,7 +249,7 @@ export default function AuthNavbar(props) {
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
-                    <ListItemIcon><EventNoteTwoToneIcon/></ListItemIcon>
+                    <ListItemIcon><AccountCircleIcon/></ListItemIcon>
                     <ListItemText primary="Profil"/>
                 </ListItem>
                 <Divider/>
