@@ -1,5 +1,6 @@
 import processDisplayFormatDate from "../Tools/FormatDate"
 import processDisplayDiffTime from "../Tools/DiffTime"
+import templateRegex from '../Data/template-regex'
 
 /*
 const processAfterSendModifiedTheme = (valueBoolean) => {
@@ -23,6 +24,7 @@ export const templateData = {
             content : {
                 user_login : {
                     nameColumn : 'Utilisateur',
+                    regex: templateRegex.pseudo,
                 },
                 /*userDescription : {
                     nameColumn : "Description",
@@ -54,7 +56,7 @@ export const templateData = {
             content : {   
                 user_email : {
                     nameColumn : 'Adresse email',
-                    regex : 'email',
+                    regex : templateRegex.email,
                 },
                 user_gender : {
                     nameColumn : 'Genre',
@@ -86,7 +88,7 @@ export const templateData = {
             content : {
             user_password : {
                 nameColumn : 'Mot de passe',
-                regex : 'password',
+                regex : templateRegex.password,
             },
             }
         },

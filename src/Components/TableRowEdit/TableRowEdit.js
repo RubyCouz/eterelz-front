@@ -20,7 +20,7 @@ import {
 } from '@apollo/client'
 
 import CreateIcon from '@material-ui/icons/Create'
-import templateRegex from '../../Data/template-regex'
+
 import ThemeContext from '../../context/theme-context'
 
 export default function TableRowEdit(props) {
@@ -121,9 +121,10 @@ export default function TableRowEdit(props) {
         } else if (sendData === null || sendData === '' || sendData === undefined) {
             errorText.push(<Typography>Aucune donnée, la modification est refusée</Typography>)
             error = true
-        } else if (templateRegex[regex]) {
-            if (!templateRegex[regex].regex.test(sendData)) {
-                errorText.push(<Typography>{templateRegex[regex].message}</Typography>)
+        } else if (regex) {
+            console.log("test")
+            if (!regex.regex.test(sendData)) {
+                errorText.push(<Typography>{regex.message}</Typography>)
                 error = true
             }
         }
