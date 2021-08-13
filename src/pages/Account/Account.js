@@ -6,7 +6,7 @@ import React, {
 } from 'react'
 import {
   gql,
-  useLazyQuery,
+  useQuery
 } from '@apollo/client'
 import AuthContext from '../../context/auth-context'
 import {
@@ -46,29 +46,18 @@ const USER = gql`
 export default function Account() {
     
   const authContext = useContext(AuthContext)
+  const avatarContext = useContext(AvatarContext)
 
-  // On attend que le context soit défini
-  const id = authContext.playload ? authContext.playload.userId : false
-  //Requête
-  const [getUser, { data }] = useLazyQuery(USER,{
-    fetchPolicy: "no-cache"})
-
-  const avatar = useContext(AvatarContext)
   //Requête executé si l'id a une valeur et change
-  useEffect(() => {
+  const id = avatarContext.avatar.id ? avatarContext.avatar.id : authContext.playload.userId
 
-    const avatarId = avatar.avatar ? avatar.avatar.id : false
-
-    if (avatarId) {
-      getUser({
-        variables: { id: avatarId },
-      })
-    } else if (id) {
-      getUser({
-        variables: { id },
-      })
+  //Requête
+  const {data} = useQuery(
+    USER, 
+    {
+      variables: { id },
     }
-  }, [id] )
+  )
 
   const [ currentIndex, setCurrentIndex]  = useState(0);
   const handleChange = (event, newValue) => { 
