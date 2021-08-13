@@ -11,6 +11,7 @@ import {
     TableCell,
     CircularProgress,
     Chip,
+    Switch,
 } from '@material-ui/core'
 
 import {
@@ -20,8 +21,8 @@ import {
 
 import CreateIcon from '@material-ui/icons/Create'
 import templateRegex from '../../Data/template-regex'
-import Switch from "@material-ui/core/Switch"
 import ThemeContext from '../../context/theme-context'
+
 export default function TableRowEdit(props) {
 
     const {queryName, nameColumn, modifiedValue, idUser, data, setDefaultValue, processDisplay, processAfterSend, regex} = props
@@ -49,6 +50,7 @@ export default function TableRowEdit(props) {
         },
         [data]
     )
+
     //Query générée pour le champ
     const UPDATE_VAR = gql`
         mutation ($id: ID!, $var: UserUpdateInput){
@@ -59,29 +61,41 @@ export default function TableRowEdit(props) {
     `;
 
     //Mutation
-    const [sendValidData] = useMutation(UPDATE_VAR,
-        {
-            onCompleted: (dataUpdate) => {
-                if (dataUpdate.updateUser) {
-                    //A modifier (mettre dans le template) (WIP)
-                    if (typeof entryValue === 'boolean') {
-                        const valueBoolean = !entryValue
-                        setEntryValue(valueBoolean)
-                        //Comment faire mieux
-                        if (queryName === 'user_isDark'){
-                            changeTheme.theme(valueBoolean)
-                        }
-                        /*if (processAfterSend){
-                            processAfterSend(valueBoolean)
-                        }*/
+    const [sendValidData] = useMutation(UPDATE_VAR, {
+        onCompleted: (dataUpdate) => {
+            if (dataUpdate.updateUser) {
+                //A modifier (mettre dans le template) (WIP)
+                if (typeof entryValue === 'boolean') {
+                    //Comment faire mieux
+                    if (queryName === 'user_isDark'){
+                        changeTheme.theme(entryValue)
                     }
-                    setError(<Typography>Changement effectué</Typography>)
-                } else {
-                    setEntryValue(data)
-                    setError(<Typography>Erreur</Typography>)
+                    /*if (processAfterSend){
+                        processAfterSend(valueBoolean)
+                    }*/
                 }
+                setError(<Typography>Changement effectué</Typography>)
+            } else {
+                setError(<Typography>Erreur</Typography>)
             }
-        })
+        },
+        update: (cache) => {
+            // Mise a jour du cache avant de recevoir la valeur
+            const dataCache = typeof entryValue === 'boolean' ? !entryValue : entryValue
+
+            cache.writeFragment({
+                id: `User:${idUser}`,
+                fragment: gql`
+                    fragment MyTodo on User {
+                    ${queryName}
+                    }
+                `,
+                data: {
+                    [queryName]: dataCache,
+                },
+                });
+        },
+    })
 
     const changeTheme = useContext(ThemeContext)
     //Temporaire (WIP)
@@ -118,7 +132,15 @@ export default function TableRowEdit(props) {
             setError(errorText)
             setEntryValue(data)
         } else {
+            //optimisticResponse s'occupe de changer data si la mutation a une erreur
             sendValidData({
+                optimisticResponse: {
+                    updateUser: {
+                      id: idUser,
+                      __typename: "User",
+                      [queryName] : sendData
+                    }
+                },
                 variables: {
                     id: idUser,
                     var: {
