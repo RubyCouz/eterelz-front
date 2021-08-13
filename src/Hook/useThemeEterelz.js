@@ -6,26 +6,25 @@ import { useState, useEffect } from "react"
 
 export default function useThemeEterelz() {
 
-    const [darkState, setDarkMode] = useState(false)
-
-    const setTheme = (boolean) => {
-        let booleanDarkMode = boolean
-        if (typeof booleanDarkMode === 'string') {
-            booleanDarkMode = (boolean === 'true')
-        }
-
-        setDarkMode(booleanDarkMode)
-        
-        window.localStorage.setItem('darkMode', booleanDarkMode)
-    }
+    const [theme, setDarkMode] = useState(LightTheme)
 
     useEffect(() => {
-        let darkModeLS = window.localStorage.getItem('darkMode')
+        const darkModeLS = window.localStorage.getItem('darkMode')
         
         darkModeLS && setTheme(darkModeLS)
     }, [])
 
-    const theme = darkState ? DarkTheme : LightTheme
+    const setTheme = (boolean) => {
+        let booleanDarkMode = boolean
+        
+        if (typeof booleanDarkMode === 'string') {
+            booleanDarkMode = (boolean === 'true')
+        }
+
+        setDarkMode(booleanDarkMode ? DarkTheme : LightTheme)
+        
+        window.localStorage.setItem('darkMode', booleanDarkMode)
+    }
 
     return [theme, setTheme]
 }
