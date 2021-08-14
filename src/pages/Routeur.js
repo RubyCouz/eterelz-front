@@ -14,7 +14,7 @@ export default function Routeur() {
     const roleJWT = authContext.playload ? authContext.playload.userRole : null
 
     
-    const routeur = DataRouteur.map( ({auth, role, path, component, type, from, to}) =>{
+    const routeur = DataRouteur.map( ({auth, role, path, component, type, from, to}, index) =>{
         let verifyAuth = false
         
         if (typeof auth === 'boolean') {
@@ -33,13 +33,13 @@ export default function Routeur() {
 
         if (type === "route") {
             if (verifyRole && verifyAuth ){
-                route = <Route path={path} component={component}/>
+                route = <Route path={path} component={component} key={index} />
             } else if (auth) {
-                route = <Redirect from={path} to="/auth" exact/>
+                route = <Redirect from={path} to="/auth" key={index} exact/>
             }
         } else if (type === "redirect"){
             if ( verifyAuth ){
-                route =  <Redirect from={from} to={to} exact/>
+                route =  <Redirect from={from} to={to} key={index} exact/>
             }
         }
 
