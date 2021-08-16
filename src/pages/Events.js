@@ -90,7 +90,6 @@ export default function EventsPage(props) {
 
     const [state, setState] = useState({
         creating: false,
-        events: [],
         isLoading: false,
         selectedEvent: null,
     })
@@ -152,18 +151,6 @@ export default function EventsPage(props) {
                     }
                 });
             },
-
-
-            onCompleted: (dataMutationEvent) => {
-                if (dataMutationEvent.createEvent !== undefined) {
-                    let listEvents = state.events
-
-                    listEvents.push(dataMutationEvent.createEvent)
-                    setState({...state, events: listEvents})
-
-                    modalCancelHandler()
-                }
-            }
         }
     )
 
