@@ -17,6 +17,7 @@ export default function EventList(props) {
                         userId = {props.authUserId}
                         creatorId = {event.event_creator._id}
                         onDetail = {props.onViewDetail}
+                        deleteEvent={props.deleteEvent}
                     />
                 )
            }

@@ -86,6 +86,26 @@ export default function EventItem(props) {
         setOpen(false);
     };
 
+    //confirmation
+    const confirmModal = () => {
+
+        if(state.textModal==='supprimer'){
+            console.log('supprimer')
+            props.deleteEvent({
+                variables:{
+                    id:props.eventId
+                }
+            })
+            ModalClose()
+        }
+        else{
+            console.log('archiver')
+            ModalClose()
+        }
+    }
+
+
+
     return (
         <li
             className="events__list-item"
@@ -116,7 +136,7 @@ export default function EventItem(props) {
                             <Button autoFocus onClick={ModalClose} color="primary">
                                 Annuler
                             </Button>
-                            <Button onClick={ModalClose} className={state.colorButton} autoFocus>
+                            <Button  className={state.colorButton} autoFocus onClick={confirmModal}>
                                 {state.textModal}
                             </Button>
                         </DialogActions>

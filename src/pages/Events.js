@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+// un seul event
 const EVENT_QUERY = gql`
     fragment EventQuery on Event{
         _id
@@ -38,6 +39,8 @@ const EVENT_QUERY = gql`
         createdAt
     }
 `
+
+//Liste des events
 const LIST_EVENTS = gql`
     ${EVENT_QUERY}
     query{
@@ -47,6 +50,9 @@ const LIST_EVENTS = gql`
     }
 `
 
+
+
+//Création d'un event
 const CREATE_EVENTS = gql`
     ${EVENT_QUERY}
     mutation CreateEvent($event_name: String!, $event_date: String!, $event_desc: String!) {
@@ -61,7 +67,23 @@ const CREATE_EVENTS = gql`
     }
 `;
 
+
+//requête suppression d'un event par l'id
+const DELETE_EVENTS = gql`
+    mutation DeleteEvent($id : ID!) {
+         deleteEvent(id: $id)
+        {
+            _id
+        }
+    }
+    
+   
+`;
+
+
+//fonction par defaut
 export default function EventsPage(props) {
+
 
     let classes = useStyles()
     const context = useContext(AuthContext)
@@ -70,7 +92,7 @@ export default function EventsPage(props) {
         creating: false,
         events: [],
         isLoading: false,
-        selectedEvent: null
+        selectedEvent: null,
     })
 
     //fonction fermeture d'une modal
@@ -90,16 +112,48 @@ export default function EventsPage(props) {
         setState({...state, selectedEvent: selectedEvent})
     }
 
+    //initialisation des valeurs
     const event_name = useRef('')
     const event_desc = useRef('')
     const event_date = useRef('')
     const event_time = useRef('')
 
-    const {loading, error, data} = useQuery(LIST_EVENTS)
 
+
+    const {loading, error, data} = useQuery(LIST_EVENTS)
+    // console.log(data)
+
+    //création de l'event
     const [modalConfirmHandler] = useMutation(
         CREATE_EVENTS,
         {
+            update(cache, { data: { CreateEvent } }) {
+                cache.modify({
+                    fields: {
+                        events(existingEvent = []) {
+                            const newEventRef = cache.writeFragment({
+                                data: {
+                                    event_name: event_name.current.value,
+                                    event_date: event_date.current.value + "T" + event_time.current.value,
+                                    event_desc: event_desc.current.value,
+                                    __typename: "Event"
+                                },
+                                fragment: gql`
+                                    fragment NewEvent on Event {
+                                      _id
+                                      event_name
+                                      event_date
+                                      event_desc
+                                    }
+                                  `
+                            });
+                            return existingEvent.concat(newEventRef);
+                        }
+                    }
+                });
+            },
+
+
             onCompleted: (dataMutationEvent) => {
                 if (dataMutationEvent.createEvent !== undefined) {
                     let listEvents = state.events
@@ -112,6 +166,16 @@ export default function EventsPage(props) {
             }
         }
     )
+
+    //constante de suppression d'un évent
+    const [deleteEvent]  = useMutation(DELETE_EVENTS,{
+        //recharge la liste d'évent
+        refetchQueries:[{query:LIST_EVENTS}]
+    })
+
+
+
+
     return (
         <div className={classes.root}>
             <AuthNavbar/>
@@ -135,6 +199,16 @@ export default function EventsPage(props) {
                                 event_name: event_name.current.value,
                                 event_date: event_date.current.value + "T" + event_time.current.value,
                                 event_desc: event_desc.current.value
+                            }
+                            ,
+                            optimisticResponse: {
+                                updateComment: {
+                                    id: "temp-id",
+                                    __typename: "Event",
+                                    event_name: event_name.current.value,
+                                    event_date: event_date.current.value + "T" + event_time.current.value,
+                                    event_desc: event_desc.current.value
+                                }
                             }
                         })
                     }
@@ -192,9 +266,10 @@ export default function EventsPage(props) {
                         error ?
                             <p>{JSON.stringify(error)}</p> :
                             <EventList
-                                events={state.events.concat(data.events)}
+                                events={data.events}
                                 authUserId={context.playload ? context.playload.userId : null}
                                 onViewDetail={showDetailHandler}
+                                deleteEvent={deleteEvent}
                             />
                 }
             </section>
