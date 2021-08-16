@@ -126,30 +126,18 @@ export default function EventsPage(props) {
     const [modalConfirmHandler] = useMutation(
         CREATE_EVENTS,
         {
-            update(cache, { data: { CreateEvent } }) {
+            update(cache, { data: { createEvent } }) {
                 cache.modify({
                     fields: {
                         events(existingEvent = []) {
                             const newEventRef = cache.writeFragment({
-                                data: {
-                                    event_name: event_name.current.value,
-                                    event_date: event_date.current.value + "T" + event_time.current.value,
-                                    event_desc: event_desc.current.value,
-                                    __typename: "Event"
-                                },
-                                fragment: gql`
-                                    fragment NewEvent on Event {
-                                      _id
-                                      event_name
-                                      event_date
-                                      event_desc
-                                    }
-                                  `
-                            });
-                            return existingEvent.concat(newEventRef);
+                                data: createEvent,
+                                fragment: EVENT_QUERY
+                            })
+                            return existingEvent.concat(newEventRef)
                         }
                     }
-                });
+                })
             },
         }
     )
@@ -186,15 +174,20 @@ export default function EventsPage(props) {
                                 event_name: event_name.current.value,
                                 event_date: event_date.current.value + "T" + event_time.current.value,
                                 event_desc: event_desc.current.value
-                            }
-                            ,
+                            },
                             optimisticResponse: {
-                                updateComment: {
-                                    id: "temp-id",
+                                createEvent: {
+                                    _id: "temp" + Date.now().toString(36),
                                     __typename: "Event",
                                     event_name: event_name.current.value,
                                     event_date: event_date.current.value + "T" + event_time.current.value,
-                                    event_desc: event_desc.current.value
+                                    event_desc: event_desc.current.value,
+                                    event_creator: {
+                                        __typename: "User",
+                                        _id:  context.playload.userId,
+                                        user_email: context.playload.user_email
+                                    },
+                                    createdAt: new Date()
                                 }
                             }
                         })
