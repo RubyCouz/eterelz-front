@@ -1,23 +1,30 @@
-import React, {useState, useContext, useRef} from 'react'
-import AuthContext from '../context/auth-context'
-import Modal from '../Components/Modal/Modal'
-import BackDrop from '../Components/Backdrop/Backdrop'
-import EventList from '../Components/Events/EventList/EventList'
-import AuthNavbar from '../Components/Navbar/AuthNavbar'
+import React, {
+    useState,
+    useContext,
+    useRef
+} from 'react'
 
 import AddIcon from '@material-ui/icons/Add'
 import {
     Fab,
     CircularProgress,
 } from '@material-ui/core'
+import {makeStyles, useTheme} from '@material-ui/core/styles'
 
-import './Events.css'
 import {
     gql,
     useQuery,
     useMutation
 } from '@apollo/client'
-import {makeStyles, useTheme} from "@material-ui/core/styles"
+
+import Modal from '../Components/Modal/Modal'
+import BackDrop from '../Components/Backdrop/Backdrop'
+import EventList from '../Components/Events/EventList/EventList'
+import AuthNavbar from '../Components/Navbar/AuthNavbar'
+
+import AuthContext from '../context/auth-context'
+
+import './Events.css'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-// un seul event
+//Fragement d'un seul event
 const EVENT_QUERY = gql`
     fragment EventQuery on Event{
         _id
@@ -50,8 +57,6 @@ const LIST_EVENTS = gql`
     }
 `
 
-
-
 //Création d'un event
 const CREATE_EVENTS = gql`
     ${EVENT_QUERY}
@@ -65,7 +70,7 @@ const CREATE_EVENTS = gql`
             ...EventQuery
         }
     }
-`;
+`
 
 
 //requête suppression d'un event par l'id
@@ -78,8 +83,7 @@ const DELETE_EVENTS = gql`
     }
     
    
-`;
-
+`
 
 //fonction par defaut
 export default function EventsPage(props) {
@@ -118,9 +122,7 @@ export default function EventsPage(props) {
     const event_time = useRef('')
 
 
-
     const {loading, error, data} = useQuery(LIST_EVENTS)
-    // console.log(data)
 
     //création de l'event
     const [modalConfirmHandler] = useMutation(
@@ -148,9 +150,6 @@ export default function EventsPage(props) {
         refetchQueries:[{query:LIST_EVENTS}]
     })
 
-
-
-
     return (
         <div className={classes.root}>
             <AuthNavbar/>
@@ -158,96 +157,98 @@ export default function EventsPage(props) {
             {
                 //condition de création OU de sélection d'un évent
                 (state.creating || state.selectedEvent) &&
-                <BackDrop/>
+                    <BackDrop/>
             }
             {
                 //Modal de création d'un évent
                 state.creating &&
-                <Modal
-                    title="Création d'un event"
-                    canCancel
-                    canConfirm
-                    onCancel={modalCancelHandler}
-                    onConfirm={
-                        () => modalConfirmHandler({
-                            variables: {
-                                event_name: event_name.current.value,
-                                event_date: event_date.current.value + "T" + event_time.current.value,
-                                event_desc: event_desc.current.value
-                            },
-                            optimisticResponse: {
-                                createEvent: {
-                                    _id: "temp" + Date.now().toString(36),
-                                    __typename: "Event",
+                    <Modal
+                        title="Création d'un event"
+                        canCancel
+                        canConfirm
+                        onCancel={modalCancelHandler}
+                        onConfirm={
+                            () => modalConfirmHandler({
+                                variables: {
                                     event_name: event_name.current.value,
                                     event_date: event_date.current.value + "T" + event_time.current.value,
-                                    event_desc: event_desc.current.value,
-                                    event_creator: {
-                                        __typename: "User",
-                                        _id:  context.playload.userId,
-                                        user_email: context.playload.user_email
-                                    },
-                                    createdAt: new Date()
+                                    event_desc: event_desc.current.value
+                                },
+                                optimisticResponse: {
+                                    createEvent: {
+                                        _id: "temp" + Date.now().toString(36),
+                                        __typename: "Event",
+                                        event_name: event_name.current.value,
+                                        event_date: event_date.current.value + "T" + event_time.current.value,
+                                        event_desc: event_desc.current.value,
+                                        event_creator: {
+                                            __typename: "User",
+                                            _id:  context.playload.userId,
+                                            user_email: context.playload.user_email
+                                        },
+                                        createdAt: new Date()
+                                    }
                                 }
-                            }
-                        })
-                    }
-                    confirmText="Confirm"
-                >
-                    <form action="">
-                        <div className="form_control">
-                            <label htmlFor="event_name">Nom de l'event</label>
-                            <input type="text" id="event_name" ref={event_name}/>
-                        </div>
-                        <div className="form_control">
-                            <label htmlFor="event_desc">Description</label>
-                            <textarea name="event_desc" id="event_desc" cols="10" rows="4" ref={event_desc}/>
-                        </div>
-                        <div className="form_control">
-                            <label htmlFor="event_date">Date</label>
-                            <input type="date" id="event_date" ref={event_date}/>
-                        </div>
-                        <div className="form_control">
-                            <label htmlFor="event_time">Heure</label>
-                            <input type="time" id="event_time" ref={event_time}/>
-                        </div>
-                    </form>
-                </Modal>
+                            })
+                        }
+                        confirmText="Confirm"
+                    >
+                        <form action="">
+                            <div className="form_control">
+                                <label htmlFor="event_name">Nom de l'event</label>
+                                <input type="text" id="event_name" ref={event_name}/>
+                            </div>
+                            <div className="form_control">
+                                <label htmlFor="event_desc">Description</label>
+                                <textarea name="event_desc" id="event_desc" cols="10" rows="4" ref={event_desc}/>
+                            </div>
+                            <div className="form_control">
+                                <label htmlFor="event_date">Date</label>
+                                <input type="date" id="event_date" ref={event_date}/>
+                            </div>
+                            <div className="form_control">
+                                <label htmlFor="event_time">Heure</label>
+                                <input type="time" id="event_time" ref={event_time}/>
+                            </div>
+                        </form>
+                    </Modal>
             }
             {
                 //Vue modal d'un event crée
                 state.selectedEvent &&
-                <Modal
-                    title={state.selectedEvent.event_name}
-                    canCancel
-                    canConfirm
-                    onCancel={modalCancelHandler}
-                    onConfirm={modalCancelHandler}
-                >
-                    <h2>{state.selectedEvent.event_name}</h2>
-                    <h3>{new Date(state.selectedEvent.event_date).toLocaleDateString()}</h3>
-                    <p>{state.selectedEvent.event_desc}</p>
-                </Modal>
+                    <Modal
+                        title={state.selectedEvent.event_name}
+                        canCancel
+                        canConfirm
+                        onCancel={modalCancelHandler}
+                        onConfirm={modalCancelHandler}
+                    >
+                        <h2>{state.selectedEvent.event_name}</h2>
+                        <h3>{new Date(state.selectedEvent.event_date).toLocaleDateString()}</h3>
+                        <p>{state.selectedEvent.event_desc}</p>
+                    </Modal>
             }
             {
                 context.token &&
-                //Si connecter afficher la création d'évent
-                <div className="events-control">
-                    <p>Créez Votre Event !!!</p>
-                    <Fab color="primary" aria-label="add" onClick={startCreateEventHandler}>
-                        <AddIcon/>
-                    </Fab>
-                </div>
+                    //Si connecter afficher la création d'évent
+                    <div className="events-control">
+                        <p>Créez Votre Event !!!</p>
+                        <Fab color="primary" aria-label="add" onClick={startCreateEventHandler}>
+                            <AddIcon/>
+                        </Fab>
+                    </div>
             }
             <section>
                 {
                     loading ?
-                        <CircularProgress/> :
+                        <CircularProgress/> 
+                    :
                         error ?
-                            <p>{JSON.stringify(error)}</p> :
+                            <p>{JSON.stringify(error)}</p> 
+                        :
                             <EventList
                                 events={data.events}
-                                authUserId={context.playload ? context.playload.userId : null}
+                                authUserId={context.playload.userId}
                                 onViewDetail={showDetailHandler}
                                 deleteEvent={deleteEvent}
                             />
