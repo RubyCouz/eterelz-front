@@ -325,29 +325,28 @@ export default function AuthNavbar(props) {
             <div className={classes.grow}>
                 <AppBar position="static">
                     <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="open drawer"
-                        >
-                            {['left'].map((anchor) => (
-                                <React.Fragment key={anchor}>
-                                    <IconButton onClick={toggleDrawer(anchor, true)}>
-                                        <MenuIcon/>
-                                    </IconButton>
+                        {['left'].map((anchor) => (
+                            <React.Fragment key={anchor}>
+                                <IconButton 
+                                    edge="start"
+                                    className={classes.menuButton}
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    onClick={toggleDrawer(anchor, true)}
+                                >
+                                    <MenuIcon/>
+                                </IconButton>
 
-                                    <SwipeableDrawer
-                                        anchor={anchor}
-                                        open={state[anchor]}
-                                        onClose={toggleDrawer(anchor, false)}
-                                        onOpen={toggleDrawer(anchor, true)}
-                                    >
-                                        {list(anchor)}
-                                    </SwipeableDrawer>
-                                </React.Fragment>
-                            ))}
-                        </IconButton>
+                                <SwipeableDrawer
+                                    anchor={anchor}
+                                    open={state[anchor]}
+                                    onClose={toggleDrawer(anchor, false)}
+                                    onOpen={toggleDrawer(anchor, true)}
+                                >
+                                    {list(anchor)}
+                                </SwipeableDrawer>
+                            </React.Fragment>
+                        ))}
                         <NavLink to="/">
                             <img
                                 src="./img/themes/logo.png"
