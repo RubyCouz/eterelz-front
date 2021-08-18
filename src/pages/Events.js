@@ -145,10 +145,14 @@ export default function EventsPage(props) {
     )
 
     //constante de suppression d'un évent
-    const [deleteEvent]  = useMutation(DELETE_EVENTS,{
-        //recharge la liste d'évent
-        refetchQueries:[{query:LIST_EVENTS}]
-    })
+    const [deleteEvent]  = useMutation(
+        DELETE_EVENTS,
+        {
+            update: (cache, { data: { deleteEvent } }) => {
+                cache.evict({ id: "Event:" + deleteEvent._id })    
+            }
+        }
+    )
 
     return (
         <div className={classes.root}>
