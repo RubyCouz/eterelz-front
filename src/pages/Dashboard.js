@@ -10,7 +10,7 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-
+import GameList from '../Components/Game/GameList'
 import {
     gql,
     useQuery,
@@ -18,6 +18,7 @@ import {
 } from '@apollo/client'
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Upload from "../Components/Upload/Upload";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -62,6 +63,8 @@ const GAME_QUERY = gql`
     fragment GameQuery on Game{
         _id
         game_name
+        game_desc
+        game_pic
         game_creator {
             _id
             user_email
@@ -79,10 +82,11 @@ const LIST_GAMES = gql`
 `
 const CREATE_GAME = gql`
     ${GAME_QUERY}
-    mutation CreateGame($game_name: String!, $game_desc: String!) {
+    mutation CreateGame($game_name: String!, $game_desc: String!, $game_pic: String!) {
         createGame(gameInput: {
             game_name: $game_name
             game_desc: $game_desc
+            game_pic: $game_pic
         })
         {
             ...GameQuery
@@ -103,6 +107,7 @@ export default function Dashboard() {
 
     const game_name = useRef('')
     const game_desc = useRef('')
+    const game_pic = useRef('')
 
     const {loading, error, data} = useQuery(LIST_GAMES)
 
@@ -130,76 +135,87 @@ export default function Dashboard() {
             }
         }
     )
-
     return (
-        <div className={classes.root}>
-            <AuthNavbar/>
-            <AppBar position="static" color="default">
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="fullWidth"
-                    aria-label="full width tabs example"
+        <>
+            <div className={classes.root}>
+                <AuthNavbar/>
+                <AppBar position="static" color="default">
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="fullWidth"
+                        aria-label="full width tabs example"
+                    >
+                        <Tab label="Liste des jeux" {...a11yProps(0)} />
+                        <Tab label="Item Two" {...a11yProps(1)} />
+                        <Tab label="Ajouter un jeu" {...a11yProps(2)} />
+                    </Tabs>
+                </AppBar>
+                <SwipeableViews
+                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    index={value}
+                    onChangeIndex={handleChangeIndex}
                 >
-                    <Tab label="Item One" {...a11yProps(0)} />
-                    <Tab label="Item Two" {...a11yProps(1)} />
-                    <Tab label="Ajouter un jeu" {...a11yProps(2)} />
-                </Tabs>
-            </AppBar>
-            <SwipeableViews
-                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                index={value}
-                onChangeIndex={handleChangeIndex}
-            >
-                <TabPanel value={value} index={0} dir={theme.direction}>
-                    Item One
-                </TabPanel>
-                <TabPanel value={value} index={1} dir={theme.direction}>
-                    Item Two
-                </TabPanel>
-                <TabPanel value={value} index={2} dir={theme.direction}>
-                    <form action="" className="auth-form">
-                        <div className="form-control">
-                            <TextField
-                                id="game_name"
-                                label="Titre du jeu"
-                                name="game_name"
-                                type="text"
-                                helperText="Entrez le titre du jeu"
-                                fullWidth={true}
-                                inputRef={game_name}
-                                required
-                            />
-                            <TextField
-                                id="game_desc"
-                                label="Description"
-                                name="game_desc"
-                                type="text"
-                                helperText="La description ne doit pas dépasser 100 caractère"
-                                fullWidth={true}
-                                inputRef={game_desc}
-                                required
-                            />
-                        </div>
-                        <Box display="flex" style={{width: '100%'}}>
-                            <Button variant="contained"
-                                    color="primary"
-                                    justifyContent="flex-end"
-                                    onClick={
-                                        () => addGameHandler({
-                                        variables: {
-                                            game_name: game_name.current.value,
-                                            game_desc: game_desc.current.value,
-                                            game_creator: context.playload.userId
-                                        }
-                                    })}
-                            >Add</Button>
-                        </Box>
-                    </form>
-                </TabPanel>
-            </SwipeableViews>
-        </div>
+                    <TabPanel value={value} index={0} dir={theme.direction}>
+                        {
+                            data ?
+                                <GameList
+                                    games={data.games}
+                                    authUserId={context.playload ? context.playload.userId : null}
+                                /> :
+                                <p>{JSON.stringify(error)}</p>
+
+                        }
+                    </TabPanel>
+                    <TabPanel value={value} index={1} dir={theme.direction}>
+                        Item Two
+                    </TabPanel>
+                    <TabPanel value={value} index={2} dir={theme.direction}>
+                        <form action="" className="auth-form">
+                            <div className="form-control">
+                                <TextField
+                                    id="game_name"
+                                    label="Titre du jeu"
+                                    name="game_name"
+                                    type="text"
+                                    helperText="Entrez le titre du jeu"
+                                    fullWidth={true}
+                                    inputRef={game_name}
+                                    required
+                                />
+                                <TextField
+                                    id="game_desc"
+                                    label="Description"
+                                    name="game_desc"
+                                    type="text"
+                                    helperText="La description ne doit pas dépasser 100 caractère"
+                                    fullWidth={true}
+                                    inputRef={game_desc}
+                                    required
+                                />
+                                <Upload/>
+                            </div>
+                            <Box display="flex" style={{width: '100%'}}>
+                                <Button variant="contained"
+                                        color="primary"
+                                        justifyContent="flex-end"
+                                        onClick={
+                                            () => addGameHandler({
+                                                variables: {
+                                                    game_name: game_name.current.value,
+                                                    game_desc: game_desc.current.value,
+                                                    game_pic: game_pic.current.value,
+                                                    game_creator: context.playload.userId
+                                                }
+                                            })}
+                                >Add</Button>
+                            </Box>
+                        </form>
+                    </TabPanel>
+                </SwipeableViews>
+            </div>
+        </>
 );
 }
