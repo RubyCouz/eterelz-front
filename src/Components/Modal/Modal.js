@@ -1,24 +1,39 @@
-import React from 'react'
-import './Modal.css'
-const modal = props => {
-    return (
-        <div className="modal">
-            <header className="modal__header"><p>{props.title}</p></header>
-            <section className="modal__content">
-                {props.children}
-            </section>
-            <section className="modal__actions">
-                {props.canCancel &&
-                <button className="btn" onClick={props.onCancel}>
-                    Cancel
-                </button>}
-                {props.canConfirm &&
-                <button className="btn" onClick={props.onConfirm}>
-                    {props.confirmText}
-                </button>}
-            </section>
-        </div>
-    )
-}
+import React from 'react';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default modal
+export default function AlertDialog(props) {
+
+
+    return (
+        <div >
+
+            <Dialog
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                open={true}
+                >
+                <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description" >
+                        {props.children}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    {props.canCancel &&
+                    <Button onClick={props.onCancel} color="primary">
+                        Disagree
+                    </Button>}
+                    {props.canConfirm &&
+                    <Button onClick={props.onConfirm} color="primary" autoFocus>
+                        Agree
+                    </Button>}
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
+}

@@ -3,6 +3,7 @@ import './EventList.css'
 import EventItem from './EventItem/EventItem'
 
 export default function EventList(props) {
+
     return (
         <ul
             className = "events__list"
@@ -18,6 +19,8 @@ export default function EventList(props) {
                         creatorId = {event.event_creator._id}
                         onDetail = {props.onViewDetail}
                         deleteEvent={props.deleteEvent}
+                        showDialogSetting = {props.showDialogSetting}
+
                     />
                 )
            }

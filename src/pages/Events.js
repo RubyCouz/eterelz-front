@@ -18,6 +18,7 @@ import {
 } from '@apollo/client'
 
 import Modal from '../Components/Modal/Modal'
+
 import BackDrop from '../Components/Backdrop/Backdrop'
 import EventList from '../Components/Events/EventList/EventList'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-//Fragement d'un seul event
+//Fragment d'un seul event
 const EVENT_QUERY = gql`
     fragment EventQuery on Event{
         _id
@@ -96,6 +97,7 @@ export default function EventsPage(props) {
         creating: false,
         isLoading: false,
         selectedEvent: null,
+
     })
 
     //fonction fermeture d'une modal
@@ -114,6 +116,8 @@ export default function EventsPage(props) {
         const selectedEvent = data.events.find(e => e._id === eventId)
         setState({...state, selectedEvent: selectedEvent})
     }
+
+
 
     //initialisation des valeurs
     const event_name = useRef('')
@@ -232,6 +236,8 @@ export default function EventsPage(props) {
                         <p>{state.selectedEvent.event_desc}</p>
                     </Modal>
             }
+
+
             {
                 context.token &&
                     //Si connecter afficher la création d'évent
