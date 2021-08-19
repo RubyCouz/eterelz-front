@@ -11,9 +11,9 @@ import {Redirect} from "react-router-dom";
  * parents
  */
 export default React.createContext({
-    token: null,
+    token: false,
     playload: null,
-    login: (token) => {
+    login: () => {
     },
     logout: () => {
     }

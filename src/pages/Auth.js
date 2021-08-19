@@ -252,9 +252,7 @@ export default function FullWidthTabs(props) {
                         if(state.stayLogged) {
                             // défintion cookie
                         }
-                        context.login(
-                            resData.data.login.token,
-                        )
+                        context.login()
                     }
                 })
                 .catch(err => {
