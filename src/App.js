@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {BrowserRouter} from 'react-router-dom'
 import {ApolloProvider} from '@apollo/client'
 
@@ -31,6 +31,11 @@ export default function App() {
     const [avatar, setAvatar] = useState({id: null})
     
     const [theme, setTheme] = useThemeEterelz()
+
+    useEffect(() => {
+        let darkModeLS = window.localStorage.getItem('darkMode')
+        darkModeLS !== 'null' && setTheme(darkModeLS)
+    }, [login, logout])
 
     return (
         <BrowserRouter>

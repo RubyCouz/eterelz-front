@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect} from "react"
 import { Cookies } from 'react-cookie'
 
 export default function useAuth() {
@@ -12,8 +12,7 @@ export default function useAuth() {
     const cookies = new Cookies
 
     useEffect(() => {
-        const tokenStorage = window.localStorage.getItem('token');
-        login(tokenStorage)
+        login()
         setLoading(false)
     }, [])
 
@@ -24,8 +23,8 @@ export default function useAuth() {
             const playload = JSON.parse(window.atob(arrayJWT[1]))
 
             let darkModeLS = window.localStorage.getItem('darkMode')
-            window.localStorage.setItem('darkMode',darkModeLS ? darkModeLS : playload.user_isDark )
-
+            darkModeLS === 'null' && window.localStorage.setItem('darkMode', playload.user_isDark )
+            
             setState({
                 token: true,
                 playload: playload,
