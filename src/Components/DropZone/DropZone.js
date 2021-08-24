@@ -8,24 +8,25 @@ export default function DropZone(props) {
         highLight: false
     })
 
-    const game_pic = useRef('')
+    // const game_pic = useRef('')
     // ouverture de la boite de dialogue pour upload de fichier, puisque input invisible
-    const openFileDialog = () => {
-        if (props.disabled) {
-            return
-        }
-        return game_pic.current.click
-    }
+    // const openFileDialog = () => {
+    //     if (props.disabled) {
+    //         return
+    //     }
+    //     return game_pic.current.click
+    // }
     //ajout d'un fichier
-    const onFilesAdded = (evt) => {
-        if (props.disabled) {
-            return
-        }
-        const files = evt.target.files
-        const array = fileListToArray(files)
-        props.onFilesAdded(array)
-
-    }
+    // const onFilesAdded = (evt) => {
+    //     if (props.disabled) {
+    //         return
+    //     }
+    //     const files = evt.target.files
+    //     const array = fileListToArray(files)
+    //     console.log(array)
+    //     props.onFilesAdded(array)
+    //
+    // }
     // convertion de la liste de fichier en tableau
     const fileListToArray = (list) => {
         const array = []
@@ -66,19 +67,18 @@ export default function DropZone(props) {
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
             onDrop={onDrop}
-            onClick={openFileDialog}
+            // onClick={openFileDialog}
             style={{cursor: props.disabled ? 'default' : 'pointer'}}
-            ref={game_pic}
         >
             <CloudUploadIcon className="icon"/>
-            {/*<input*/}
-            {/*    ref={fileInputRef}*/}
-            {/*    className="fileInput"*/}
-            {/*    type="file"*/}
-            {/*    multiple*/}
-            {/*    onChange={onFilesAdded}*/}
-            {/*/>*/}
-            {/*<span>Upload Files</span>*/}
+            <input
+                ref={props.uploadRef}
+                className="fileInput"
+                type="file"
+                multiple
+                onChange={props.onFilesAdded}
+            />
+            <span>Upload Files</span>
         </div>
     )
 }

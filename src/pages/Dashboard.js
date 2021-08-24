@@ -19,6 +19,8 @@ import {
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Upload from "../Components/Upload/Upload";
+import Progress from "../Components/Progress/Progress";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -102,16 +104,33 @@ export default function Dashboard() {
 
     const [state, setState] = useState({
         games: [],
-        isLoading: false
+        isLoading: false,
+        files: [],
+        uploading: false,
+        uploadProgress: [],
+        successfullUploaded: false
     })
 
     const game_name = useRef('')
     const game_desc = useRef('')
     const game_pic = useRef('')
-
     const {loading, error, data} = useQuery(LIST_GAMES)
 
     const [value, setValue] = React.useState(0);
+
+    const [addGameHandler] = useMutation(
+        CREATE_GAME,
+        {
+            onCompleted: (dataMutationGame) => {
+                if (dataMutationGame.createGame !== undefined) {
+                    console.log(state.games)
+                    let listGame = state.games
+                    listGame.push(dataMutationGame.createGame)
+                    setState({...state, games: listGame})
+                }
+            }
+        }
+    )
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -121,20 +140,124 @@ export default function Dashboard() {
         setValue(index);
     };
 
+    const onFilesAdded = (files) => {
+        console.log(files)
+        setState({...state, files: files})
+        // console.log(state.files)
+    }
 
-
-    const [addGameHandler] = useMutation(
-        CREATE_GAME,
-        {
-            onCompleted: (dataMutationGame) => {
-                if(dataMutationGame.createGame !== undefined) {
-                    let listGame = state.games
-                    listGame.push(dataMutationGame.createGame)
-                    setState({...state, games: listGame})
+    const addGame = async () => {
+        setState({
+            ...state,
+            uploadProgress: {},
+            uploading: true
+        })
+        const promises = []
+        state.files.forEach(file => {
+            console.log(file)
+            promises.push(sendRequest(file))
+            addGameHandler({
+                variables: {
+                    game_name: game_name.current.value,
+                    game_desc: game_desc.current.value,
+                    game_pic: state.files[0].name,
+                    game_creator: context.playload.userId
                 }
-            }
+            })
+        })
+        try{
+            await Promise.all(promises)
+                .setState({
+                    ...state,
+                    successfullUpload: true,
+                    uploading: false
+                })
+
+        } catch (e) {
+            // ajout error
+            setState({
+                ...state,
+                successfullUploaded: true,
+                uploading:false
+            })
         }
-    )
+
+    }
+
+    const sendRequest = (file) => {
+        return new Promise((resolve, reject) => {
+            const req = new XMLHttpRequest()
+
+            req.upload.addEventListener('progress', event => {
+                if(event.lengthComputable) {
+                    const copy = {...state.uploadProgress}
+                    copy[file.name] = {
+                        state: 'pending',
+                        percentage: (event.loaded / event.total) * 100
+                    }
+                    setState({
+                        ...state,
+                        uploadProgress: copy
+                    })
+                }
+            })
+
+            req.upload.addEventListener('load', event => {
+                const copy = {...state.uploadProgress}
+                copy[file.name] = {
+                    state: 'done',
+                    percentage: 100
+                }
+                setState({
+                    ...state,
+                    uploadProgress: copy
+                })
+                resolve(req.response)
+            })
+
+            req.upload.addEventListener('error', event => {
+                const copy = {...state.uploadProgress}
+                copy[file.name] = {
+                    state: 'error',
+                    percentage: 0
+                }
+                setState({
+                    ...state,
+                    uploadProgress: copy
+                })
+                reject(req.response)
+            })
+            const formData = new FormData()
+            formData.append("file", file, file.name)
+
+            req.open('POST', 'http://localhost:8080/upload')
+            req.send(formData)
+        })
+    }
+
+    const renderProgress = (file) => {
+        setState({
+            ...state,
+            uploadProgress: file.name
+        })
+        const uploadProgress = state.uploadProgress
+        if(state.uploading || state.successfullUploaded) {
+            return(
+                <div className="progressWrapper">
+                    <Progress progress={uploadProgress ? uploadProgress.percentage : 0} />
+                    <CheckCircleOutlineIcon
+                        className="checkIcon"
+                        style={{
+                            opacity:
+                                uploadProgress && uploadProgress.state === "done" ? 0.5 : 0
+                        }}
+                    />
+                </div>
+            )
+        }
+    }
+
+
     return (
         <>
             <div className={classes.root}>
@@ -173,7 +296,7 @@ export default function Dashboard() {
                         Item Two
                     </TabPanel>
                     <TabPanel value={value} index={2} dir={theme.direction}>
-                        <form action="" className="auth-form">
+                        <form action="" className="auth-form" encType="multipart/form-data">
                             <div className="form-control">
                                 <TextField
                                     id="game_name"
@@ -195,21 +318,18 @@ export default function Dashboard() {
                                     inputRef={game_desc}
                                     required
                                 />
-                                <Upload/>
+                                <Upload
+                                    uploadRef={game_pic}
+                                    onFilesAdded={onFilesAdded}
+                                    renderProgress={renderProgress}
+                                    files={state.files}
+                                />
                             </div>
                             <Box display="flex" style={{width: '100%'}}>
                                 <Button variant="contained"
                                         color="primary"
                                         justifyContent="flex-end"
-                                        onClick={
-                                            () => addGameHandler({
-                                                variables: {
-                                                    game_name: game_name.current.value,
-                                                    game_desc: game_desc.current.value,
-                                                    game_pic: game_pic.current.value,
-                                                    game_creator: context.playload.userId
-                                                }
-                                            })}
+                                        onClick={addGame}
                                 >Add</Button>
                             </Box>
                         </form>
@@ -217,5 +337,5 @@ export default function Dashboard() {
                 </SwipeableViews>
             </div>
         </>
-);
+    );
 }
