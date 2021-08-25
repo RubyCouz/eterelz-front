@@ -25,7 +25,7 @@ import ThemeContext from '../../context/theme-context'
 
 export default function TableRowEdit(props) {
 
-    const {queryName, nameColumn, modifiedValue, idUser, data, setDefaultValue, processDisplay, processAfterSend, regex} = props
+    const {queryName, nameColumn, modifiedValue, idUser, data, processDisplay, processAfterSend, regex} = props
 
     const [showField, setShowField] = useState(false)
     const ShowField = () => {
@@ -58,7 +58,7 @@ export default function TableRowEdit(props) {
                 ${queryName}
             }
         }
-    `;
+    `
 
     //Mutation
     const [sendValidData] = useMutation(UPDATE_VAR, {
@@ -93,7 +93,7 @@ export default function TableRowEdit(props) {
                 data: {
                     [queryName]: dataCache,
                 },
-                });
+            })
         },
     })
 
@@ -184,7 +184,7 @@ export default function TableRowEdit(props) {
                             color="default"
                             inputProps={{'aria-label': 'checkbox with default color'}}
                         />
-                        :
+                    :
                         entryValue !== undefined ?
                             showField ?
                                 <TextField
@@ -198,12 +198,12 @@ export default function TableRowEdit(props) {
                                     onKeyDown={handleKeyPress}
                                     size="small"
                                 />
-                                :
+                            :
                                 Array.isArray(entryValue) ?
                                     entryValue.map(element => <Chip label={element}/>)
-                                    :
+                                :
                                     <Typography>{entryValue}</Typography>
-                            :
+                        :
                             <CircularProgress size={15}/>
                 }
             </TableCell>
@@ -215,7 +215,7 @@ export default function TableRowEdit(props) {
                 {
                     !(modifiedValue === false) ?
                         <CreateIcon fontSize="small"/>
-                        :
+                    :
                         undefined
                 }
             </TableCell>
