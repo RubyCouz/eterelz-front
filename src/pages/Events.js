@@ -3,29 +3,24 @@ import React, {
     useContext,
     useRef
 } from 'react'
-
 import AddIcon from '@material-ui/icons/Add'
 import {
     Fab,
     CircularProgress,
 } from '@material-ui/core'
 import {makeStyles, useTheme} from '@material-ui/core/styles'
-
 import {
     gql,
     useQuery,
     useMutation
 } from '@apollo/client'
-
 import Modal from '../Components/Modal/Modal'
-
 import BackDrop from '../Components/Backdrop/Backdrop'
 import EventList from '../Components/Events/EventList/EventList'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
-
 import AuthContext from '../context/auth-context'
-
 import './Events.css'
+import Autocomplete from '../Components/Tags/Tags'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -82,9 +77,20 @@ const DELETE_EVENTS = gql`
             _id
         }
     }
-    
-   
 `
+
+//requête d'pdate d'un event par l'id
+const UPDATE_EVENTS = gql`
+ mutation UpdateEvent($id : ID!, $updateEventInput: UpdateEventInput) {
+         updateEvent(id: $id, updateEventInput : $updateEventInput)
+        {
+            event_name 
+            event_date
+            event_desc
+        }
+    }
+`
+
 
 //fonction par defaut
 export default function EventsPage(props) {
@@ -97,25 +103,29 @@ export default function EventsPage(props) {
         creating: false,
         isLoading: false,
         selectedEvent: null,
-
+        updating : false
     })
 
     //fonction fermeture d'une modal
     const modalCancelHandler = () => {
-        const cancelModal = {creating: false, selectedEvent: null}
+        const cancelModal = {creating: false, selectedEvent: null, updating : false}
         setState({...state, ...cancelModal})
     }
 
     //fonction de création d'un évent
-    const startCreateEventHandler = () => {
-        setState({...state, creating: true})
+    const openModal = variable => {
+        setState({...state, ...variable})
     }
+
+
+
 
     //fonction d'affichage des détails d'un évent
     const showDetailHandler = eventId => {
         const selectedEvent = data.events.find(e => e._id === eventId)
         setState({...state, selectedEvent: selectedEvent})
     }
+
 
 
 
@@ -156,6 +166,31 @@ export default function EventsPage(props) {
                 cache.evict({ id: "Event:" + deleteEvent._id })    
             }
         }
+    )
+
+
+
+
+    //constante de modification d'un évent
+    const [updateEvent]  = useMutation(
+        UPDATE_EVENTS,
+        {
+                    refetchQueries:[{query:LIST_EVENTS}]
+            // update(cache, { data: { updateEvent } }) {
+            //     cache.modify({
+            //         fields: {
+            //             events(existingEvent = []) {
+            //                 const updateEventRef = cache.writeFragment({
+            //                     data: updateEvent,
+            //                     fragment: EVENT_QUERY
+            //                 })
+            //                 return existingEvent.concat(updateEventRef)
+            //             }
+            //         }
+            //     })
+            // },
+        }
+
     )
 
     return (
@@ -201,7 +236,9 @@ export default function EventsPage(props) {
                         }
                         confirmText="Confirm"
                     >
+
                         <form action="">
+
                             <div className="form_control">
                                 <label htmlFor="event_name">Nom de l'event</label>
                                 <input type="text" id="event_name" ref={event_name}/>
@@ -220,6 +257,59 @@ export default function EventsPage(props) {
                             </div>
                         </form>
                     </Modal>
+
+            }
+            {
+                state.updating &&
+                <Modal
+                    title="Modification d'un évent"
+                    canCancel
+                    canConfirm
+                    onCancel={modalCancelHandler}
+                    onConfirm={
+                    () => updateEvent({
+                        variables: {
+                            id : state.id,
+                            updateEventInput : {
+                                event_name: event_name.current.value,
+                                event_date: event_date.current.value + "T" + event_time.current.value,
+                                event_desc: event_desc.current.value
+                            },
+                        },
+                        // optimisticResponse: {
+                        //     updateEvent: {
+                        //         __typename: "Event",
+                        //         event_name: event_name.current.value,
+                        //         event_date: event_date.current.value + "T" + event_time.current.value,
+                        //         event_desc: event_desc.current.value,
+                        //
+                        //     }
+                        // }
+                    })
+                }
+                    confirmText="Confirm"
+                    >
+
+                    <form action="">
+
+                        <div className="form_control">
+                            <label htmlFor="event_name">Nom de l'event</label>
+                            <input type="text" id="event_name" ref={event_name} />
+                        </div>
+                        <div className="form_control">
+                            <label htmlFor="event_desc">Description</label>
+                            <textarea name="event_desc" id="event_desc" cols="10" rows="4" ref={event_desc}/>
+                        </div>
+                        <div className="form_control">
+                            <label htmlFor="event_date">Date</label>
+                            <input type="date" id="event_date" ref={event_date}/>
+                        </div>
+                        <div className="form_control">
+                            <label htmlFor="event_time">Heure</label>
+                            <input type="time" id="event_time" ref={event_time}/>
+                        </div>
+                    </form>
+                </Modal>
             }
             {
                 //Vue modal d'un event crée
@@ -243,11 +333,12 @@ export default function EventsPage(props) {
                     //Si connecter afficher la création d'évent
                     <div className="events-control">
                         <p>Créez Votre Event !!!</p>
-                        <Fab color="primary" aria-label="add" onClick={startCreateEventHandler}>
+                        <Fab color="primary" aria-label="add" onClick={() => openModal({creating: true})}>
                             <AddIcon/>
                         </Fab>
                     </div>
             }
+            <Autocomplete></Autocomplete>
             <section>
                 {
                     loading ?
@@ -261,6 +352,8 @@ export default function EventsPage(props) {
                                 authUserId={context.playload.userId}
                                 onViewDetail={showDetailHandler}
                                 deleteEvent={deleteEvent}
+                                openModal={openModal}
+
                             />
                 }
             </section>

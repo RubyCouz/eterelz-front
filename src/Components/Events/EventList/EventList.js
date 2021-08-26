@@ -20,7 +20,7 @@ export default function EventList(props) {
                         onDetail = {props.onViewDetail}
                         deleteEvent={props.deleteEvent}
                         showDialogSetting = {props.showDialogSetting}
-
+                        openModal={props.openModal}
                     />
                 )
            }

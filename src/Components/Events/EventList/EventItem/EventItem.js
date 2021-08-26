@@ -136,6 +136,9 @@ export default function RecipeReviewCard(props) {
         }
     }
 
+
+
+
     //expension de la carte (pour voir les infos)
     const [expanded, setExpanded] = React.useState(false);
 
@@ -217,7 +220,7 @@ export default function RecipeReviewCard(props) {
                                 <PageviewIcon/>
                             </IconButton>
 
-                            <IconButton aria-label="edit">
+                            <IconButton aria-label="edit" onClick={() => props.openModal({updating: true, id : props.eventId})}>
                                 <EditIcon/>
                             </IconButton>
                             <IconButton aria-label="delete" onClick={deleteModal}>
@@ -243,7 +246,7 @@ export default function RecipeReviewCard(props) {
                             {
                                 //edition sur les évent non crées
                                 (auth.token && auth.playload.userRole === 'admin') &&
-                                <IconButton aria-label="edit">
+                                <IconButton aria-label="edit" onClick={() => props.openModal({updating: true, id : props.eventId})}>
                                     <EditIcon/>
                                 </IconButton>
                             }
