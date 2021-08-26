@@ -228,9 +228,9 @@ export default function Dashboard() {
                 reject(req.response)
             })
             const formData = new FormData()
-            formData.append("file", file, file.name)
+            formData.append('file', file, file.name)
 
-            req.open('POST', 'http://localhost:8080/upload')
+            req.open('POST', 'http://localhost:8080/upload/game')
             req.send(formData)
         })
     }
