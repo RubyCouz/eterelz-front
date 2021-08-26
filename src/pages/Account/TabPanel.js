@@ -41,7 +41,6 @@ export default function TabPanel(props) {
                         {...columnData}
                         key={ columnData.queryName }
                         idUser={ idUser }
-                        //setDefaultValue = { setDefaultValue }
                       />
                   )
                 }

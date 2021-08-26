@@ -1,6 +1,5 @@
 import React, {
   useContext,
-  useEffect,
   useMemo,
   useState
 } from 'react'
@@ -90,20 +89,20 @@ export default function Account() {
     }
     , []
   )
+
   //Création des fenêtres de contenue
   const tabsPanels = useMemo(
     () => {
       let tabsPanels = []
 
       Object.entries(templateData[ "index" ]).forEach(
-        ([keyObject, valueObject]) => {
-
+        ([keyObject]) => {
           const windowData = templateData[ "index" ][ keyObject ].content
           let tabPaneldata = []
 
           if (data){
             Object.entries( windowData ).forEach(
-              ( [ windowKey, valueObject2 ] ) => {
+              ( [ windowKey ] ) => {
                 if (data.user[ windowKey ] !== null) {
                   let objet = {}
                   objet =  windowData[ windowKey ]
@@ -122,8 +121,6 @@ export default function Account() {
               index={ parseInt( keyObject ) }
               data={ tabPaneldata }
               idUser={ id }
-              /*defaultValue = { data }
-              setDefaultValue = { setData }*/
             />
           )
         } 
