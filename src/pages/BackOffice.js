@@ -1,22 +1,47 @@
-import React, { useState, useContext } from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import { gql, useMutation, useQuery } from "@apollo/client";
-import { IconButton, TableFooter } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { green } from "@material-ui/core/colors";
-import TablePaginationActions from "@material-ui/core/TablePagination/TablePaginationActions";
+import React, {
+  useState,
+  useContext 
+} from "react"
+
+import { 
+  IconButton,
+  TableFooter,
+  Paper,
+  TableRow,
+  TablePagination,
+  TableHead,
+  TableContainer,
+  TableCell,
+  TableBody,
+  Table,
+} from "@material-ui/core"
+
+import {
+  withStyles, 
+  makeStyles 
+} from "@material-ui/core/styles"
+
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon
+} from "@material-ui/icons"
+
+import { green } from "@material-ui/core/colors"
+
+import TablePaginationActions from "@material-ui/core/TablePagination/TablePaginationActions"
+
+import {
+  gql,
+  useMutation,
+  useQuery
+} from "@apollo/client"
+
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
-import AvatarContext from "../context/avatar-context";
-import { NavLink } from "react-router-dom";
+
+import AvatarContext from "../context/avatar-context"
+
+import { NavLink } from "react-router-dom"
+
 /**********************************************************************************************************************/
 //Requête Apollo
 const USER_QUERY = gql`
@@ -38,7 +63,7 @@ const LIST_USERS = gql`
   }
 `;
 
-const DELETE_USER = gql`
+const UPDATE_USER = gql`
   mutation UpdateUser($id: ID!, $update: UserUpdateInput!) {
     updateUser(_id: $id, updateUserInput: $update) {
       _id
@@ -87,12 +112,10 @@ export default function BackOffice() {
     setPage(0);
   };
 
-  const [deleteUser] = useMutation(DELETE_USER, {
+  const [updateUser] = useMutation(UPDATE_USER, {
     refetchQueries: [{ query: LIST_USERS }],
   });
-  const [actviateUser] = useMutation(DELETE_USER, {
-    refetchQueries: [{ query: LIST_USERS }],
-  });
+
   const tableHeader = [
     "ID",
     "Login",
@@ -168,7 +191,7 @@ export default function BackOffice() {
                         <IconButton
                           aria-label="delete"
                           onClick={() => {
-                            deleteUser({
+                            updateUser({
                               variables: {
                                 id: user._id,
                                 update: { user_isActive: false },
@@ -183,7 +206,7 @@ export default function BackOffice() {
                       <button
                         className="btn-Activate"
                         onClick={() => {
-                          actviateUser({
+                          updateUser({
                             variables: {
                               id: user._id,
                               update: { user_isActive: true },
