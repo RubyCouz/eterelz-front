@@ -23,7 +23,7 @@ import useThemeEterelz from '../Hook/useThemeEterelz'
 import useAuth from '../Hook/useAuth'
 
 export default function Index() {
-    const [auth, login, logout, loading] = useAuth()
+    const [auth, login, logout] = useAuth()
 
     const [avatar, setAvatar] = useState({id: null})
     

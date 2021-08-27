@@ -9,7 +9,7 @@ export default function useAuth() {
         token: false,
         playload: null,
     })
-    const cookies = new Cookies
+    const cookies = new Cookies()
 
     useEffect(() => {
         login()

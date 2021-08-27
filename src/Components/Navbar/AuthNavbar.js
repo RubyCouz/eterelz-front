@@ -152,7 +152,7 @@ ScrollTop.propTypes = {
 export default function AuthNavbar(props) {
     const auth = useContext(AuthContext)
     const classes = useStyles()
-    const [anchorEl, setAnchorEl] = React.useState(null);
+
     const [state, setState] = React.useState({
         left: false
     })

@@ -74,7 +74,7 @@ const useStyles = makeStyles({
 //Functionnal componnent
 export default function BackOffice() {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(LIST_USERS);
+  const { data } = useQuery(LIST_USERS);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -105,16 +105,6 @@ export default function BackOffice() {
     const timestamp = Date.parse(num);
     const date = new Date(timestamp).toLocaleDateString("fr-FR");
     return date.toString();
-  };
-  //fonction d'édition de l'utilisateur
-  const handleEdit = (user) => {
-    if (!user) {
-      throw new Error("Utilisateur inconu");
-    }
-    console.log(user);
-    console.log(
-      `On redirige vers la page de l'utilisateur ID: ${user._id} Login:${user.user_login}`
-    );
   };
 
   const avatar = useContext(AvatarContext)

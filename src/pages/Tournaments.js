@@ -1,7 +1,6 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
 import {makeStyles} from "@material-ui/core/styles"
-import AuthContext from '../context/auth-context'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -12,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Tournaments() {
 
     let classes = useStyles()
-    const context = useContext(AuthContext)
 
     return (
         <div className={classes.root}>
