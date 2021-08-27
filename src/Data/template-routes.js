@@ -1,5 +1,5 @@
 import BackOfficePage from '../pages/BackOffice'
-import HomePage from '../pages/Home'
+import HomePage from '../pages/Home/Home'
 import EventsPage from '../pages/Events'
 import AuthPage from '../pages/Auth'
 import AccountPage from '../pages/Account/Account'

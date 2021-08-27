@@ -2,8 +2,6 @@ import React, {useState} from 'react'
 
 import {
     IconButton,
-    Box,
-    Typography,
     Tab,
     Tabs,
     AppBar,
@@ -13,37 +11,11 @@ import {
 import {AccountCircle as AccountCircleIcon} from "@material-ui/icons"
 import {makeStyles} from '@material-ui/core/styles'
 
-import PropTypes from 'prop-types'
-
 import SwipeableViews from 'react-swipeable-views'
 
 import {NavLink} from "react-router-dom"
 
-function TabPanel(props) {
-    const {children, value, index, ...other} = props
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-};
+import TabPanel from './TabPanel'
 
 function a11yProps(index) {
     return {
@@ -67,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Navbar(props) {
+export default function Home(props) {
     const classes = useStyles();
     const [value, setValue] = useState(0);
 
@@ -126,16 +98,16 @@ export default function Navbar(props) {
                     index={value}
                     onChangeIndex={handleChangeIndex}
                 >
-                    <TabPanel value={value} index={0} dir={props.theme}>
+                    <TabPanel value={value} index={0}>
                         Page descriptif tournoi / event
                     </TabPanel>
-                    <TabPanel value={value} index={1} dir={props.theme}>
+                    <TabPanel value={value} index={1}>
                         Page présentation Streamer, aperçu streamer en direct
                     </TabPanel>
-                    <TabPanel value={value} index={2} dir={props.theme}>
+                    <TabPanel value={value} index={2}>
                         Page Présentation des Jeux de la commu EterelZ
                     </TabPanel>
-                    <TabPanel value={value} index={3} dir={props.theme}>
+                    <TabPanel value={value} index={3}>
                         Page présentation commu EterelZ
                     </TabPanel>
                 </SwipeableViews>
