@@ -1,24 +1,26 @@
-import React, {useContext} from 'react'
-import PropTypes from 'prop-types'
-import SwipeableViews from 'react-swipeable-views'
-import {makeStyles} from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
-import IconButton from "@material-ui/core/IconButton"
-import {NavLink} from "react-router-dom"
+import React, {useState} from 'react'
+
 import {
-    AccountCircle as AccountCircleIcon
-} from "@material-ui/icons";
-import { MenuItem } from "@material-ui/core"
-import Toolbar from "@material-ui/core/Toolbar"
-import AuthContext from "../../context/auth-context"
-import ThemeContext from "../../context/theme-context"
+    IconButton,
+    Box,
+    Typography,
+    Tab,
+    Tabs,
+    AppBar,
+    MenuItem,
+    Toolbar,
+} from "@material-ui/core"
+import {AccountCircle as AccountCircleIcon} from "@material-ui/icons"
+import {makeStyles} from '@material-ui/core/styles'
+
+import PropTypes from 'prop-types'
+
+import SwipeableViews from 'react-swipeable-views'
+
+import {NavLink} from "react-router-dom"
 
 function TabPanel(props) {
-    const {children, value, index, ...other} = props;
+    const {children, value, index, ...other} = props
 
     return (
         <div
@@ -67,17 +69,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
-    const [state, setState] = React.useState({
-        left: false
-    })
-    const toggleDrawer = (anchor, open) => (event) => {
-        if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return
-        }
+    const [value, setValue] = useState(0);
 
-        setState({...state, [anchor]: open});
-    }
     const handleChange = (event, newValue) => {
         setValue(newValue);
     }
@@ -86,9 +79,6 @@ export default function Navbar(props) {
         setValue(index);
     }
 
-    const auth = useContext(AuthContext)
-
-    const changeTheme = useContext(ThemeContext)
     return (
         <>
             <div className={classes.root}>
