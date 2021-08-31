@@ -91,8 +91,6 @@ const UPDATE_EVENTS = gql`
     }
 `
 
-
-
 //fonction par defaut
 export default function EventsPage(props) {
 
@@ -112,23 +110,18 @@ export default function EventsPage(props) {
     const modalCancelHandler = () => {
         const cancelModal = {creating: false, selectedEvent: null, updating : false}
         setState({...state, ...cancelModal})
+        setValue(initialValue)
+    }
+    //initialisation des valeurs
+    const initialValue = {
+        event_name : '',
+        event_desc : '',
+        event_date : '',
+        event_time : ''
     }
 
-
-    //initialisation des valeurs
-    const event_name = useRef('')
-    const event_desc = useRef('')
-    const event_date = useRef('')
-    const event_time = useRef('')
-
-    //initialisation du statement
-    const [value, setValue] = React.useState({
-        name : '',
-        description : '',
-        date : '',
-        time : ''
-    });
-
+    //récupération des valeurs initials
+    const [value, setValue] = React.useState(initialValue);
 
     //fonction de d'ouverture d'un évent (variable récupère soit creating/updating et l'id
     const openModal = variable => {
@@ -143,8 +136,8 @@ export default function EventsPage(props) {
             updatingEvent = {...updatingEvent, event_date : dateSplit[0],event_time : time.toLocaleTimeString()}
             resultat = {...state, updating : updatingEvent}
 
-            //set les valeurs dans les inputs
-            setValue({...state, name : updatingEvent.event_name, description : updatingEvent.event_desc, date : updatingEvent.event_date, time : updatingEvent.event_time})
+            //set les valeurs dans les inputs à l'ouverture de la modal
+            setValue({...value, event_name : updatingEvent.event_name, event_desc : updatingEvent.event_desc, event_date : updatingEvent.event_date, event_time : updatingEvent.event_time})
 
         }
         else{
@@ -152,9 +145,6 @@ export default function EventsPage(props) {
         }
         setState(resultat)
     }
-
-
-
 
     //fonction d'affichage des détails d'un évent
     const showDetailHandler = eventId => {
@@ -164,13 +154,14 @@ export default function EventsPage(props) {
 
     //récupère la valeur de l'input
     const handleChange = (e) => {
-        setValue(e.target.value);
+        // récupère le nom de la variable et set la valeur à l'intérieur
+        setValue ({...value, [e.target.name] : e.target.value})
     }
 
     const {loading, error, data} = useQuery(LIST_EVENTS)
 
-    //création de l'event
-    const [modalConfirmHandler] = useMutation(
+    //Envoie des données à l'api
+    const [sendCreateEvent] = useMutation(
         CREATE_EVENTS,
         {
             update(cache, { data: { createEvent } }) {
@@ -188,6 +179,34 @@ export default function EventsPage(props) {
             },
         }
     )
+
+    //bouton confirmer r'envoie les données grâce à sendCreateEvent
+    const confirmHandler = () => {
+        sendCreateEvent({
+            variables: {
+                event_name: value.event_name,
+                event_date: value.event_date + "T" + value.event_time,
+                event_desc: value.event_desc
+            },
+            optimisticResponse: {
+                createEvent: {
+                    _id: "temp" + Date.now().toString(36),
+                    __typename: "Event",
+                    event_name: value.event_name,
+                    event_date: value.event_date + "T" + value.event_time,
+                    event_desc: value.event_desc,
+                    event_creator: {
+                        __typename: "User",
+                        _id:  context.playload.userId,
+                        user_email: context.playload.user_email
+                    },
+                    createdAt: new Date()
+                }
+            }
+        })
+        //ferme la modal
+        modalCancelHandler()
+    }
 
     //constante de suppression d'un évent
     const [deleteEvent]  = useMutation(
@@ -239,30 +258,7 @@ export default function EventsPage(props) {
                         canCancel
                         canConfirm
                         onCancel={modalCancelHandler}
-                        onConfirm={
-                            () => modalConfirmHandler({
-                                variables: {
-                                    event_name: event_name.current.value,
-                                    event_date: event_date.current.value + "T" + event_time.current.value,
-                                    event_desc: event_desc.current.value
-                                },
-                                optimisticResponse: {
-                                    createEvent: {
-                                        _id: "temp" + Date.now().toString(36),
-                                        __typename: "Event",
-                                        event_name: event_name.current.value,
-                                        event_date: event_date.current.value + "T" + event_time.current.value,
-                                        event_desc: event_desc.current.value,
-                                        event_creator: {
-                                            __typename: "User",
-                                            _id:  context.playload.userId,
-                                            user_email: context.playload.user_email
-                                        },
-                                        createdAt: new Date()
-                                    }
-                                }
-                            })
-                        }
+                        onConfirm={confirmHandler}
                         confirmText="Confirm"
                     >
 
@@ -270,19 +266,19 @@ export default function EventsPage(props) {
 
                             <div className="form_control">
                                 <label htmlFor="event_name">Nom de l'event</label>
-                                <input type="text" id="event_name" ref={event_name}/>
+                                <input type="text" name="event_name" id="event_name" value={value.event_name} onChange={handleChange}/>
                             </div>
                             <div className="form_control">
                                 <label htmlFor="event_desc">Description</label>
-                                <textarea name="event_desc" id="event_desc" cols="10" rows="4" ref={event_desc}/>
+                                <textarea name="event_desc" name="event_desc" id="event_desc" cols="10" rows="4" value={value.event_desc} onChange={handleChange}/>
                             </div>
                             <div className="form_control">
                                 <label htmlFor="event_date">Date</label>
-                                <input type="date" id="event_date" ref={event_date}/>
+                                <input type="date" name="event_date" id="event_date" value={value.event_date} onChange={handleChange}/>
                             </div>
                             <div className="form_control">
                                 <label htmlFor="event_time">Heure</label>
-                                <input type="time" id="event_time" ref={event_time}/>
+                                <input type="time" name="event_time" id="event_time" value={value.event_time} onChange={handleChange}/>
                             </div>
                         </form>
                     </Modal>
@@ -300,17 +296,18 @@ export default function EventsPage(props) {
                         variables: {
                             id : state.updating._id,
                             updateEventInput : {
-                                event_name: event_name.current.value,
-                                event_date: event_date.current.value + "T" + event_time.current.value,
-                                event_desc: event_desc.current.value
+                                event_name: value.event_name,
+                                event_date: value.event_date + "T" + value.event_time,
+                                event_desc: value.event_desc
                             },
                         },
+                        //optimistic réponse r'envoie la réponse en avant sur le cache
                         // optimisticResponse: {
                         //     updateEvent: {
                         //         __typename: "Event",
-                        //         event_name: event_name.current.value,
-                        //         event_date: event_date.current.value + "T" + event_time.current.value,
-                        //         event_desc: event_desc.current.value,
+                        //         event_name: value.event_name,
+                        //         event_date: value.event_date + "T" + value.event_time,
+                        //         event_desc: value.event_desc
                         //
                         //     }
                         // }
@@ -323,19 +320,19 @@ export default function EventsPage(props) {
 
                         <div className="form_control">
                             <label htmlFor="event_name">Nom de l'event</label>
-                            <input type="text" id="event_name" ref={event_name} value={value.name} onChange={handleChange}/>
+                            <input type="text"name="event_name" id="event_name"  value={value.event_name} onChange={handleChange}/>
                         </div>
                         <div className="form_control">
                             <label htmlFor="event_desc">Description</label>
-                            <textarea name="event_desc" id="event_desc" cols="10" rows="4" ref={event_desc} value={value.description} onChange={handleChange}/>
+                            <textarea name="event_desc" id="event_desc" cols="10" rows="4"  value={value.event_desc} onChange={handleChange}/>
                         </div>
                         <div className="form_control">
                             <label htmlFor="event_date">Date</label>
-                            <input type="date" id="event_date" ref={event_date} value={value.date} onChange={handleChange}/>
+                            <input type="date" name="event_date" id="event_date"  value={value.event_date} onChange={handleChange}/>
                         </div>
                         <div className="form_control">
                             <label htmlFor="event_time">Heure</label>
-                            <input type="time" id="event_time" ref={event_time} value={value.time} onChange={handleChange}/>
+                            <input type="time" name="event_time" id="event_time" value={value.event_time} onChange={handleChange}/>
                         </div>
                     </form>
                 </Modal>
