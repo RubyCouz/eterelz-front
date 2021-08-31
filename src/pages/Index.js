@@ -17,7 +17,7 @@ import ThemeContext from '../context/theme-context'
 import {graphqlConfig} from '../context/apollo-context'
 import AvatarContext from '../context/avatar-context'
 
-import Routeur from './Routeur'
+import Routeur from '../Routeurs/Routeur'
 
 import useThemeEterelz from '../Hook/useThemeEterelz'
 import useAuth from '../Hook/useAuth'
