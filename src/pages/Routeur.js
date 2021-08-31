@@ -33,26 +33,30 @@ export default function Routeur() {
 
         if (type === "route") {
             if (verifyRole && verifyAuth ){
-                route = <Route path={path} component={component} key={index} />
-            } else if (auth) {
-                route = <Redirect from={path} to="/auth" key={index} exact/>
+                route = <Route path={process.env.PUBLIC_URL + path} component={component} key={index} />
+            } else  {
+                if (auth) {
+                    route = <Redirect from={process.env.PUBLIC_URL + path} to={process.env.PUBLIC_URL + "/auth"} key={index} exact/>
+                } else {
+                    route = <Redirect from={process.env.PUBLIC_URL + path} to={process.env.PUBLIC_URL + "/dashboard"} key={index} exact/>
+                }
             }
         } else if (type === "redirect"){
             if ( verifyAuth ){
-                route =  <Redirect from={from} to={to} key={index} exact/>
+                route =  <Redirect from={process.env.PUBLIC_URL + from} to={process.env.PUBLIC_URL + to} key={index} exact/>
             }
         }
 
         
 
         return route
-    }).filter(function(x) {
-        return x !== undefined
     })
-
-
     return (
-        <Switch>{routeur}</Switch>
+        <Switch>
+            <Redirect from="/" to="home" exact/>
+            
+            {routeur}
+        </Switch>
     )
 
 }
