@@ -4,9 +4,7 @@ import './DropZone.css'
 
 export default function DropZone(props) {
 
-    const [state, setState] = useState({
-        hightlight: false
-    })
+    const [hightlight, setHightlight] = useState()
 
     const openFileDialog = () => {
         if (props.disabled) return
@@ -23,37 +21,39 @@ export default function DropZone(props) {
     }
 
     const onDragOver = (event) => {
-        event.preventDefault();
-        if (props.disabled) return;
-        setState({...state, hightlight: true })
+        event.preventDefault()
+        if (props.disabled) return
+        setHightlight(true)
     }
 
     const onDragLeave = (event) => {
-        setState({...state, hightlight: true })
+        setHightlight(true)
     }
 
     const onDrop = (event) => {
-        event.preventDefault();
-        if (props.disabled) return;
-        const files = event.dataTransfer.files;
+        event.preventDefault()
+        if (props.disabled) return
+        const files = event.dataTransfer.files
         if (props.onFilesAdded) {
-            const array = fileListToArray(files);
-            props.onFilesAdded(array);
+            const array = fileListToArray(files)
+            props.onFilesAdded(array)
+
         }
-        setState({...state, hightlight: false });
+
+        setHightlight(true)
     }
 
     const fileListToArray = (list) => {
-        const array = [];
+        const array = []
         for (let i = 0; i < list.length; i++) {
-            array.push(list.item(i));
+            array.push(list.item(i))
         }
         return array;
     }
 
     return (
         <div
-            className={`dropzone ${state.hightlight ? "highlight" : ""}`}
+            className={`dropzone ${hightlight ? "highlight" : ""}`}
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
             onDrop={onDrop}

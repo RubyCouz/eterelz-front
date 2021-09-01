@@ -13,11 +13,9 @@ export default function Upload(props) {
         uploadProgress: {},
         successfullUploaded: false
     })
-
+// TODO changer les state, faire plusieurs useState
      const onFilesAdded = (files) => {
-        setState(prevState => {
-            prevState.files.concat(files)
-        })
+        setState({...state, files: files})
     }
 
      const uploadFiles = async () => {
@@ -46,44 +44,61 @@ export default function Upload(props) {
         }
     }
 
+    React.useEffect(() => {
+        if(state.files.length !== 0 && state.uploading === false) {
+            console.log('progress')
+            setState({
+                ...state,
+                uploadProgress: {},
+                uploading: true
+            });
+            const promises = [];
+            state.files.forEach(file => {
+                promises.push(sendRequest(state.files[0]))
+            });
+        }
+
+    }, [state])
+
     const sendRequest = (file) => {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest()
 
             req.upload.addEventListener('progress', event => {
                 if (event.lengthComputable) {
-                    const copy = { ...this.state.uploadProgress }
+                    const copy = { ...state.uploadProgress }
                     copy[file.name] = {
                         state: 'pending',
                         percentage: (event.loaded / event.total) * 100
                     };
-                    this.setState({ uploadProgress: copy })
+                    setState({...state, uploadProgress: copy })
                 }
             });
 
             req.upload.addEventListener('load', event => {
-                const copy = { ...this.state.uploadProgress }
+                const copy = { ...state.uploadProgress }
                 copy[file.name] = { state: 'done', percentage: 100 }
-                this.setState({ uploadProgress: copy })
+                setState({...state, uploadProgress: copy })
                 resolve(req.response)
             });
 
             req.upload.addEventListener('error', event => {
-                const copy = { ...this.state.uploadProgress }
+                const copy = { ...state.uploadProgress }
                 copy[file.name] = { state: 'error', percentage: 0 }
-                this.setState({ uploadProgress: copy })
+                setState({...state, uploadProgress: copy })
                 reject(req.response)
             });
 
-            const formData = new FormData();
-            formData.append('file', file, file.name)
-
-            req.open('POST', 'http://localhost:8080/upload/game')
-            req.send(formData)
+            const formData = new FormData()
+            // formData.append('file', file, file.name)
+            //
+            // req.open('POST', 'http://localhost:8080/upload/game')
+            // req.send(formData)
         });
     }
 
     const renderProgress = (file) => {
+        console.log('check progress')
         const uploadProgress = state.uploadProgress[file.name];
         if (state.uploading || state.successfullUploaded) {
             return (
@@ -101,39 +116,14 @@ export default function Upload(props) {
         }
     }
 
-    {/*const renderActions = () => {*/}
-    //     if (state.successfullUploaded) {
-    //         return (
-    {/*            <button*/}
-    {/*                onClick={() =>*/}
-    {/*                    setState({*/}
-    {/*                        ...state,*/}
-    {/*                        files: [],*/}
-    {/*                        successfullUploaded: false*/}
-    //                     })
-    //                 }
-    {/*            >*/}
-    //                 Clear
-    //             </button>
-    //         );
-    //     } else {
-    //         return (
-    //             <button
-    //                 disabled={state.files.length < 0 || state.uploading}
-    //                 onClick={uploadFiles}
-    //             >
-    //                 Upload
-    //             </button>
-    //         );
-    //     }
-    // }
-
         return (
             <div className="upload">
                 <span className="title">Upload Files</span>
                 <div className="content">
                     <div>
                         <Dropzone
+                            files={state.files}
+                            sendRequest={sendRequest}
                             game_pic={props.game_pic}
                             onFilesAdded={onFilesAdded}
                             disabled={state.uploading || state.successfullUploaded}
