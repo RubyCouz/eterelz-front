@@ -1,4 +1,4 @@
-import { useState, useEffect} from "react"
+import { useState, useEffect} from 'react'
 import { Cookies } from 'react-cookie'
 
 export default function useAuth() {
@@ -7,10 +7,14 @@ export default function useAuth() {
         token: false,
         playload: null,
     })
+
+    const [loading, setLoading] = useState(true)
+
     const cookies = new Cookies()
 
     useEffect(() => {
         login()
+        setLoading(false)
     }, [])
 
     const login = () => {
@@ -57,5 +61,5 @@ export default function useAuth() {
         })
     }
 
-    return [auth, login, logout]
+    return [auth, login, logout, loading]
 }

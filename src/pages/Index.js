@@ -18,12 +18,13 @@ import {graphqlConfig} from '../context/apollo-context'
 import AvatarContext from '../context/avatar-context'
 
 import Routeur from '../Routeurs/Routeur'
+import LoadingPage from '../pages/Loading'
 
 import useThemeEterelz from '../Hook/useThemeEterelz'
 import useAuth from '../Hook/useAuth'
 
 export default function Index() {
-    const [auth, login, logout] = useAuth()
+    const [auth, login, logout, loading] = useAuth()
 
     const [avatar, setAvatar] = useState({id: null})
     
@@ -60,7 +61,12 @@ export default function Index() {
                         >
                             <ThemeProvider theme={createMuiTheme(theme)}>
                                 <CssBaseline/>
-                                <Routeur/>
+                                {
+                                    loading ?
+                                        <LoadingPage />
+                                    :
+                                        <Routeur/>
+                                }
                             </ThemeProvider>
                         </ThemeContext.Provider>
                     </ApolloProvider>
