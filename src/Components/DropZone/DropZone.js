@@ -1,84 +1,75 @@
-import React, {Component, useRef, useState} from 'react'
+import React, {Component, useState} from "react"
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import './DropZone.css'
 
 export default function DropZone(props) {
 
     const [state, setState] = useState({
-        highLight: false
+        hightlight: false
     })
 
-    // const game_pic = useRef('')
-    // ouverture de la boite de dialogue pour upload de fichier, puisque input invisible
-    // const openFileDialog = () => {
-    //     if (props.disabled) {
-    //         return
-    //     }
-    //     return game_pic.current.click
-    // }
-    //ajout d'un fichier
-    // const onFilesAdded = (evt) => {
-    //     if (props.disabled) {
-    //         return
-    //     }
-    //     const files = evt.target.files
-    //     const array = fileListToArray(files)
-    //     console.log(array)
-    //     props.onFilesAdded(array)
-    //
-    // }
-    // convertion de la liste de fichier en tableau
-    const fileListToArray = (list) => {
-        const array = []
-        for (let i = 0; i < list.length; i++) {
-            array.push(list.item(i))
-        }
-        return array
+    const openFileDialog = () => {
+        if (props.disabled) return
+        props.game_pic.current.click()
     }
 
-    const onDragOver = (evt) => {
-        evt.preventDefault()
-        if (props.disabled) {
-            return
-        }
-        setState({...state, highLight: true})
-    }
-
-    const onDragLeave = () => {
-        setState({...state, highLight: false})
-    }
-
-    const onDrop = (event) => {
-        event.preventDefault()
-        if (props.disabled) {
-            return
-        }
-        const files = event.dataTransfer.files
+    const onFilesAdded = (evt) => {
+        if (props.disabled) return
+        const files = evt.target.files
         if (props.onFilesAdded) {
             const array = fileListToArray(files)
             props.onFilesAdded(array)
         }
-        setState({...state, highLight: false})
+    }
+
+    const onDragOver = (event) => {
+        event.preventDefault();
+        if (props.disabled) return;
+        setState({...state, hightlight: true })
+    }
+
+    const onDragLeave = (event) => {
+        setState({...state, hightlight: true })
+    }
+
+    const onDrop = (event) => {
+        event.preventDefault();
+        if (props.disabled) return;
+        const files = event.dataTransfer.files;
+        if (props.onFilesAdded) {
+            const array = fileListToArray(files);
+            props.onFilesAdded(array);
+        }
+        setState({...state, hightlight: false });
+    }
+
+    const fileListToArray = (list) => {
+        const array = [];
+        for (let i = 0; i < list.length; i++) {
+            array.push(list.item(i));
+        }
+        return array;
     }
 
     return (
         <div
-            className="{`Dropzone ${state.hightlight ? 'highlight' : ''}`}"
+            className={`dropzone ${state.hightlight ? "highlight" : ""}`}
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
             onDrop={onDrop}
-            // onClick={openFileDialog}
-            style={{cursor: props.disabled ? 'default' : 'pointer'}}
+            onClick={openFileDialog}
+            style={{ cursor: props.disabled ? "default" : "pointer" }}
         >
-            <CloudUploadIcon className="icon"/>
             <input
-                ref={props.uploadRef}
+                ref={props.game_pic}
                 className="fileInput"
                 type="file"
                 multiple
-                onChange={props.onFilesAdded}
+                onChange={onFilesAdded}
             />
+            <CloudUploadIcon className="icon"/>
             <span>Upload Files</span>
         </div>
-    )
+    );
+
 }
