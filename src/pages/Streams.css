@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Glory:wght@300&display=swap');
+
+.container-grid {
+    max-width: 1800px;
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    gap: 10px;
+    justify-content: center;
+    margin: auto;
+}
+
+.card-container {
+    background-color: rgba(20, 20, 20, 0.835);
+    border-radius: 8px;
+    box-shadow: 5px 5px 15px 5px #000000;
+    font-family: 'Glory', sans-serif;
+    font-size: 1rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+.avatar {
+    width: 50px;
+    margin: 10px;
+    border-radius: 50%;
+}
+.postTitle {
+    order: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 100%;
+    min-width: 0px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+.user-name{
+    margin: 0;
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 1.3rem;
+    color: white;
+}
+.game-name {
+    margin: 0;
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: white;
+}
+
+
+.container-background {
+    width: 300px;
+    height: 170px;
+    background-color: rgb(146, 3, 146);
+    position: relative;
+}
+.container-background img:hover {
+    position: absolute;
+    cursor: pointer;
+    top: -5px;
+    left: 5px;
+    transition: 1.5s ease-in-out;
+
+}
+
+.stream-live {
+    position: absolute;
+    top:0px;
+    left: 10px;
+}
+.stream-live p {
+    background-color: red;
+    padding: 2px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-transform: uppercase;
+
+}
