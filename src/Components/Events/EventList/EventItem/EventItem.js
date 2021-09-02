@@ -122,7 +122,6 @@ export default function RecipeReviewCard(props) {
     const confirmModal = () => {
 
         if(state.textModal==='supprimer'){
-            console.log('supprimer')
             props.deleteEvent({
                 variables:{
                     id:props.eventId
@@ -131,7 +130,6 @@ export default function RecipeReviewCard(props) {
             ModalClose()
         }
         else{
-            console.log('archiver')
             ModalClose()
         }
     }

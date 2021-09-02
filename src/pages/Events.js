@@ -180,7 +180,7 @@ export default function EventsPage(props) {
         }
     )
 
-    //bouton confirmer r'envoie les données grâce à sendCreateEvent
+    //bouton confirmer la creation d'un event r'envoie les données grâce à sendCreateEvent
     const confirmHandler = () => {
         sendCreateEvent({
             variables: {
@@ -203,6 +203,31 @@ export default function EventsPage(props) {
                     createdAt: new Date()
                 }
             }
+        })
+        //ferme la modal
+        modalCancelHandler()
+    }
+
+    const confirmUpdateHandler = () => {
+        updateEvent({
+            variables: {
+                id : state.updating._id,
+                updateEventInput : {
+                    event_name: value.event_name,
+                    event_date: value.event_date + "T" + value.event_time,
+                    event_desc: value.event_desc
+                },
+            },
+            //optimistic réponse r'envoie la réponse en avant sur le cache
+            // optimisticResponse: {
+            //     updateEvent: {
+            //         __typename: "Event",
+            //         event_name: value.event_name,
+            //         event_date: value.event_date + "T" + value.event_time,
+            //         event_desc: value.event_desc
+            //
+            //     }
+            // }
         })
         //ferme la modal
         modalCancelHandler()
@@ -291,28 +316,7 @@ export default function EventsPage(props) {
                     canCancel
                     canConfirm
                     onCancel={modalCancelHandler}
-                    onConfirm={
-                    () => updateEvent({
-                        variables: {
-                            id : state.updating._id,
-                            updateEventInput : {
-                                event_name: value.event_name,
-                                event_date: value.event_date + "T" + value.event_time,
-                                event_desc: value.event_desc
-                            },
-                        },
-                        //optimistic réponse r'envoie la réponse en avant sur le cache
-                        // optimisticResponse: {
-                        //     updateEvent: {
-                        //         __typename: "Event",
-                        //         event_name: value.event_name,
-                        //         event_date: value.event_date + "T" + value.event_time,
-                        //         event_desc: value.event_desc
-                        //
-                        //     }
-                        // }
-                    })
-                }
+                    onConfirm={confirmUpdateHandler}
                     confirmText="Confirm"
                     >
 
@@ -320,7 +324,7 @@ export default function EventsPage(props) {
 
                         <div className="form_control">
                             <label htmlFor="event_name">Nom de l'event</label>
-                            <input type="text"name="event_name" id="event_name"  value={value.event_name} onChange={handleChange}/>
+                            <input type="text" name="event_name" id="event_name"  value={value.event_name} onChange={handleChange}/>
                         </div>
                         <div className="form_control">
                             <label htmlFor="event_desc">Description</label>
@@ -364,6 +368,7 @@ export default function EventsPage(props) {
                         </Fab>
                     </div>
             }
+            {/*affichage de la barre des tags*/}
             <Autocomplete></Autocomplete>
             <section>
                 {
