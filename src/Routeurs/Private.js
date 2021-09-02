@@ -10,6 +10,7 @@ const TournamentsPage = lazy(() => import('../pages/Tournaments'))
 const EventsPage = lazy(() => import('../pages/Events'))
 const ClansPage = lazy(() => import('../pages/Clan'))
 const StreamsPage = lazy(() => import('../pages/Streams'))
+const StreamUser = lazy(() => import('../pages/StreamUser'))
 const BackOfficePage = lazy(() => import('../pages/BackOffice'))
 const NoFoundPage = lazy(() => import('../pages/NoFound'))
 
@@ -35,6 +36,7 @@ export default function Private() {
             <Route path={process.env.PUBLIC_URL + '/tournaments'} component={TournamentsPage} />
             <Route path={process.env.PUBLIC_URL + '/events'} component={EventsPage} />
             <Route path={process.env.PUBLIC_URL + '/clan'} component={ClansPage} />
+            <Route path={process.env.PUBLIC_URL + '/streams/:login'} component={StreamUser} />
             <Route path={process.env.PUBLIC_URL + '/streams'} component={StreamsPage} />
             <Route path={process.env.PUBLIC_URL + '/404'} component={NoFoundPage} />
         </Switch>

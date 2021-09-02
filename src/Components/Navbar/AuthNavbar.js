@@ -349,7 +349,7 @@ export default function AuthNavbar(props) {
                         ))}
                         <NavLink to="/">
                             <img
-                                src="./img/themes/logo.png"
+                                src="/img/themes/logo.png"
                                 alt="Logo EterelZ"
                                 className={classes.logo}
                             />
