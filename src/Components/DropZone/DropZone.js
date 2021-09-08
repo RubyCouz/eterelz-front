@@ -36,6 +36,7 @@ export default function DropZone(props) {
         const files = event.dataTransfer.files
         if (props.onFilesAdded) {
             const array = fileListToArray(files)
+            console.log(array)
             props.onFilesAdded(array)
 
         }
