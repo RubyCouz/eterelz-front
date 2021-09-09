@@ -19,8 +19,6 @@ import {
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Upload from "../Components/Upload/Upload";
-import Progress from "../Components/Progress/Progress";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -154,7 +152,6 @@ export default function Dashboard() {
         setUploading(true)
         setUploadProgress({})
         const promises = []
-        console.log(uploadingFile)
         promises.push(sendRequest(uploadingFile))
         try {
             await Promise.all(promises)
@@ -186,7 +183,6 @@ export default function Dashboard() {
 
                 if (event.lengthComputable) {
                     const copy = {...uploadProgress}
-                    console.log(copy)
                     copy[file.name] = {
                         state: 'pending',
                         percentage: (event.loaded / event.total) * 100
@@ -197,7 +193,6 @@ export default function Dashboard() {
 
             req.upload.addEventListener('load', event => {
                 const copy = {...uploadProgress}
-                console.log(copy)
                 copy[file.name] = {state: 'done', percentage: 100}
                 setUploadProgress(copy)
                 resolve(req.response)
@@ -205,7 +200,6 @@ export default function Dashboard() {
 
             req.upload.addEventListener('error', event => {
                 const copy = {...uploadProgress}
-                console.log(copy)
                 copy[file.name] = {state: 'error', percentage: 0}
                 setUploadProgress(copy)
                 reject(req.response)
@@ -298,11 +292,6 @@ export default function Dashboard() {
                                 >
                                     Add
                                 </Button>
-                                {/*<Button variant="contained"*/}
-                                {/*        color="primary"*/}
-                                {/*        justifyContent="flex-end"*/}
-                                {/*        onClick={addGame}*/}
-                                {/*>Add</Button>*/}
                             </Box>
                         </div>
                     </form>

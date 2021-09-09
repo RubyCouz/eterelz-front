@@ -38,7 +38,6 @@ export default function DropZone(props) {
             const array = fileListToArray(files)
             console.log(array)
             props.onFilesAdded(array)
-
         }
 
         setHightlight(true)
