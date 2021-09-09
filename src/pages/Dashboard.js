@@ -19,8 +19,6 @@ import {
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Upload from "../Components/Upload/Upload";
-import Progress from "../Components/Progress/Progress";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -58,7 +56,18 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%'
-    }
+    },
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    paper: {
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+    },
 }))
 
 const GAME_QUERY = gql`
@@ -103,21 +112,20 @@ export default function Dashboard() {
     const context = useContext(AuthContext)
 
     const [state, setState] = useState({
-        games: [],
         isLoading: false,
-        files: [],
-        uploading: false,
-        uploadProgress: [],
-        successfullUploaded: false
+        games: [],
     })
 
     const game_name = useRef('')
     const game_desc = useRef('')
     const game_pic = useRef('')
-    const {loading, error, data} = useQuery(LIST_GAMES)
 
     const [value, setValue] = React.useState(0);
-
+    const [uploadProgress, setUploadProgress] = React.useState({})
+    const [uploadingFile, setUploadingFile] = React.useState()
+    const [uploading, setUploading] = React.useState(false)
+    const [successfulUploaded, setSuccessfulUploaded] = React.useState(false)
+    const {loading, error, data} = useQuery(LIST_GAMES)
     const [addGameHandler] = useMutation(
         CREATE_GAME,
         {
@@ -140,46 +148,29 @@ export default function Dashboard() {
         setValue(index);
     };
 
-    const onFilesAdded = (files) => {
-        console.log(files)
-        setState({...state, files: files})
-        // console.log(state.files)
-    }
-
     const addGame = async () => {
-        setState({
-            ...state,
-            uploadProgress: {},
-            uploading: true
-        })
+        setUploading(true)
+        setUploadProgress({})
         const promises = []
-        state.files.forEach(file => {
-            console.log(file)
-            promises.push(sendRequest(file))
-            addGameHandler({
+        promises.push(sendRequest(uploadingFile))
+        try {
+            await Promise.all(promises)
+            setUploading(false)
+            setSuccessfulUploaded(true)
+            await addGameHandler({
                 variables: {
                     game_name: game_name.current.value,
                     game_desc: game_desc.current.value,
-                    game_pic: state.files[0].name,
+                    game_pic: uploadingFile.name,
                     game_creator: context.playload.userId
                 }
             })
-        })
-        try{
-            await Promise.all(promises)
-                .setState({
-                    ...state,
-                    successfullUpload: true,
-                    uploading: false
-                })
 
         } catch (e) {
-            // ajout error
-            setState({
-                ...state,
-                successfullUploaded: true,
-                uploading:false
-            })
+                // ajout error
+            setSuccessfulUploaded(false)
+            setUploading(false)
+            throw new Error(e)
         }
 
     }
@@ -189,153 +180,125 @@ export default function Dashboard() {
             const req = new XMLHttpRequest()
 
             req.upload.addEventListener('progress', event => {
-                if(event.lengthComputable) {
-                    const copy = {...state.uploadProgress}
+
+                if (event.lengthComputable) {
+                    const copy = {...uploadProgress}
                     copy[file.name] = {
                         state: 'pending',
                         percentage: (event.loaded / event.total) * 100
-                    }
-                    setState({
-                        ...state,
-                        uploadProgress: copy
-                    })
+                    };
+                    setUploadProgress(copy)
                 }
             })
 
             req.upload.addEventListener('load', event => {
-                const copy = {...state.uploadProgress}
-                copy[file.name] = {
-                    state: 'done',
-                    percentage: 100
-                }
-                setState({
-                    ...state,
-                    uploadProgress: copy
-                })
+                const copy = {...uploadProgress}
+                copy[file.name] = {state: 'done', percentage: 100}
+                setUploadProgress(copy)
                 resolve(req.response)
             })
 
             req.upload.addEventListener('error', event => {
-                const copy = {...state.uploadProgress}
-                copy[file.name] = {
-                    state: 'error',
-                    percentage: 0
-                }
-                setState({
-                    ...state,
-                    uploadProgress: copy
-                })
+                const copy = {...uploadProgress}
+                copy[file.name] = {state: 'error', percentage: 0}
+                setUploadProgress(copy)
                 reject(req.response)
             })
+
             const formData = new FormData()
-            formData.append('file', file, file.name)
+            formData.append("file", file, file.name)
 
             req.open('POST', 'http://localhost:8080/upload/game')
             req.send(formData)
-        })
-    }
-
-    const renderProgress = (file) => {
-        setState({
-            ...state,
-            uploadProgress: file.name
-        })
-        const uploadProgress = state.uploadProgress
-        if(state.uploading || state.successfullUploaded) {
-            return(
-                <div className="progressWrapper">
-                    <Progress progress={uploadProgress ? uploadProgress.percentage : 0} />
-                    <CheckCircleOutlineIcon
-                        className="checkIcon"
-                        style={{
-                            opacity:
-                                uploadProgress && uploadProgress.state === "done" ? 0.5 : 0
-                        }}
-                    />
-                </div>
-            )
-        }
+        });
     }
 
 
     return (
-        <>
-            <div className={classes.root}>
-                <AuthNavbar/>
-                <AppBar position="static" color="default">
-                    <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="fullWidth"
-                        aria-label="full width tabs example"
-                    >
-                        <Tab label="Liste des jeux" {...a11yProps(0)} />
-                        <Tab label="Item Two" {...a11yProps(1)} />
-                        <Tab label="Ajouter un jeu" {...a11yProps(2)} />
-                    </Tabs>
-                </AppBar>
-                <SwipeableViews
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={value}
-                    onChangeIndex={handleChangeIndex}
+        <div className={classes.root}>
+            <AuthNavbar/>
+            <AppBar position="static" color="default">
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    variant="fullWidth"
+                    aria-label="full width tabs example"
                 >
-                    <TabPanel value={value} index={0} dir={theme.direction}>
-                        {
-                            data ?
-                                <GameList
-                                    games={data.games}
-                                    authUserId={context.playload ? context.playload.userId : null}
-                                /> :
-                                <p>{JSON.stringify(error)}</p>
+                    <Tab label="Liste des jeux" {...a11yProps(0)} />
+                    <Tab label="Item Two" {...a11yProps(1)} />
+                    <Tab label="Ajouter un jeu" {...a11yProps(2)} />
+                </Tabs>
+            </AppBar>
+            <SwipeableViews
+                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                index={value}
+                onChangeIndex={handleChangeIndex}
+            >
+                <TabPanel value={value} index={0} dir={theme.direction}>
+                    {
+                        data ?
+                            <GameList
+                                games={data.games}
+                                authUserId={context.playload ? context.playload.userId : null}
+                            /> :
+                            <p>{JSON.stringify(error)}</p>
 
-                        }
-                    </TabPanel>
-                    <TabPanel value={value} index={1} dir={theme.direction}>
-                        Item Two
-                    </TabPanel>
-                    <TabPanel value={value} index={2} dir={theme.direction}>
-                        <form action="" className="auth-form" encType="multipart/form-data">
-                            <div className="form-control">
-                                <TextField
-                                    id="game_name"
-                                    label="Titre du jeu"
-                                    name="game_name"
-                                    type="text"
-                                    helperText="Entrez le titre du jeu"
-                                    fullWidth={true}
-                                    inputRef={game_name}
-                                    required
-                                />
-                                <TextField
-                                    id="game_desc"
-                                    label="Description"
-                                    name="game_desc"
-                                    type="text"
-                                    helperText="La description ne doit pas dépasser 100 caractère"
-                                    fullWidth={true}
-                                    inputRef={game_desc}
-                                    required
-                                />
-                                <Upload
-                                    uploadRef={game_pic}
-                                    onFilesAdded={onFilesAdded}
-                                    renderProgress={renderProgress}
-                                    files={state.files}
-                                />
-                            </div>
+                    }
+                </TabPanel>
+                <TabPanel value={value} index={1} dir={theme.direction}>
+                    Item Two
+                </TabPanel>
+                <TabPanel value={value} index={2} dir={theme.direction}>
+                    <form action="" className="auth-form" encType="multipart/form-data">
+                        <div className="form-control">
+                            <TextField
+                                id="game_name"
+                                label="Titre du jeu"
+                                name="game_name"
+                                type="text"
+                                helperText="Entrez le titre du jeu"
+                                fullWidth={true}
+                                inputRef={game_name}
+                                required
+                            />
+                            <TextField
+                                id="game_desc"
+                                label="Description"
+                                name="game_desc"
+                                type="text"
+                                helperText="La description ne doit pas dépasser 100 caractère"
+                                fullWidth={true}
+                                inputRef={game_desc}
+                                required
+                            />
+                            <Upload
+                                uploading={uploading}
+                                setSuccessfullUploaded={setSuccessfulUploaded}
+                                successfullUploaded={successfulUploaded}
+                                setUploadProgress={setUploadProgress}
+                                setUploading={setUploading}
+                                uploadProgress={uploadProgress}
+                                setUploadingFile={setUploadingFile}
+                                game_pic={game_pic}
+                            />
                             <Box display="flex" style={{width: '100%'}}>
-                                <Button variant="contained"
-                                        color="primary"
-                                        justifyContent="flex-end"
-                                        onClick={addGame}
-                                >Add</Button>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    justifyContent="flex-end"
+                                    onClick={addGame}
+                                >
+                                    Add
+                                </Button>
                             </Box>
-                        </form>
-                    </TabPanel>
-                </SwipeableViews>
-            </div>
-        </>
-    );
+                        </div>
+                    </form>
+
+                </TabPanel>
+            </SwipeableViews>
+
+        </div>
+    )
 }

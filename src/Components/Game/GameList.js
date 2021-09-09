@@ -10,6 +10,7 @@ export default function GameList(props) {
                         gameId={game._id}
                         game_name={game.game_name}
                         game_desc={game.game_desc}
+                        game_pic={game.game_pic}
                         userId={props.authUserId}
                     />
                 )
