@@ -64,7 +64,6 @@ export default function DropZone(props) {
                 ref={props.game_pic}
                 className="fileInput"
                 type="file"
-                multiple
                 onChange={onFilesAdded}
             />
             <CloudUploadIcon className="icon"/>

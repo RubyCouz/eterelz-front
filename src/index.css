@@ -37,3 +37,6 @@ body {
   background: #282c34;
   border-color: #282c34;
 }
+.fileInput {
+  display: none !important;
+}

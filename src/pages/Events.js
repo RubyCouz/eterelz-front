@@ -369,7 +369,7 @@ export default function EventsPage(props) {
                     </div>
             }
             {/*affichage de la barre des tags*/}
-            <Autocomplete></Autocomplete>
+            <Autocomplete/>
             <section>
                 {
                     loading ?

@@ -2,3 +2,9 @@
     width: 200px;
     height: auto;
 }
+
+.hover {
+    box-shadow: 2px 0px 28px 9px rgba(142,36,170,0.8);
+    -webkit-box-shadow: 2px 0px 28px 9px rgba(142,36,170,0.8);
+    -moz-box-shadow: 2px 0px 28px 9px rgba(142,36,170,0.8);
+}

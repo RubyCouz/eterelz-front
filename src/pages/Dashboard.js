@@ -2,7 +2,6 @@ import React, {useContext, useRef, useState} from 'react'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
 import {makeStyles, useTheme} from "@material-ui/core/styles"
 import AuthContext from '../context/auth-context'
-
 import PropTypes from 'prop-types'
 import SwipeableViews from 'react-swipeable-views'
 import AppBar from '@material-ui/core/AppBar'
@@ -10,15 +9,18 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-import GameList from '../Components/Game/GameList'
+import UserGameList from '../Components/UserGame/UserGameList'
 import {
     gql,
     useQuery,
     useMutation
 } from '@apollo/client'
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Upload from "../Components/Upload/Upload";
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Upload from '../Components/Upload/Upload'
+import ModalGame from '../Components/ModalGame/ModalGame'
+import Grid from '@material-ui/core/Grid'
+import {Container} from "@material-ui/core";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -70,6 +72,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
+const USERGAME_QUERY = gql`
+    fragment UserGameQuery on UserGame{
+        _id
+        user {
+            _id
+            user_login
+        }
+        game {
+            _id
+            game_name
+            game_pic
+        }
+    }
+`
+
 const GAME_QUERY = gql`
     fragment GameQuery on Game{
         _id
@@ -83,6 +100,16 @@ const GAME_QUERY = gql`
         createdAt
     }
 `
+
+const LIST_USERGAME = gql`
+    ${USERGAME_QUERY}
+    query{
+        userGame{
+            ...UserGameQuery
+        }
+    }
+`
+
 const LIST_GAMES = gql`
     ${GAME_QUERY}
     query{
@@ -91,6 +118,7 @@ const LIST_GAMES = gql`
         }
     }
 `
+
 const CREATE_GAME = gql`
     ${GAME_QUERY}
     mutation CreateGame($game_name: String!, $game_desc: String!, $game_pic: String!) {
@@ -105,33 +133,50 @@ const CREATE_GAME = gql`
     }
 `
 
-export default function Dashboard() {
+const ADDGAME_PLAYLIST = gql`
+    ${USERGAME_QUERY}
+    mutation PlayGame($gameId: ID!) {
+        playGame(
+            gameId: $gameId
+        )
+        {
+            ...UserGameQuery
+        }
+    }
+`
+
+export default function Dashboard(callbackfn, thisArg) {
     const theme = useTheme();
 
     let classes = useStyles()
+    let gameArray = []
     const context = useContext(AuthContext)
 
     const [state, setState] = useState({
         isLoading: false,
         games: [],
+        addedGames: []
     })
-
+    const [open, setOpen] = React.useState(false);
     const game_name = useRef('')
     const game_desc = useRef('')
     const game_pic = useRef('')
+    const game_choice = useRef('')
 
     const [value, setValue] = React.useState(0);
     const [uploadProgress, setUploadProgress] = React.useState({})
     const [uploadingFile, setUploadingFile] = React.useState()
     const [uploading, setUploading] = React.useState(false)
     const [successfulUploaded, setSuccessfulUploaded] = React.useState(false)
-    const {loading, error, data} = useQuery(LIST_GAMES)
+
+    const {data: games_data, loading: games_loading, error: games_error} = useQuery(LIST_GAMES)
+    const {data: userGames_data, loading: userGames_loading, error: userGames_error} = useQuery(LIST_USERGAME)
+
     const [addGameHandler] = useMutation(
         CREATE_GAME,
         {
             onCompleted: (dataMutationGame) => {
                 if (dataMutationGame.createGame !== undefined) {
-                    console.log(state.games)
                     let listGame = state.games
                     listGame.push(dataMutationGame.createGame)
                     setState({...state, games: listGame})
@@ -139,6 +184,44 @@ export default function Dashboard() {
             }
         }
     )
+
+    const [addGameToPlaylistHandler] = useMutation(
+        ADDGAME_PLAYLIST,
+        {
+            onCompleted: (dataMutationAddedGame) => {
+                if (dataMutationAddedGame.playGame !== undefined) {
+                    let listAddedGame = state.addedGames
+                    listAddedGame.push(dataMutationAddedGame.playGame)
+                    setState({...state, addedGames: listAddedGame})
+                }
+            }
+        }
+    )
+
+    const [scroll, setScroll] = React.useState('paper');
+
+    const handleClickOpen = (scrollType) => () => {
+        setOpen(true);
+        setScroll(scrollType);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    // /**
+    //  * ouverture de la modal
+    //  */
+    // const handleOpen = () => {
+    //     setOpen(true);
+    // };
+    //
+    // /**
+    //  * fermeture de la modal
+    //  */
+    // const handleClose = () => {
+    //     setOpen(false);
+    // };
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -148,6 +231,10 @@ export default function Dashboard() {
         setValue(index);
     };
 
+    /**
+     * ajout d'un jeux dans la collection Game
+     * @returns {Promise<void>}
+     */
     const addGame = async () => {
         setUploading(true)
         setUploadProgress({})
@@ -167,7 +254,7 @@ export default function Dashboard() {
             })
 
         } catch (e) {
-                // ajout error
+            // ajout error
             setSuccessfulUploaded(false)
             setUploading(false)
             throw new Error(e)
@@ -175,6 +262,11 @@ export default function Dashboard() {
 
     }
 
+    /**
+     * envoie de la requête vers le serveur, gestion de chargement et des erreurs
+     * @param file
+     * @returns {Promise<unknown>}
+     */
     const sendRequest = (file) => {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest()
@@ -213,6 +305,24 @@ export default function Dashboard() {
         });
     }
 
+    /**
+     * Ajout d'un ou plusieurs jeux à la playlist user
+     */
+    const addGameToPlaylist = () => {
+        gameArray.map(async game => {
+                try {
+                    await addGameToPlaylistHandler({
+                        variables: {
+                            gameId: game._id
+                        }
+                    })
+                    handleClose()
+                } catch (e) {
+                    throw new Error(e)
+                }
+            }
+        )
+    }
 
     return (
         <div className={classes.root}>
@@ -226,7 +336,7 @@ export default function Dashboard() {
                     variant="fullWidth"
                     aria-label="full width tabs example"
                 >
-                    <Tab label="Liste des jeux" {...a11yProps(0)} />
+                    <Tab label="Mes jeux" {...a11yProps(0)} />
                     <Tab label="Item Two" {...a11yProps(1)} />
                     <Tab label="Ajouter un jeu" {...a11yProps(2)} />
                 </Tabs>
@@ -237,15 +347,33 @@ export default function Dashboard() {
                 onChangeIndex={handleChangeIndex}
             >
                 <TabPanel value={value} index={0} dir={theme.direction}>
-                    {
-                        data ?
-                            <GameList
-                                games={data.games}
-                                authUserId={context.playload ? context.playload.userId : null}
-                            /> :
-                            <p>{JSON.stringify(error)}</p>
+                    <Grid item xs={12}>
+                        <Button onClick={handleClickOpen('paper')}>Ajoutez un jeu à votre collection</Button>
+                    </Grid>
+                    <Container maxWidth="md">
+                        {
+                            userGames_data !== undefined && userGames_data.userGame.length !== 0 ?
+                                <UserGameList
+                                    games={userGames_data}
+                                    authUserId={context.playload ? context.playload.userId : null}
+                                />
+                                :
+                                <div>
+                                    <p>Vous n'avez pas encore de jeux dans votre collection</p>
+                                    <p>Il est temps de commencer l'aventure en cliquant sur le bouton ci-dessus !!!</p>
+                                </div>
+                        }
+                    </Container>
 
-                    }
+                    <ModalGame
+                        gameArray={gameArray}
+                        addGameToPlaylist={addGameToPlaylist}
+                        game_choice={game_choice}
+                        games={games_data}
+                        handleClose={handleClose}
+                        open={open}
+                        scroll={scroll}
+                    />
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
                     Item Two
@@ -268,7 +396,7 @@ export default function Dashboard() {
                                 label="Description"
                                 name="game_desc"
                                 type="text"
-                                helperText="La description ne doit pas dépasser 100 caractère"
+                                helperText="La description ne doit pas dépasser 100 caractères"
                                 fullWidth={true}
                                 inputRef={game_desc}
                                 required
@@ -298,7 +426,6 @@ export default function Dashboard() {
 
                 </TabPanel>
             </SwipeableViews>
-
         </div>
     )
 }

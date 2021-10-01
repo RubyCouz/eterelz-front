@@ -16,9 +16,7 @@
     height: 64px;
     width: 64px;
 }
-.fileInput {
-    display: none !important;
-}
+
 
 .highlight {
     background-color: rgb(188, 185, 236);
