@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+}
+.colour-block {
+    background: #823A9C !important;
+    width: 100%;
+    padding: 12% 5% 7% 5%;
+    color: #fff !important;
+}
+.black-block {
+    background: #121212;
+    width: 100%;
+    padding: 20% 5% 10% 5%;
+    color: #823A9C;
+}
+/*------------------*/
+/*  SKEW CLOCKWISE  */
+/*------------------*/
+.skew-cc{
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    left: 0;
+    background: linear-gradient(to right bottom, #823A9C 49%, #121212 50%),
+                linear-gradient(-50deg, #121212 16px, #000 0);
+}
+/*-------------------------*/
+/* SKEW COUNTER CLOCKWISE  */
+/*-------------------------*/
+.skew-c{
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    left: 0;
+    background: linear-gradient(to left bottom, #121212 49%, #823A9C 50%);
+}
+
+.homeCollapsible {
+    background: #121212 !important;
+    color: #cccccc !important;
+}
+.css-1pnmrwp-MuiTypography-root {
+    color: #cccccc !important;
+}
+
+.css-yw020d-MuiAccordionSummary-expandIconWrapper {
+    color: #cccccc !important;
+}
+
+.divider-up-to-down {
+    height: 100%;
+    width: 100%;
+    background: #823A9C;
+    clip-path: polygon(95% 0%, 100% 0, 5% 100%, 0% 100%);
+}
+
+.divider-down-to-up {
+    height: 100%;
+    width: 100%;
+    background: #121212;
+    clip-path: polygon(5% 0%, 0 0, 95% 100%, 100% 100%);
+}

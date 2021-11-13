@@ -1,241 +1,135 @@
 import React, {useState} from 'react'
-
-import {
-    IconButton,
-    Tab,
-    Tabs,
-    AppBar,
-    MenuItem,
-    Toolbar, Menu,
-} from "@material-ui/core"
-import {AccountCircle, AccountCircle as AccountCircleIcon, Search} from "@material-ui/icons"
-import {makeStyles} from '@material-ui/core/styles'
-
-import SwipeableViews from 'react-swipeable-views'
-
-import {NavLink} from "react-router-dom"
-
-import TabPanel from './TabPanel'
 import Box from "@mui/material/Box"
-import Badge from "@material-ui/core/Badge"
-import MailIcon from "@material-ui/icons/Mail"
-import NotificationsIcon from "@material-ui/icons/Notifications"
-import MenuIcon from "@material-ui/icons/Menu"
-import Typography from "@mui/material/Typography"
-import {alpha} from "@mui/material/styles"
-import styled from "@emotion/styled"
-import MoreIcon from "@material-ui/icons/MoreVert"
-import SearchIcon from "@material-ui/icons/Search";
-import * as PropTypes from "prop-types";
+import Navbar from '../../Components/Navbar/Navbar'
+import HomeCarousel from '../../Components/HomeCarousel/HomeCarousel'
+import EventCard from '../../Components/EventCard/EventCard'
+import ActionModul from '../../Components/ActionModul/ActionModul'
+import './Home.css'
+import Grid from "@mui/material/Grid";
+import Button from "@material-ui/core/Button";
 
-function a11yProps(index) {
-    return {
-        id: `full-width-tab-${index}`,
-        'aria-controls': `full-width-tabpanel-${index}`,
-    };
-}
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import WidgetDiscord from '../../Components/WidgetDiscord/WidgetDiscord'
+import Divider from "@material-ui/core/Divider";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-    },
-    list: {
-        width: 250,
-    },
-    fullList: {
-        width: 'auto',
-    },
-    logo: {
-        width: '150px',
-    },
-}));
 
 export default function Home(props) {
-    const classes = useStyles();
-    const [value, setValue] = useState(0);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    }
 
-    const handleChangeIndex = (index) => {
-        setValue(index);
-    }
+    const [expanded, setExpanded] = React.useState(false);
 
-    const handleMobileMenuOpen = (event) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    }
-
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    }
-
-    const handleProfileMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    }
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    }
-
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
-
-    const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-        </Menu>
-    );
-
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-    const renderMobileMenu = (
-        <Menu
-            anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMobileMenuOpen}
-            onClose={handleMobileMenuClose}
-        >
-            <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon/>
-                    </Badge>
-                </IconButton>
-                <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton
-                    size="large"
-                    aria-label="show 17 new notifications"
-                    color="inherit"
-                >
-                    <Badge badgeContent={17} color="error">
-                        <NotificationsIcon/>
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle/>
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
-        </Menu>
-    );
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+    };
 
     return (
         <div>
             <Box sx={{flexGrow: 1}}>
-                <AppBar
-                    position="static"
-                    color="primary"
-                >
-                    <Toolbar>
-                        <NavLink to="/">
-                            <img
-                                src="./img/themes/logo.png"
-                                alt="Logo EterelZ"
-                                className={classes.logo}
-                            />
-                        </NavLink>
-                        <Box sx={{flexGrow: 1}}>
-                            <Tabs
-                                value={value}
-                                onChange={handleChange}
-                                indicatorColor="secondary"
-                                textColor="inherit"
-                                variant="fullWidth"
-                                aria-label="full width tabs example"
-                            >
-                                <Tab label="Tournois / Event" {...a11yProps(0)} />
-                                <Tab label="Les Streams" {...a11yProps(1)} />
-                                <Tab label="Jeux" {...a11yProps(2)} />
-                                <Tab label="La commu EterelZ" {...a11yProps(3)} />
-                            </Tabs>
-                        </Box>
-                        <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-                            <IconButton
-                                size="large"
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <AccountCircle/>
-                            </IconButton>
-                        </Box>
-                        <Box sx={{display: {xs: 'flex', md: 'none'}}}>
-                            <IconButton
-                                size="large"
-                                aria-label="show more"
-                                aria-controls={mobileMenuId}
-                                aria-haspopup="true"
-                                onClick={handleMobileMenuOpen}
-                                color="inherit"
-                            >
-                                <MoreIcon/>
-                            </IconButton>
-                        </Box>
-                    </Toolbar>
-                </AppBar>
-                {renderMobileMenu}
-                {renderMenu}
-                <SwipeableViews
-                    axis={props.theme === 'rtl' ? 'x-reverse' : 'x'}
-                    index={value}
-                    onChangeIndex={handleChangeIndex}
-                >
-                    <TabPanel value={value} index={0}>
-                        Page descriptif tournoi / event
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                        Page présentation Streamer, aperçu streamer en direct
-                    </TabPanel>
-                    <TabPanel value={value} index={2}>
-                        Page Présentation des Jeux de la commu EterelZ
-                    </TabPanel>
-                    <TabPanel value={value} index={3}>
-                        Page présentation commu EterelZ
-                    </TabPanel>
-                </SwipeableViews>
+                <Navbar/>
+            </Box>
+            <Box sx={{flexGrow: 1}}>
+                <HomeCarousel/>
+            </Box>
+            <Box sx={{flexGrow: 1}}>
+                <div className="skew-c"/>
+                <div className="colour-block">
+                    <Grid container spacing={{xs: 1, md: 10}} columns={{xs: 3, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4} className="column">
+                            <h2>PORTAIL</h2>
+                            <Button>Se référencer</Button>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4} className="column">
+                            <h2>TEAM EXPERIENCE</h2>
+                            <Button>POSTULER</Button>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4} className="column">
+                            <h2>EVENT</h2>
+                            <EventCard/>
+                            <EventCard/>
+                            <EventCard/>
+                        </Grid>
+                    </Grid>
+                </div>
+                <div className="skew-cc"/>
+                <div className="black-block">
+                    <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={5} sm={5} md={5}>
+                            <div>
+                                <Accordion
+                                    className="homeCollapsible"
+                                    expanded={expanded === 'panel1'}
+                                    onChange={handleChange('panel1')}
+                                >
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon/>}
+                                        aria-controls="panel1bh-content"
+                                        id="panel1bh-header"
+                                    >
+                                        <Typography sx={{color: 'text.secondary'}}>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores
+                                            commodi, culpa deleniti deserunt dolor expedita explicabo magnam maiores
+                                            porro quod velit voluptate. Alias doloribus impedit mollitia perferendis
+                                            porro, ratione.
+                                        </Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Typography>
+                                            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
+                                            Aliquam eget maximus est, id dignissim quam.
+                                        </Typography>
+                                    </AccordionDetails>
+                                </Accordion>
+                            </div>
+                        </Grid>
+                        <Grid item xs={2} sm={2} md={2}>
+                            <div className="divider-up-to-down"/>
+                        </Grid>
+                        <Grid item xs={5} sm={5} md={5}>
+                            <p className="column">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci amet
+                                asperiores
+                                aspernatur, laboriosam reprehenderit unde vel? Accusamus culpa, cupiditate, eaque eum
+                                exercitationem molestias perspiciatis quas sequi similique sit vitae.
+                            </p>
+                            <p>AVEC UN PUTAIN D'AGENDA EN PRIME !!!</p>
+                        </Grid>
+
+                    </Grid>
+                </div>
+                <div className="skew-c"/>
+                <div className="colour-block">
+                    <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={5} sm={5} md={5}>
+                            <div>
+                                <WidgetDiscord/>
+                            </div>
+                        </Grid>
+                        <Grid item xs={2} sm={2} md={2}>
+                            <div className="divider-down-to-up"/>
+                        </Grid>
+                        <Grid item xs={5} sm={5} md={5}>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequuntur delectus
+                                error, magni odit officiis sequi ullam? Aliquam assumenda autem, consequuntur eveniet
+                                expedita facilis harum labore, quas saepe sint, voluptate?
+                            </p>
+                        </Grid>
+                    </Grid>
+                </div>
+                <div className="skew-cc"/>
             </Box>
         </div>
 
     )
 }
+
+
+
+
+
+
+
+

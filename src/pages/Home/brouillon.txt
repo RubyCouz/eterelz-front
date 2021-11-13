@@ -1,0 +1,60 @@
+-----------------------------------------------------------------------------
+    carrousel pic jeux eterlz + slide inscription team
+    - pti point pour naviguer sur les différents
+    - redirection vers team du jeu
+-----------------------------------------------------------------------------
+    bouton PORTAIL          |  TEAM EXPERIENCE      |   EVENNEMENT
+                            |                       |
+    bouton SE REFERENCER    |   bouton POSTULER     |   3 derniers events plus nom
+                            |   (=> inscription)    |
+                            |                       |
+-----------------------------------------------------------------------------
+   texte                                        \    AGENDA
+                                                 \
+                                                  \   agenda, affichage des events du jour sur un hover
+                  en savoir plus (collapsible)     \
+------------------------------------------------------------------------------
+    Discord                                        /
+                                                  /
+    widget discord eterelz                       /                paragraphe
+                                                /
+                                               /
+--------------------------------------------------------------------------------------
+    Liste Affilié / streamer / youtube
+        - galerie profile pic + lien
+        - au mieux liste de streamer
+---------------------------------------------------------------------------------
+
+Latest Match
+
+sous forme de tableau
+-> reprise du calendrier
+-> reprise des matchs des teams
+-> streams / vidéos du matchs
+-> score
+-> adversaire
+-> date
+
+sur les tous les matchs, possibilité de filtrer
+score   |  nom teams    |  date  |   support visionnage
+
+--------------------------------------------------------------------------------------
+
+Stat
+
+sur 5 meilleurs jeux (plus de popularité)
+
+
+fond du jeux
+  - nombre de joueurs (cf inscrit)
+  - equipe
+  - tournois
+  - event
+  - affiliés
+  - discord
+---------------------------------------------------------------------------------------
+FOOTER
+recrutement         |                           |
+info eterlez        |  paragraphe               | diverses redirections
+                    |                           |
+---------------------------------------------------------------------------------------

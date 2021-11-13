@@ -1,0 +1,9 @@
+.card {
+    margin-bottom: 1vh;
+    text-align: left;
+}
+@media(max-width:960px) {
+    .card {
+        height: 5vh;
+    }
+}
