@@ -24,6 +24,7 @@ import useThemeEterelz from '../Hook/useThemeEterelz'
 import useAuth from '../Hook/useAuth'
 
 export default function Index() {
+
     const [auth, login, logout, loading] = useAuth()
 
     const [avatar, setAvatar] = useState({id: null})
@@ -34,6 +35,8 @@ export default function Index() {
         let darkModeLS = window.localStorage.getItem('darkMode')
         darkModeLS !== 'null' && setTheme(darkModeLS)
     }, [login, logout])
+
+
 
     return (
         <BrowserRouter>

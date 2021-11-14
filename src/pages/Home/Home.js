@@ -120,6 +120,14 @@ export default function Home(props) {
                     </Grid>
                 </div>
                 <div className="skew-cc"/>
+                <div className="black-block">
+                    <h2>Streamer</h2>
+                </div>
+                <div className="skew-c"/>
+                <div className="colour-block">
+                <h2>Latest Match</h2>
+                </div>
+                <div className="skew-cc"/>
             </Box>
         </div>
 

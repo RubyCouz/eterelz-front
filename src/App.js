@@ -1,23 +1,28 @@
-import React, {Suspense, lazy} from 'react'
+import React, {Suspense, lazy, useState, useEffect} from 'react'
 import Loading from './pages/Loading'
 const Index = lazy(() => import('./pages/Index'))
 
-const widget = async () => {
-    let result = await import('@widgetbot/crate')
-    const Crate = await result.cdn();
-
-    return new Crate({
-        server: '299881420891881473',
-        channel: '355719584830980096',
-        location: ['bottom', 'right']
-    })
-}
-
-
 export default function App() {
+
+    let [crate, setCrate] = useState()
+
+    useEffect(async () => {
+
+        let result = await import('@widgetbot/crate')
+        const Crate = await result.cdn();
+
+        crate = new Crate({
+            server: '326099902037884940',
+            channel: '670890139438022687',
+            location: ['bottom', 'right'],
+            notifications: true,
+            indicator: true,
+        })
+    })
+
     return (
         <Suspense fallback={<Loading />}>
-            {widget}
+            {crate}
             <Index/>
         </Suspense>
     )
