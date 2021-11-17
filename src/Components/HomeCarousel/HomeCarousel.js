@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import './HomeCarousel.css'
 import {Carousel} from 'react-responsive-carousel'
 import TeamCard from '../TeamCard/TeamCard'

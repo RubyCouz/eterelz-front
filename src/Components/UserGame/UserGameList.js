@@ -1,7 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
 import UserGameItem from './UserGameItem/UserGameItem'
-import {Grid} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import {Grid} from "@material-ui/core"
 
 export default function UserGameList(props) {
     return (

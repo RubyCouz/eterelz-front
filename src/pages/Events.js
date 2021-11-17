@@ -1,14 +1,13 @@
 import React, {
     useState,
-    useContext,
-    useRef
+    useContext
 } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import {
     Fab,
     CircularProgress,
 } from '@material-ui/core'
-import {makeStyles, useTheme} from '@material-ui/core/styles'
+import {makeStyles} from '@material-ui/core/styles'
 import {
     gql,
     useQuery,

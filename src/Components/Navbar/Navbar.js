@@ -2,19 +2,15 @@ import React, {useState} from 'react'
 
 import {
     IconButton,
-    Tab,
-    Tabs,
     AppBar,
     MenuItem,
     Toolbar, Menu,
 } from '@material-ui/core'
-import {AccountCircle, AccountCircle as AccountCircleIcon, Search} from '@material-ui/icons'
+import {AccountCircle} from '@material-ui/icons'
 import {makeStyles} from '@material-ui/core/styles'
-import Box from "@mui/material/Box";
-import {NavLink} from "react-router-dom";
-import MoreIcon from "@material-ui/icons/MoreVert";
-import SwipeableViews from "react-swipeable-views";
-import TabPanel from "../../pages/Home/TabPanel";
+import Box from "@mui/material/Box"
+import {NavLink} from "react-router-dom"
+import MoreIcon from "@material-ui/icons/MoreVert"
 
 
 const useStyles = makeStyles((theme) => ({

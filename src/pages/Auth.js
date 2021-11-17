@@ -1,22 +1,14 @@
 import React, {useContext, useState} from 'react'
 import PropTypes from 'prop-types'
-import SwipeableViews from 'react-swipeable-views'
 import {makeStyles, useTheme} from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-import PersonPinIcon from '@material-ui/icons/PersonPin'
-import HelpIcon from '@material-ui/icons/Help'
 import './Auth.css'
 import AuthContext from '../context/auth-context'
 import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 
 // Alert
 function Alert(props) {
@@ -52,12 +44,12 @@ TabPanel.propTypes = {
     value: PropTypes.any.isRequired,
 };
 
-function a11yProps(index) {
-    return {
-        id: `full-width-tab-${index}`,
-        'aria-controls': `full-width-tabpanel-${index}`,
-    };
-}
+// function a11yProps(index) {
+//     return {
+//         id: `full-width-tab-${index}`,
+//         'aria-controls': `full-width-tabpanel-${index}`,
+//     };
+// }
 
 //Style et thème de la navbar
 const useStyles = makeStyles((theme) => ({
@@ -126,7 +118,7 @@ export default function FullWidthTabs(props) {
 
     //style des tabs
     let classes = useStyles()
-    let theme = useTheme();
+    // let theme = useTheme();
     const [value, setValue] = useState(0);
 
     const handleInputChange = (event) => {

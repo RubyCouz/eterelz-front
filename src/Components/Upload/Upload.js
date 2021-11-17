@@ -1,4 +1,4 @@
-import React, {Component, useState} from "react";
+import React, {useState} from "react";
 import Dropzone from "../DropZone/DropZone";
 import "./Upload.css";
 import Progress from "../Progress/Progress";

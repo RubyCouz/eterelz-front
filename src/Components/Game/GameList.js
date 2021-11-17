@@ -1,7 +1,5 @@
 import React, {useState} from 'react'
 import GameItem from './GameItem/GameItem'
-import {Checkbox, FormControlLabel} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import {Grid} from "@mui/material";
 
 export default function GameList(props) {
