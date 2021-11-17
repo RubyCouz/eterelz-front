@@ -139,19 +139,19 @@ export default function Home(props) {
                         <Grid item xs={4} sm={4} md={4}>
                             <h3>Sardoche</h3>
                             <HomeStream
-                                url="https://www.twitch.tv/sardoche"
+                                url="https://www.twitch.tv/sardoche&parent=31.220.52.74"
                             />
                         </Grid>
                         <Grid item xs={4} sm={4} md={4}>
                             <h3>Mojitomangue</h3>
                             <HomeStream
-                                url="https://www.twitch.tv/mojitomangue"
+                                url="https://www.twitch.tv/mojitomangue&parent=31.220.52.74"
                             />
                         </Grid>
                         <Grid item xs={4} sm={4} md={4}>
                             <h3>At0mium</h3>
                             <HomeStream
-                                url="https://www.twitch.tv/at0mium"
+                                url="https://www.twitch.tv/at0mium&parent=31.220.52.74"
                             />
                         </Grid>
                     </Grid>
@@ -159,19 +159,19 @@ export default function Home(props) {
                         <Grid item xs={4} sm={4} md={4}>
                             <h3>Solary</h3>
                             <HomeStream
-                                url="https://www.twitch.tv/solary"
+                                url="https://www.twitch.tv/solary&parent=31.220.52.74"
                             />
                         </Grid>
                         <Grid item xs={4} sm={4} md={4}>
                             <h3>Aspigtv</h3>
                             <HomeStream
-                                url="https://www.twitch.tv/aspigtv"
+                                url="https://www.twitch.tv/aspigtv&parent=31.220.52.74"
                             />
                         </Grid>
                         <Grid item xs={4} sm={4} md={4}>
                             <h3>Mooters</h3>
                             <HomeStream
-                                url="https://www.twitch.tv/mooters"
+                                url="https://www.twitch.tv/mooters&parent=31.220.52.74"
                             />
                         </Grid>
                     </Grid>
