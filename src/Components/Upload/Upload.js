@@ -14,12 +14,15 @@ export default function Upload(props) {
     }
 
 
-    React.useEffect(async () => {
-        if (state.files.length !== 0 && props.uploading === false) {
-           props.setUploadingFile(state.files[0])
-            props.setUploadProgress({})
-            props.setUploading(true)
+    React.useEffect( () => {
+        async function upload() {
+            if (state.files.length !== 0 && props.uploading === false) {
+                props.setUploadingFile(state.files[0])
+                props.setUploadProgress({})
+                props.setUploading(true)
+            }
         }
+        upload()
     }, [state])
 
 
