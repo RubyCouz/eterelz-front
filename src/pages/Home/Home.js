@@ -2,22 +2,24 @@ import React, {useState} from 'react'
 import Box from "@mui/material/Box"
 import Navbar from '../../Components/Navbar/Navbar'
 import HomeCarousel from '../../Components/HomeCarousel/HomeCarousel'
+import SponsoCarousel from '../../Components/SponsoCarousel/SponsoCarousel'
 import EventCard from '../../Components/EventCard/EventCard'
-import ActionModul from '../../Components/ActionModul/ActionModul'
 import './Home.css'
-import Grid from "@mui/material/Grid";
-import Button from "@material-ui/core/Button";
+import Grid from "@mui/material/Grid"
+import Button from "@material-ui/core/Button"
 
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Typography from '@mui/material/Typography'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import WidgetDiscord from '../../Components/WidgetDiscord/WidgetDiscord'
-import Divider from "@material-ui/core/Divider";
+import HomeStream from '../../Components/HomeStream/HomeStream'
+import HomeMatches from '../../Components/HomeMatches/HomeMatches'
 
 
 export default function Home(props) {
+
 
     const [expanded, setExpanded] = React.useState(false);
 
@@ -34,29 +36,40 @@ export default function Home(props) {
                 <HomeCarousel/>
             </Box>
             <Box sx={{flexGrow: 1}}>
+                <SponsoCarousel/>
+                {/*<SponsoCarousel/>*/}
+            </Box>
+            <Box sx={{flexGrow: 1}}>
                 <div className="skew-c"/>
                 <div className="colour-block">
-                    <Grid container spacing={{xs: 1, md: 10}} columns={{xs: 3, sm: 8, md: 12}}>
-                        <Grid item xs={4} sm={4} md={4} className="column">
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 3, sm: 8, md: 12}}>
+                        <Grid item xs={3} sm={3} md={3}>
                             <h2>PORTAIL</h2>
                             <Button>Se référencer</Button>
                         </Grid>
-                        <Grid item xs={4} sm={4} md={4} className="column">
+                        <Grid item xs={3} sm={3} md={3}>
                             <h2>TEAM EXPERIENCE</h2>
                             <Button>POSTULER</Button>
                         </Grid>
-                        <Grid item xs={4} sm={4} md={4} className="column">
+                        <Grid item xs={6} sm={6} md={6}>
                             <h2>EVENT</h2>
-                            <EventCard/>
-                            <EventCard/>
-                            <EventCard/>
+                            <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 3, sm: 8, md: 12}}>
+                                <Grid item xs={6} sm={6} md={6}>
+                                    <EventCard/>
+                                    <EventCard/>
+                                </Grid>
+                                <Grid item xs={6} sm={6} md={6}>
+                                    <EventCard/>
+                                    <EventCard/>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </div>
                 <div className="skew-cc"/>
                 <div className="black-block">
                     <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 4, sm: 8, md: 12}}>
-                        <Grid item xs={5} sm={5} md={5}>
+                        <Grid item xs={5} sm={5} md={5} className="column">
                             <div>
                                 <Accordion
                                     className="homeCollapsible"
@@ -88,7 +101,7 @@ export default function Home(props) {
                             <div className="divider-up-to-down"/>
                         </Grid>
                         <Grid item xs={5} sm={5} md={5}>
-                            <p className="column">
+                            <p>
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci amet
                                 asperiores
                                 aspernatur, laboriosam reprehenderit unde vel? Accusamus culpa, cupiditate, eaque eum
@@ -101,7 +114,7 @@ export default function Home(props) {
                 </div>
                 <div className="skew-c"/>
                 <div className="colour-block">
-                    <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 4, sm: 8, md: 12}}>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
                         <Grid item xs={5} sm={5} md={5}>
                             <div>
                                 <WidgetDiscord/>
@@ -111,7 +124,7 @@ export default function Home(props) {
                             <div className="divider-down-to-up"/>
                         </Grid>
                         <Grid item xs={5} sm={5} md={5}>
-                            <p>
+                            <p className="text">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequuntur delectus
                                 error, magni odit officiis sequi ullam? Aliquam assumenda autem, consequuntur eveniet
                                 expedita facilis harum labore, quas saepe sint, voluptate?
@@ -122,10 +135,55 @@ export default function Home(props) {
                 <div className="skew-cc"/>
                 <div className="black-block">
                     <h2>Streamer</h2>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Sardoche</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/sardoche"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Mojitomangue</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/mojitomangue"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>At0mium</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/at0mium"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Solary</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/solary"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Aspigtv</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/aspigtv"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Mooters</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/mooters"
+                            />
+                        </Grid>
+                    </Grid>
                 </div>
                 <div className="skew-c"/>
                 <div className="colour-block">
-                <h2>Latest Match</h2>
+                    <h2>Latest Match</h2>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <HomeMatches/>
+                        </Grid>
+                    </Grid>
                 </div>
                 <div className="skew-cc"/>
             </Box>

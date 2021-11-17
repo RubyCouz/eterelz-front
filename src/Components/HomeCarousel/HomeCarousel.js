@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import './HomeCarousel.css'
-import { Carousel } from 'react-responsive-carousel'
+import {Carousel} from 'react-responsive-carousel'
 import TeamCard from '../TeamCard/TeamCard'
 
-export default function HomeCarousel() {
+export default function HomeCarousel(props) {
+
     return (
         <Carousel
             autoPlay
@@ -14,28 +15,45 @@ export default function HomeCarousel() {
             dynamicHeight={true}
             stopOnHover={true}
             showThumbs={false}
+            // animationHandler="fade"
         >
             <div className="pic">
-                <img src="./img/pic1.jpg" alt="pic"/>
+                <img src="./img/hots.jpg" alt="pic"/>
                 <div className="legend">
-                    <p className="titleSlide">Jeux</p>
-                    <p className="textSlide">Game Style</p>
+                    <p className="titleSlide">Heroes Of The Storm</p>
+                    <p className="textSlide">M.O.B.A</p>
                     <div className="teamCard">
                         <TeamCard
-                            moreVertIconId="more1"
-                            menuID="menu1"
+                            moreVertIconId="more5"
+                            menuID="menu5"
+                            name="KMCSF"
+                            gender="Team Amateur"
+                            ranked="Silver / Gold"
+                            icon="K"
                         />
                         <TeamCard
-                            moreVertIconId="more2"
-                            menuID="menu2"
+                            moreVertIconId="more6"
+                            menuID="menu6"
+                            name="NVALV"
+                            gender="Team Amateur"
+                            ranked="Gold / Platine"
+                            icon="N"
                         />
                         <TeamCard
-                            moreVertIconId="more3"
-                            menuID="menu3"
+                            moreVertIconId="more7"
+                            menuID="menu7"
+                            name="GTO"
+                            gender="Team Amateur"
+                            ranked="Diamant +"
+                            props="G"
                         />
                         <TeamCard
-                            moreVertIconId="more4"
-                            menuID="menu4"
+                            moreVertIconId="more8"
+                            menuID="menu8"
+                            name="PAIR"
+                            gender="Team Amateur"
+                            ranked="Master"
+                            icon="P"
                         />
                     </div>
                 </div>

@@ -34,7 +34,6 @@ export default function TeamCard(props) {
     // const handleExpandClick = () => {
     //     setExpanded(!expanded);
     // };
-console.log(props)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -43,13 +42,12 @@ console.log(props)
     const handleClose = () => {
         setAnchorEl(null);
     };
-
     return (
         <Card sx={{ maxWidth: 345 }} className="card">
             <CardHeader
                 avatar={
                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        R
+                        {props.icon}
                     </Avatar>
                 }
                 action={
@@ -70,14 +68,14 @@ console.log(props)
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={handleClose}>Action 1</MenuItem>
-                            <MenuItem onClick={handleClose}>Action 2</MenuItem>
-                            <MenuItem onClick={handleClose}>Action 3</MenuItem>
+                            <MenuItem onClick={handleClose}>Contacter le Capitaine</MenuItem>
+                            <MenuItem onClick={handleClose}>Voir profil Heroes Lounge</MenuItem>
+                            <MenuItem onClick={handleClose}>Voir leurs derniers matchs</MenuItem>
                         </Menu>
                     </IconButton>
                 }
-                title="Team's Name"
-                subheader="Some description"
+                title={props.name}
+                subheader={props.gender + ' ' + props.ranked}
             />
             {/*<CardMedia*/}
             {/*    component="img"*/}
