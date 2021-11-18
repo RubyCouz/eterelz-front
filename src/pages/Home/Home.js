@@ -14,8 +14,8 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import Typography from '@mui/material/Typography'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import WidgetDiscord from '../../Components/WidgetDiscord/WidgetDiscord'
-// import HomeStream from '../../Components/HomeStream/HomeStream'
-import HomeMatches from '../../Components/HomeMatches/HomeMatches'
+import HomeStream from '../../Components/HomeStream/HomeStream'
+// import HomeMatches from '../../Components/HomeMatches/HomeMatches'
 
 
 export default function Home(props) {
@@ -134,53 +134,53 @@ export default function Home(props) {
                 <div className="skew-cc"/>
                 <div className="black-block">
                     <h2>Streamer</h2>
-                    {/*<Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>*/}
-                    {/*    <Grid item xs={4} sm={4} md={4}>*/}
-                    {/*        <h3>Sardoche</h3>*/}
-                    {/*        <HomeStream*/}
-                    {/*            url="https://www.twitch.tv/sardoche&parent=31.220.52.74"*/}
-                    {/*        />*/}
-                    {/*    </Grid>*/}
-                    {/*    <Grid item xs={4} sm={4} md={4}>*/}
-                    {/*        <h3>Mojitomangue</h3>*/}
-                    {/*        <HomeStream*/}
-                    {/*            url="https://www.twitch.tv/mojitomangue&parent=31.220.52.74"*/}
-                    {/*        />*/}
-                    {/*    </Grid>*/}
-                    {/*    <Grid item xs={4} sm={4} md={4}>*/}
-                    {/*        <h3>At0mium</h3>*/}
-                    {/*        <HomeStream*/}
-                    {/*            url="https://www.twitch.tv/at0mium&parent=31.220.52.74"*/}
-                    {/*        />*/}
-                    {/*    </Grid>*/}
-                    {/*</Grid>*/}
-                    {/*<Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>*/}
-                    {/*    <Grid item xs={4} sm={4} md={4}>*/}
-                    {/*        <h3>Solary</h3>*/}
-                    {/*        <HomeStream*/}
-                    {/*            url="https://www.twitch.tv/solary&parent=31.220.52.74"*/}
-                    {/*        />*/}
-                    {/*    </Grid>*/}
-                    {/*    <Grid item xs={4} sm={4} md={4}>*/}
-                    {/*        <h3>Aspigtv</h3>*/}
-                    {/*        <HomeStream*/}
-                    {/*            url="https://www.twitch.tv/aspigtv&parent=31.220.52.74"*/}
-                    {/*        />*/}
-                    {/*    </Grid>*/}
-                    {/*    <Grid item xs={4} sm={4} md={4}>*/}
-                    {/*        <h3>Mooters</h3>*/}
-                    {/*        <HomeStream*/}
-                    {/*            url="https://www.twitch.tv/mooters&parent=31.220.52.74"*/}
-                    {/*        />*/}
-                    {/*    </Grid>*/}
-                    {/*</Grid>*/}
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Sardoche</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/sardoche&parent=31.220.52.74"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Mojitomangue</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/mojitomangue&parent=31.220.52.74"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>At0mium</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/at0mium&parent=31.220.52.74"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Solary</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/solary&parent=31.220.52.74"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Aspigtv</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/aspigtv&parent=31.220.52.74"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Mooters</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/mooters&parent=31.220.52.74"
+                            />
+                        </Grid>
+                    </Grid>
                 </div>
                 <div className="skew-c"/>
                 <div className="colour-block">
                     <h2>Latest Match</h2>
                     <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
                         <Grid item xs={12} sm={12} md={12}>
-                            <HomeMatches/>
+                            {/*<HomeMatches/>*/}
                         </Grid>
                     </Grid>
                 </div>
