@@ -5,23 +5,25 @@ const Index = lazy(() => import('./pages/Index'))
 
 export default function App() {
 
-    let [crate, setCrate] = useState()
+    let [crate] = useState()
+
+    const widget = async (crate) => {
+        let result = await import('@widgetbot/crate')
+        const Crate = await result.cdn();
+
+        crate = new Crate({
+            server: '326099902037884940',
+            channel: '670890139438022687',
+            location: ['bottom', 'right'],
+            notifications: true,
+            indicator: true,
+        })
+    }
 
     useEffect(() => {
-        async function widget() {
-            let result = await import('@widgetbot/crate')
-            const Crate = await result.cdn();
-
-            crate = new Crate({
-                server: '326099902037884940',
-                channel: '670890139438022687',
-                location: ['bottom', 'right'],
-                notifications: true,
-                indicator: true,
-            })
-        }
-        widget()
-    })
+        widget(crate)
+    }, [crate]
+    )
 
     return (
         <Suspense fallback={<Loading/>}>

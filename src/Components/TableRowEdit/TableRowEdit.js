@@ -25,7 +25,7 @@ import ThemeContext from '../../context/theme-context'
 
 export default function TableRowEdit(props) {
 
-    const {queryName, nameColumn, modifiedValue, idUser, data, processDisplay, processAfterSend, regex} = props
+    const {queryName, nameColumn, modifiedValue, idUser, data, processDisplay, regex} = props
 
     const [showField, setShowField] = useState(false)
     const ShowField = () => {
@@ -48,7 +48,7 @@ export default function TableRowEdit(props) {
             }
             setEntryValue(value)
         },
-        [data]
+        [data, processDisplay]
     )
 
     //Query générée pour le champ

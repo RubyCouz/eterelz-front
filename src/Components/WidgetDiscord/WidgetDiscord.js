@@ -10,6 +10,7 @@ export default function WidgetDiscord() {
                     frameBorder="0"
                     sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
                     className="widgetDiscord"
+                    title="Widget Discord"
             />
         </div>
 

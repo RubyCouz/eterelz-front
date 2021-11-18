@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react'
 import PropTypes from 'prop-types'
-import {makeStyles, useTheme} from '@material-ui/core/styles'
+import {makeStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import './Auth.css'
@@ -119,7 +119,7 @@ export default function FullWidthTabs(props) {
     //style des tabs
     let classes = useStyles()
     // let theme = useTheme();
-    const [value, setValue] = useState(0);
+    // const [setValue] = useState(0);
 
     const handleInputChange = (event) => {
         const target = event.target;
@@ -146,9 +146,9 @@ export default function FullWidthTabs(props) {
             stayLogged: true
         }
     )
-    const handleStayLogged = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-    };
+    // const handleStayLogged = (event) => {
+    //     setState({ ...state, [event.target.name]: event.target.checked });
+    // };
     //State etat des erreur pour lancement requête
     const [requestError, setRequestError] = useState(initialRequestError)
 
@@ -335,14 +335,14 @@ export default function FullWidthTabs(props) {
     //     }
     // }
     //changement de tabs
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-        cancel()
-    };
+    // const handleChange = (event, newValue) => {
+    //     setValue(newValue);
+    //     cancel()
+    // };
 
-    const handleChangeIndex = (index) => {
-        setValue(index);
-    };
+    // const handleChangeIndex = (index) => {
+    //     setValue(index);
+    // };
 
     const handleClick = () => {
         setOpen(true);

@@ -34,7 +34,7 @@ export default function Index() {
     useEffect(() => {
         let darkModeLS = window.localStorage.getItem('darkMode')
         darkModeLS !== 'null' && setTheme(darkModeLS)
-    }, [login, logout])
+    }, [login, logout, setTheme])
 
 
 

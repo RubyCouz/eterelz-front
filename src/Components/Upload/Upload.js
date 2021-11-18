@@ -23,7 +23,7 @@ export default function Upload(props) {
             }
         }
         upload()
-    }, [state])
+    }, [state, props])
 
 
     const renderProgress = (file) => {

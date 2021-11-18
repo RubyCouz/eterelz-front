@@ -169,8 +169,11 @@ export default function Dashboard(callbackfn, thisArg) {
     const [uploading, setUploading] = React.useState(false)
     const [successfulUploaded, setSuccessfulUploaded] = React.useState(false)
 
-    const {data: games_data, loading: games_loading, error: games_error} = useQuery(LIST_GAMES)
-    const {data: userGames_data, loading: userGames_loading, error: userGames_error} = useQuery(LIST_USERGAME)
+    // const {data: games_data, loading: games_loading, error: games_error} = useQuery(LIST_GAMES)
+    // const {data: userGames_data, loading: userGames_loading, error: userGames_error} = useQuery(LIST_USERGAME)
+
+    const {data: games_data} = useQuery(LIST_GAMES)
+    const {data: userGames_data} = useQuery(LIST_USERGAME)
 
     const [addGameHandler] = useMutation(
         CREATE_GAME,

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Box from "@mui/material/Box"
 import Navbar from '../../Components/Navbar/Navbar'
 import HomeCarousel from '../../Components/HomeCarousel/HomeCarousel'

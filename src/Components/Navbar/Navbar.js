@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 
 import {
     IconButton,
@@ -31,15 +31,15 @@ const useStyles = makeStyles((theme) => ({
 export default function Home(props) {
 
     const classes = useStyles();
-    const [value, setValue] = useState(0);
+    // const [value, setValue] = useState(0);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    }
-    const handleChangeIndex = (index) => {
-        setValue(index);
-    }
+    // const handleChange = (event, newValue) => {
+    //     setValue(newValue);
+    // }
+    // const handleChangeIndex = (index) => {
+    //     setValue(index);
+    // }
 
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);

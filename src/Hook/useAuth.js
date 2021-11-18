@@ -1,7 +1,7 @@
-import { useState, useEffect} from 'react'
-import { Cookies } from 'react-cookie'
+import {useState, useEffect, useCallback, useMemo} from 'react'
+import {Cookies} from 'react-cookie'
 
-export default function useAuth() {
+export default function useAuth(callback, deps) {
 
     const [auth, setState] = useState({
         token: false,
@@ -10,14 +10,21 @@ export default function useAuth() {
 
     const [loading, setLoading] = useState(true)
 
-    const cookies = new Cookies()
+    const cookies = useMemo(() => new Cookies(), [])
 
-    useEffect(() => {
-        login()
-        setLoading(false)
-    }, [])
+    const logout = useCallback(() => {
+            window.localStorage.removeItem('darkMode')
+            cookies.remove("jwt_HP")
+            cookies.remove("jwt_HP_RT")
 
-    const login = () => {
+            setState({
+                token: false,
+                playload: null
+            })
+        }, [cookies]
+    )
+
+    const login = useCallback(() => {
         const refreshToken = cookies.get("jwt_HP_RT")
         const token = cookies.get("jwt_HP")
 
@@ -29,9 +36,9 @@ export default function useAuth() {
 
         let data
 
-        if ( token !== undefined) {
+        if (token !== undefined) {
             data = token
-        } else if ( refreshToken !== undefined) {
+        } else if (refreshToken !== undefined) {
             data = refreshToken
         }
 
@@ -41,25 +48,20 @@ export default function useAuth() {
             const playload = JSON.parse(window.atob(arrayJWT[1]))
 
             let darkModeLS = window.localStorage.getItem('darkMode')
-            darkModeLS === 'null' && window.localStorage.setItem('darkMode', playload.user_isDark )
-            
+            darkModeLS === 'null' && window.localStorage.setItem('darkMode', playload.user_isDark)
+
             setState({
                 token: true,
                 playload: playload,
             })
         }
-    }
+    }, [cookies, logout])
 
-    const logout = () => {
-        window.localStorage.removeItem('darkMode')
-        cookies.remove("jwt_HP")
-        cookies.remove("jwt_HP_RT")
+    useEffect(() => {
+        login()
+        setLoading(false)
+    }, [login])
 
-        setState({
-            token: false,
-            playload: null
-        })
-    }
 
     return [auth, login, logout, loading]
 }
