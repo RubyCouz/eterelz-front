@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import WidgetDiscord from '../../Components/WidgetDiscord/WidgetDiscord'
 import HomeStream from '../../Components/HomeStream/HomeStream'
-import HomeMatches from '../../Components/HomeMatches/HomeMatches'
+// import HomeMatches from '../../Components/HomeMatches/HomeMatches'
 
 
 export default function Home(props) {
@@ -180,7 +180,7 @@ export default function Home(props) {
                     <h2>Latest Match</h2>
                     <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
                         <Grid item xs={12} sm={12} md={12}>
-                            <HomeMatches/>
+                            {/*<HomeMatches/>*/}
                         </Grid>
                     </Grid>
                 </div>
