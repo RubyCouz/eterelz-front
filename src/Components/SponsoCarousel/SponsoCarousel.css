@@ -2,6 +2,16 @@
     background-color: #121212 !important;
     color: #cccccc !important;
     margin: 0;
-    height: 5vh;
+    height: 7vh;
     padding-top: 1vh;
+    width: 10vw;
+}
+
+.sponsoPic {
+    height: 5vh;
+    width: auto;
+}
+
+.alice-carousel__stage-item {
+    width: 10vw;
 }
