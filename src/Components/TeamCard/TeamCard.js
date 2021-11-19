@@ -22,8 +22,8 @@ export default function TeamCard(props) {
         <Card sx={{ maxWidth: 345 }} className="card">
             <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        {props.icon}
+                    <Avatar sx={{ width: 64, height: 64 }} aria-label="recipe" variant="square">
+                        <img src={props.icon} alt="profil pic" title="profil pic NVALV" className="profilPic"/>
                     </Avatar>
                 }
                 action={
@@ -44,14 +44,20 @@ export default function TeamCard(props) {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={handleClose}>Contacter le Capitaine</MenuItem>
-                            <MenuItem onClick={handleClose}>Voir profil Heroes Lounge</MenuItem>
-                            <MenuItem onClick={handleClose}>Voir leurs derniers matchs</MenuItem>
+                            <MenuItem onClick={handleClose}>
+                                <a href={props.firstLink} target="_blanked">{props.firstAction}</a>
+                            </MenuItem>
+                            <MenuItem onClick={handleClose}>
+                                <a href={props.secondLink} target="_blanked">{props.secondAction}</a>
+                            </MenuItem>
+                            <MenuItem onClick={handleClose}>
+                                <a href={props.thirdLink} target="_blanked">{props.thirdAction}</a>
+                                </MenuItem>
                         </Menu>
                     </IconButton>
                 }
-                title={props.name}
-                subheader={props.gender + ' ' + props.ranked}
+                title={props.title}
+                subheader={props.firstContent + ' ' + props.secondContent}
             />
         </Card>
     );

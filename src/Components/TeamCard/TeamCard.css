@@ -2,6 +2,19 @@
     margin-bottom: 1vh;
     text-align: left;
 }
+
+.css-1u22viz-MuiAvatar-root {
+    background-color: #fff !important;
+}
+
+.css-1ri6ub7-MuiPaper-root-MuiCard-root {
+    background-image: url("localhost:3000/public/img/background/bg_eterelz.jpg") !important;
+}
+/*.profilPic {*/
+/*    width: 7vw !important;*/
+/*    height: auto !important;*/
+/*}*/
+
 @media(max-width:960px) {
     .card {
         height: 5vh;
