@@ -18,46 +18,47 @@ export default function TeamCard(props) {
         setAnchorEl(null);
     };
     return (
-        <Card sx={{ maxWidth: 345 }} className="card">
+        <Card sx={{maxWidth: 345}} className="card">
             <CardHeader
                 avatar={
-                    <Avatar sx={{ width: 64, height: 64 }} aria-label="recipe" variant="square">
+                    <Avatar sx={{width: 64, height: 64}} aria-label="recipe" variant="square">
                         <img src={props.icon} alt="profil pic" title="profil pic NVALV" className="profilPic"/>
                     </Avatar>
                 }
                 action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon
-                            id={props.moreVertIconId}
-                            aria-controls={props.menuID}
-                            aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
-                            onClick={handleClick}
-                        />
-                        <Menu
-                            id={props.menuID}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
-                        >
-                            <MenuItem onClick={handleClose}>
-                                <a href={props.firstLink} target="_blanked">{props.firstAction}</a>
-                            </MenuItem>
-                            <MenuItem onClick={handleClose}>
-                                <a href={props.secondLink} target="_blanked">{props.secondAction}</a>
-                            </MenuItem>
-                            <MenuItem onClick={handleClose}>
-                                <a href={props.thirdLink} target="_blanked">{props.thirdAction}</a>
-                                </MenuItem>
-                        </Menu>
+                    <IconButton
+                        aria-label="settings"
+                        id={props.moreVertIconId}
+                        aria-controls={props.menuID}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}
+                    >
+                        <MoreVertIcon/>
                     </IconButton>
                 }
                 title={props.title}
                 subheader={props.firstContent + ' ' + props.secondContent}
             />
+            <Menu
+                id={props.menuID}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+            >
+                <MenuItem onClick={handleClose}>
+                    <a href={props.firstLink} target="_blanked">{props.firstAction}</a>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                    <a href={props.secondLink} target="_blanked">{props.secondAction}</a>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                    <a href={props.thirdLink} target="_blanked">{props.thirdAction}</a>
+                </MenuItem>
+            </Menu>
         </Card>
     );
 }

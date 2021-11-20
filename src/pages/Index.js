@@ -4,7 +4,7 @@ import {ApolloProvider} from '@apollo/client'
 
 import {
     ThemeProvider,
-    createMuiTheme,
+    createTheme,
 } from '@material-ui/core/styles'
 import {
     CssBaseline,
@@ -62,7 +62,7 @@ export default function Index() {
                                 theme: setTheme,
                             }}
                         >
-                            <ThemeProvider theme={createMuiTheme(theme)}>
+                            <ThemeProvider theme={createTheme(theme)}>
                                 <CssBaseline/>
                                 {
                                     loading ?
