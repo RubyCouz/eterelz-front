@@ -1,7 +1,7 @@
 import React from 'react'
 import './HomeCarousel.css'
 import {Carousel} from 'react-responsive-carousel'
-import TeamCard from '../TeamCard/TeamCard'
+import Card from '../Card/Card'
 // import IconButton from "@mui/material/IconButton";
 
 // function PlayArrowIcon() {
@@ -26,7 +26,7 @@ export default function HomeCarousel(props) {
                     <p className="titleSlide">Heroes Of The Storm</p>
                     <p className="textSlide">M.O.B.A</p>
                     <div className="teamCard">
-                        <TeamCard
+                        <Card
                             moreVertIconId="more1"
                             menuID="menu1"
                             title="KMCSF"
@@ -37,7 +37,7 @@ export default function HomeCarousel(props) {
                             secondAction="Voir profil Heroes Lounge"
                             thirdAction="Voir leurs derniers matchs"
                         />
-                        <TeamCard
+                        <Card
                             moreVertIconId="more2"
                             menuID="menu2"
                             title="NVALV"
@@ -48,10 +48,11 @@ export default function HomeCarousel(props) {
                             secondAction="Voir profil Heroes Lounge"
                             thirdAction="Voir leurs derniers matchs"
                         />
-                        <TeamCard
+                        <Card
                             moreVertIconId="more3"
                             menuID="menu3"
                             title="GTO"
+                            icon="./img/ranked/logo_platine.png"
                             firstContent="Team Amateur"
                             secondContent="Diamant +"
                             props="./img/ranked/logo_platine.png"
@@ -59,13 +60,13 @@ export default function HomeCarousel(props) {
                             secondAction="Voir profil Heroes Lounge"
                             thirdAction="Voir leurs derniers matchs"
                         />
-                        <TeamCard
+                        <Card
                             moreVertIconId="more4"
                             menuID="menu4"
                             title="PAIR"
+                            icon="./img/ranked/logo_elite.png"
                             firstContent="Team Amateur"
                             secondContent="Master"
-                            icon="./img/ranked/logo_master.png"
                             firstAction="Contacter le Capitaine"
                             secondAction="Voir profil Heroes Lounge"
                             thirdAction="Voir leurs derniers matchs"
@@ -79,7 +80,7 @@ export default function HomeCarousel(props) {
                     <p className="titleSlide">Warhammer Darktide</p>
                     <p className="textSlide">M.M.O / F.P.S</p>
                     <div className="teamCard">
-                        <TeamCard
+                        <Card
                             moreVertIconId="more5"
                             menuID="menu5"
                             title="Communauté"
@@ -91,7 +92,7 @@ export default function HomeCarousel(props) {
                             secondLink="https://warhammer40000.com/fr"
                         />
 
-                        <TeamCard
+                        <Card
                             moreVertIconId="more6"
                             menuID="menu6"
                             title="Top 1 Cabale FR W40k"
@@ -113,7 +114,7 @@ export default function HomeCarousel(props) {
                     <p className="titleSlide">Battlefield 2042</p>
                     <p className="textSlide">M.M.O / F.P.S</p>
                     <div className="teamCard">
-                        <TeamCard
+                        <Card
                             moreVertIconId="more7"
                             menuID="menu7"
                             title="Communauté Battlefield"
@@ -124,10 +125,12 @@ export default function HomeCarousel(props) {
                             secondAction="Plus d'informations sur le jeu"
                             secondLink="https://store.steampowered.com/app/1517290/Battlefield_2042/"
                         />
-                        <TeamCard
+                        <Card
                             moreVertIconId="more8"
                             menuID="menu8"
-                            title={<a href="https://www.twitch.tv/hellrogiv" target="_blanked">Suivez notre Coach</a>}
+                            title="Suivez notre Coach"
+                            url="https://www.twitch.tv/videos/1170102944"
+                            link="https://www.twitch.tv/hellrogiv"
                             firstContent=""
                             secondContent=""
                         />
@@ -140,7 +143,7 @@ export default function HomeCarousel(props) {
                     <p className="titleSlide">Naraka</p>
                     <p className="textSlide">Battle Royale</p>
                     <div className="teamCard">
-                        <TeamCard
+                        <Card
                             moreVertIconId="more9"
                             menuID="menu9"
                             title="Communauté Naraka"
@@ -160,7 +163,7 @@ export default function HomeCarousel(props) {
                     <p className="titleSlide">Halo</p>
                     <p className="textSlide">M.M.O / F.P.S</p>
                     <div className="teamCard">
-                        <TeamCard
+                        <Card
                             moreVertIconId="more10"
                             menuID="menu10"
                             title="Communauté Halo"
@@ -180,7 +183,7 @@ export default function HomeCarousel(props) {
                     <p className="titleSlide">Destiny</p>
                     <p className="textSlide">M.M.O / F.P.S</p>
                     <div className="teamCard">
-                        <TeamCard
+                        <Card
                             moreVertIconId="more11"
                             menuID="menu11"
                             title="Communauté Destiny"
@@ -200,7 +203,7 @@ export default function HomeCarousel(props) {
                     <p className="titleSlide">Dofus</p>
                     <p className="textSlide">M.M.O.R.P.G</p>
                     <div className="teamCard">
-                        <TeamCard
+                        <Card
                             moreVertIconId="more12"
                             menuID="menu12"
                             title="Communauté Ankama"
@@ -211,14 +214,14 @@ export default function HomeCarousel(props) {
                             secondAction="Plus d'informations sur Waven"
                             secondLink="https://www.waven-game.com/fr/"
                         />
-                        <TeamCard
+                        <Card
                             moreVertIconId="more13"
                             menuID="menu13"
                             title={<a href="https://www.twitch.tv/peaceotto" target="_blanked">Suivez notre Streamer AffiliatZ Peaceotto</a>}
                             firstContent=""
                             secondContent=""
                         />
-                        <TeamCard
+                        <Card
                             moreVertIconId="more14"
                             menuID="menu14"
                             title={<a href="https://www.twitch.tv/petitdbl" target="_blanked">Suivez notre Streamer AffiliatZ</a>}
@@ -234,7 +237,7 @@ export default function HomeCarousel(props) {
                     <p className="titleSlide">League of Legends</p>
                     <p className="textSlide">M.O.B.A</p>
                     <div className="teamCard">
-                        <TeamCard
+                        <Card
                             moreVertIconId="more15"
                             menuID="menu15"
                             title="Communauté LoL"
@@ -245,7 +248,7 @@ export default function HomeCarousel(props) {
                             secondAction="Défiez ou proposer un événement et/ou tournoi"
                             secondLink="https://discord.gg/86W82Xc"
                         />
-                        <TeamCard
+                        <Card
                             moreVertIconId="more16"
                             menuID="menu16"
                             title={<a href="https://www.twitch.tv/deepanalyst" target="_blanked">Suivez notre Coach</a>}
