@@ -6,12 +6,12 @@
     color: #cccccc !important;
 }
 
-.css-1u22viz-MuiAvatar-root {
-    background-color: rgba(0, 0, 0, 0) !important;
+.cardHeader span {
+    color: #cccccc !important;
 }
 
-.css-83ijpv-MuiTypography-root {
-    color: #cccccc !important;
+.cardAvatar {
+    background: rgba(0,0,0,0) !important;
 }
 
 .menuIcon {

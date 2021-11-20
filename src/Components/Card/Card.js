@@ -28,18 +28,17 @@ export default function Card(props) {
     };
     return (
         <LittleCard sx={{maxWidth: 345}} className="card">
-            <CardHeader
+            <CardHeader className="cardHeader"
                 avatar={
                     <div>
                         {
                             props.icon &&
-                            <Avatar sx={{width: 64, height: 64}} aria-label="recipe" variant="square">
+                            <Avatar sx={{width: 64, height: 64}} aria-label="recipe" variant="square" className="cardAvatar">
                                 <img src={props.icon} alt="profil pic" title="profil pic NVALV" className="profilPic"/>
                             </Avatar>
                         }
                     </div>
                 }
-
                 action={
                     <div>
                         {
