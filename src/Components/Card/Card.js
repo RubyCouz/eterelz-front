@@ -52,7 +52,7 @@ export default function Card(props) {
                                 aria-expanded={open ? 'true' : undefined}
                                 onClick={handleClick}
                             >
-                                <MoreVertIcon/>
+                                <MoreVertIcon className="menuIcon"/>
                             </IconButton>
                         }
                     </div>

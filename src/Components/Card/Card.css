@@ -1,19 +1,22 @@
 .card {
     margin-bottom: 1vh;
     text-align: left;
+    background-image: url("bg_eterelz.jpg") !important;
+    background-size: 100%;
+    color: #cccccc !important;
 }
 
 .css-1u22viz-MuiAvatar-root {
-    background-color: #fff !important;
+    background-color: rgba(0, 0, 0, 0) !important;
 }
 
-/*.css-1ri6ub7-MuiPaper-root-MuiCard-root {*/
-/*    background-image: url("localhost:3000/public/img/background/bg_eterelz.jpg") !important;*/
-/*}*/
-/*.profilPic {*/
-/*    width: 7vw !important;*/
-/*    height: auto !important;*/
-/*}*/
+.css-83ijpv-MuiTypography-root {
+    color: #cccccc !important;
+}
+
+.menuIcon {
+    color: #cccccc !important;
+}
 
 .reactPlayer {
     width: 100px !important;
