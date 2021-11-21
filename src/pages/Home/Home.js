@@ -3,7 +3,7 @@ import Box from "@mui/material/Box"
 import Navbar from '../../Components/Navbar/Navbar'
 import HomeCarousel from '../../Components/HomeCarousel/HomeCarousel'
 import SponsoCarousel from '../../Components/SponsoCarousel/SponsoCarousel'
-import EventCard from '../../Components/EventCard/EventCard'
+import Card from '../../Components/Card/Card'
 import './Home.css'
 import Grid from "@mui/material/Grid"
 import Button from "@material-ui/core/Button"
@@ -54,12 +54,52 @@ export default function Home(props) {
                             <h2>EVENT</h2>
                             <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 3, sm: 8, md: 12}}>
                                 <Grid item xs={6} sm={6} md={6}>
-                                    <EventCard/>
-                                    <EventCard/>
+                                    <Card
+                                    title="Event Name"
+                                    firstContent="Some Description"
+                                    secondContent=""
+                                    firstAction="Action 1"
+                                    firstLink=""
+                                    secondAction="Action 2"
+                                    secondLink=""
+                                    thirdAction="Action 3"
+                                    thirdLink=""
+                                    />
+                                    <Card
+                                    title="Event Name"
+                                    firstContent="Some Description"
+                                    secondContent=""
+                                    firstAction="Action 1"
+                                    firstLink=""
+                                    secondAction="Action 2"
+                                    secondLink=""
+                                    thirdAction="Action 3"
+                                    thirdLink=""
+                                    />
                                 </Grid>
                                 <Grid item xs={6} sm={6} md={6}>
-                                    <EventCard/>
-                                    <EventCard/>
+                                    <Card
+                                    title="Event Name"
+                                    firstContent="Some Description"
+                                    secondContent=""
+                                    firstAction="Action 1"
+                                    firstLink=""
+                                    secondAction="Action 2"
+                                    secondLink=""
+                                    thirdAction="Action 3"
+                                    thirdLink=""
+                                    />
+                                    <Card
+                                    title="Event Name"
+                                    firstContent="Some Description"
+                                    secondContent=""
+                                    firstAction="Action 1"
+                                    firstLink=""
+                                    secondAction="Action 2"
+                                    secondLink=""
+                                    thirdAction="Action 3"
+                                    thirdLink=""
+                                    />
                                 </Grid>
                             </Grid>
                         </Grid>

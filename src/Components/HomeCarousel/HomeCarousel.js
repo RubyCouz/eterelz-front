@@ -169,10 +169,10 @@ export default function HomeCarousel(props) {
                             title="Communauté Halo"
                             firstContent=""
                             secondContent=""
-                            secondAction="Rejoindre la communauté"
-                            secondLink="https://discord.gg/86W82Xc"
-                            thirdAction="Plus d'informations sur le jeu"
-                            thirdLink="https://store.steampowered.com/app/1240440/Halo_Infinite/"
+                            firstAction="Rejoindre la communauté"
+                            firstLink="https://discord.gg/86W82Xc"
+                            secondAction="Plus d'informations sur le jeu"
+                            secondLink="https://store.steampowered.com/app/1240440/Halo_Infinite/"
                         />
                     </div>
                 </div>
@@ -217,16 +217,18 @@ export default function HomeCarousel(props) {
                         <Card
                             moreVertIconId="more13"
                             menuID="menu13"
-                            title={<a href="https://www.twitch.tv/peaceotto" target="_blanked">Suivez notre Streamer AffiliatZ Peaceotto</a>}
+                            title="Suivez notre Streamer AffiliatZ Peaceotto"
                             firstContent=""
                             secondContent=""
+                            firstAction={<a href="https://www.twitch.tv/peaceotto">Twitch</a>}
                         />
                         <Card
                             moreVertIconId="more14"
                             menuID="menu14"
-                            title={<a href="https://www.twitch.tv/petitdbl" target="_blanked">Suivez notre Streamer AffiliatZ</a>}
+                            title="Suivez notre Streamer AffiliatZ Petitdbl"
                             firstContent=""
                             secondContent=""
+                            firstAction={<a href="https://www.twitch.tv/petitdbl">Twitch</a>}
                         />
                     </div>
                 </div>
@@ -251,9 +253,10 @@ export default function HomeCarousel(props) {
                         <Card
                             moreVertIconId="more16"
                             menuID="menu16"
-                            title={<a href="https://www.twitch.tv/deepanalyst" target="_blanked">Suivez notre Coach</a>}
-                            firstContent="(Master Jungle)"
-                            secondContent="AffiliatZ"
+                            title={<a href="https://www.twitch.tv/deepanalyst" target="_blanked">Suivez notre Coach (Master Jungle) AffiliatZ</a>}
+                            firstContent=""
+                            secondContent=""
+                            url="https://www.twitch.tv/videos/1200846507"
                         />
                     </div>
                 </div>

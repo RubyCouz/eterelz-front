@@ -18,6 +18,15 @@
     color: #cccccc !important;
 }
 
+ul {
+    padding: 0 !important;
+}
+
+.menu {
+    background-color: #121212 !important;
+    color: #cccccc !important;
+}
+
 .reactPlayer {
     width: 100px !important;
     height: auto !important;

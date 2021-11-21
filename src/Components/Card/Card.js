@@ -69,22 +69,25 @@ export default function Card(props) {
                     MenuListProps={{
                         'aria-labelledby': 'basic-button',
                     }}
+
                 >
-                    <MenuItem onClick={handleClose}>
-                        <a href={props.firstLink} target="_blanked">{props.firstAction}</a>
-                    </MenuItem>
-                    {
-                        props.secondAction &&
+                    <div className="menu">
                         <MenuItem onClick={handleClose}>
-                            <a href={props.secondLink} target="_blanked">{props.secondAction}</a>
+                            <a href={props.firstLink} target="_blanked">{props.firstAction}</a>
                         </MenuItem>
-                    }
-                    {
-                        props.thirdAction &&
-                        <MenuItem onClick={handleClose}>
-                            <a href={props.thirdLink} target="_blanked">{props.thirdAction}</a>
-                        </MenuItem>
-                    }
+                        {
+                            props.secondAction &&
+                            <MenuItem onClick={handleClose}>
+                                <a href={props.secondLink} target="_blanked">{props.secondAction}</a>
+                            </MenuItem>
+                        }
+                        {
+                            props.thirdAction &&
+                            <MenuItem onClick={handleClose}>
+                                <a href={props.thirdLink} target="_blanked">{props.thirdAction}</a>
+                            </MenuItem>
+                        }
+                    </div>
                 </Menu>
             }
             {
@@ -93,7 +96,6 @@ export default function Card(props) {
                     <Typography variant="body2" color="text.secondary">
                         {
                             props.url ?
-                                <a href={props.link}>
                                     <ReactPlayer
                                         autoplay={true}
                                         url={props.url}
@@ -108,7 +110,6 @@ export default function Card(props) {
                                             }
                                         }}
                                     />
-                                </a>
                                  :
                                 props.content
                         }
