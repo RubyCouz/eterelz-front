@@ -4,6 +4,7 @@
     background-image: url("bg_eterelz.jpg") !important;
     background-size: 100%;
     color: #cccccc !important;
+    max-width: 100% !important;
 }
 
 .cardHeader span {

@@ -16,7 +16,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import WidgetDiscord from '../../Components/WidgetDiscord/WidgetDiscord'
 import HomeStream from '../../Components/HomeStream/HomeStream'
 import HomeMatches from '../../Components/HomeMatches/HomeMatches'
-
+import Footer from '../../Components/Footer/Footer'
+import Stats from '../../Components/Stats/Stats'
 
 export default function Home(props) {
 
@@ -225,6 +226,13 @@ export default function Home(props) {
                     </Grid>
                 </div>
                 <div className="skew-cc"/>
+                <div className="black-block">
+                    <Stats/>
+                </div>
+                <div className="black-block footer">
+                    <Footer/>
+                </div>
+
             </Box>
         </div>
 

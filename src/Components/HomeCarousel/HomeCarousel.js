@@ -91,7 +91,6 @@ export default function HomeCarousel(props) {
                             secondAction="Se renseigner sur la licence"
                             secondLink="https://warhammer40000.com/fr"
                         />
-
                         <Card
                             moreVertIconId="more6"
                             menuID="menu6"

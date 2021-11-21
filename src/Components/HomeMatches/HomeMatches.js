@@ -3,10 +3,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import './HomeMatches.css'
 
 const columns = [
-    // {
-    //     field: 'id',
-    //     headerName: 'ID'
-    // },
     {
         field: 'score',
         flex: 1,

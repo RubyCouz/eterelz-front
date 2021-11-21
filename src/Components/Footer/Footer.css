@@ -1,0 +1,30 @@
+.footer {
+    margin-top: 0 !important;
+}
+
+.logo {
+    width: 64px;
+    height: auto;
+}
+
+.footerTitle {
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.plateformList {
+    /*position: absolute;*/
+    list-style: none;
+    /*right: 2vw;*/
+    /*align-content: center;*/
+}
+
+.plateformList > li {
+    display: inline;
+}
+
+.icon {
+    width: 38px;
+    height: auto;
+    margin: 5px;
+}
