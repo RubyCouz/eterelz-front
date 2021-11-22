@@ -9,7 +9,7 @@ const sponsoPic = [
     "./img/sponso/gamesandrules.png",
     "./img/sponso/LogoMrWhi7e.png",
     "./img/sponso/SEBASTIEN2x.png",
-    "./img/sponso/Steam-logo-2002-present.png",
+    "./img/sponso/steam-logo-2002-present.png",
     "./img/sponso/twitch.png",
     "./img/sponso/dl.jfif"
 ]
