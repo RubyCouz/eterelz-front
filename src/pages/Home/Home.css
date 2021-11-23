@@ -4,7 +4,7 @@ body {
 .colour-block {
     background: #823A9C !important;
     width: 100%;
-    padding: 3% 5% 2% 5%;
+    padding: 5% 5% 2% 5%;
     color: #fff !important;
 }
 .black-block {
@@ -39,11 +39,8 @@ body {
     background: #121212 !important;
     color: #cccccc !important;
 }
-.css-1pnmrwp-MuiTypography-root {
-    color: #cccccc !important;
-}
 
-.css-yw020d-MuiAccordionSummary-expandIconWrapper {
+.textWhite {
     color: #cccccc !important;
 }
 

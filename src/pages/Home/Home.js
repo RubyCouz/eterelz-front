@@ -121,7 +121,7 @@ export default function Home(props) {
                                         aria-controls="panel1bh-content"
                                         id="panel1bh-header"
                                     >
-                                        <Typography sx={{color: 'text.secondary'}}>
+                                        <Typography sx={{color: 'text.secondary'}} className="textWhite">
                                             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores
                                             commodi, culpa deleniti deserunt dolor expedita explicabo magnam maiores
                                             porro quod velit voluptate. Alias doloribus impedit mollitia perferendis
@@ -129,7 +129,7 @@ export default function Home(props) {
                                         </Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Typography>
+                                        <Typography className="textWhite">
                                             Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
                                             Aliquam eget maximus est, id dignissim quam.
                                         </Typography>
