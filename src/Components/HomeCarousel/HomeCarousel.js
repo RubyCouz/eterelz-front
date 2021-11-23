@@ -23,7 +23,7 @@ export default function HomeCarousel(props) {
             <div className="pic">
                 <img src="./img/carousel/hots.jpg" alt="pic" className="gamePic"/>
                 <div className="legend">
-                    <p className="titleSlide">Heroes Of The Storm</p>
+                    <p className="titleSlide">Heroes of the Storm</p>
                     <p className="textSlide">M.O.B.A</p>
                     <div className="teamCard">
                         <Card
@@ -77,8 +77,8 @@ export default function HomeCarousel(props) {
             <div className="pic">
                 <img src="./img/carousel/Warhammer.jpg" alt="pic"/>
                 <div className="legend">
-                    <p className="titleSlide">Warhammer Darktide</p>
-                    <p className="textSlide">M.M.O / F.P.S</p>
+                    <p className="titleSlide">Warhammer 40'000 : Darktide</p>
+                    <p className="textSlide">M.M.O.F.P.S</p>
                     <div className="teamCard">
                         <Card
                             moreVertIconId="more5"
@@ -111,7 +111,7 @@ export default function HomeCarousel(props) {
                 <img src="./img/carousel/battlefield-2042.jpg" alt="pic"/>
                 <div className="legend">
                     <p className="titleSlide">Battlefield 2042</p>
-                    <p className="textSlide">M.M.O / F.P.S</p>
+                    <p className="textSlide">M.M.O.F.P.S</p>
                     <div className="teamCard">
                         <Card
                             moreVertIconId="more7"
@@ -127,7 +127,7 @@ export default function HomeCarousel(props) {
                         <Card
                             moreVertIconId="more8"
                             menuID="menu8"
-                            title="Suivez notre Coach"
+                            title="Suivez notre Streamer AffiliatZ : HellrogIV"
                             url="https://www.twitch.tv/videos/1170102944"
                             link="https://www.twitch.tv/hellrogiv"
                             firstContent=""
@@ -160,7 +160,7 @@ export default function HomeCarousel(props) {
                 <img src="./img/carousel/halo.jpg" alt="pic"/>
                 <div className="legend">
                     <p className="titleSlide">Halo</p>
-                    <p className="textSlide">M.M.O / F.P.S</p>
+                    <p className="textSlide">M.M.O.F.P.S</p>
                     <div className="teamCard">
                         <Card
                             moreVertIconId="more10"
@@ -173,6 +173,17 @@ export default function HomeCarousel(props) {
                             secondAction="Plus d'informations sur le jeu"
                             secondLink="https://store.steampowered.com/app/1240440/Halo_Infinite/"
                         />
+                        <Card
+                            moreVertIconId="moreHalo"
+                            menuID="menuHalo"
+                            title="With Attitude"
+                            icon="./img/team/logo/wa.png"
+                            firstContent="Team T4"
+                            secondContent="Onyx"
+                            firstAction="Contacter le Capitaine"
+                            secondAction="Voir profil"
+                            thirdAction="Voir leurs derniers matchs"
+                        />
                     </div>
                 </div>
             </div>
@@ -180,7 +191,7 @@ export default function HomeCarousel(props) {
                 <img src="./img/carousel/destiny.jpg" alt="pic"/>
                 <div className="legend">
                     <p className="titleSlide">Destiny</p>
-                    <p className="textSlide">M.M.O / F.P.S</p>
+                    <p className="textSlide">M.M.O.F.P.S</p>
                     <div className="teamCard">
                         <Card
                             moreVertIconId="more11"

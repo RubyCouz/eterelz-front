@@ -141,83 +141,61 @@ export default function Home(props) {
                             <div className="divider-up-to-down"/>
                         </Grid>
                         <Grid item xs={5} sm={5} md={5}>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci amet
-                                asperiores
-                                aspernatur, laboriosam reprehenderit unde vel? Accusamus culpa, cupiditate, eaque eum
-                                exercitationem molestias perspiciatis quas sequi similique sit vitae.
-                            </p>
-                            <p>AVEC UN PUTAIN D'AGENDA EN PRIME !!!</p>
+                            <WidgetDiscord/>
                         </Grid>
 
                     </Grid>
                 </div>
                 <div className="skew-c"/>
                 <div className="colour-block">
+                    <h2>AffiliatZ Streamer</h2>
                     <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
-                        <Grid item xs={5} sm={5} md={5}>
-                            <div>
-                                <WidgetDiscord/>
-                            </div>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Hellrog IV</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/hellrogiv"
+                            />
                         </Grid>
-                        <Grid item xs={2} sm={2} md={2}>
-                            <div className="divider-down-to-up"/>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Petitdbl</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/petitdbl"
+                            />
                         </Grid>
-                        <Grid item xs={5} sm={5} md={5}>
-                            <p className="text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consequuntur delectus
-                                error, magni odit officiis sequi ullam? Aliquam assumenda autem, consequuntur eveniet
-                                expedita facilis harum labore, quas saepe sint, voluptate?
-                            </p>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Deepanalyst</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/deepanalyst"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Unluckboy</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/unluckoy"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Peaceotto</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/peaceotto"
+                            />
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <h3>Starzfr</h3>
+                            <HomeStream
+                                url="https://www.twitch.tv/starzfr"
+                            />
                         </Grid>
                     </Grid>
                 </div>
                 <div className="skew-cc"/>
                 <div className="black-block">
-                    <h2>Streamer</h2>
-                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <h3>Sardoche</h3>
-                            <HomeStream
-                                url="https://www.twitch.tv/sardoche"
-                            />
-                        </Grid>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <h3>Mojitomangue</h3>
-                            <HomeStream
-                                url="https://www.twitch.tv/mojitomangue"
-                            />
-                        </Grid>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <h3>At0mium</h3>
-                            <HomeStream
-                                url="https://www.twitch.tv/at0mium"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <h3>Solary</h3>
-                            <HomeStream
-                                url="https://www.twitch.tv/solary"
-                            />
-                        </Grid>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <h3>Aspigtv</h3>
-                            <HomeStream
-                                url="https://www.twitch.tv/aspigtv"
-                            />
-                        </Grid>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <h3>Mooters</h3>
-                            <HomeStream
-                                url="https://www.twitch.tv/mooters"
-                            />
-                        </Grid>
-                    </Grid>
+                    <Stats/>
                 </div>
                 <div className="skew-c"/>
-                <div className="colour-block">
+                <div className="colour-block blockStat">
                     <h2>Latest Match</h2>
                     <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
                         <Grid item xs={12} sm={12} md={12}>
@@ -226,9 +204,6 @@ export default function Home(props) {
                     </Grid>
                 </div>
                 <div className="skew-cc"/>
-                <div className="black-block">
-                    <Stats/>
-                </div>
                 <div className="black-block footer">
                     <Footer/>
                 </div>

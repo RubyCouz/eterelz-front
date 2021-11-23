@@ -65,6 +65,10 @@ body {
     padding-top: 5%;
 }
 
+.blockStat {
+    padding-top: 9% !important;
+}
+
 .footer {
     padding-top: 5% !important;
 }

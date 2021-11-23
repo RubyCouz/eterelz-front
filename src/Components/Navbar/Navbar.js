@@ -12,6 +12,7 @@ import Box from "@mui/material/Box"
 import {NavLink} from "react-router-dom"
 import MoreIcon from "@material-ui/icons/MoreVert"
 
+import './Navbar.css'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,20 +27,18 @@ const useStyles = makeStyles((theme) => ({
     logo: {
         width: '150px',
     },
+    navbar: {
+        backgroundColor: 'rgb(0,168,212)',
+        background: 'linear-gradient(90deg, rgba(0,168,212,1) 0%, rgba(134,24,173,1) 53%)'
+    }
 }))
 
 export default function Home(props) {
 
     const classes = useStyles();
-    // const [value, setValue] = useState(0);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const [anchorEl, setAnchorEl] = React.useState(null);
-    // const handleChange = (event, newValue) => {
-    //     setValue(newValue);
-    // }
-    // const handleChangeIndex = (index) => {
-    //     setValue(index);
-    // }
+
 
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
@@ -100,18 +99,6 @@ export default function Home(props) {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            {/*<Tabs*/}
-            {/*    value={value}*/}
-            {/*    onChange={handleChange}*/}
-            {/*    orientation="vertical"*/}
-            {/*    indicatorColor="secondary"*/}
-            {/*    textColor="inherit"*/}
-            {/*>*/}
-            {/*    <Tab label="Tournois / Event" {...a11yProps(0)} />*/}
-            {/*    <Tab label="Les Streams" {...a11yProps(1)} />*/}
-            {/*    <Tab label="Jeux" {...a11yProps(2)} />*/}
-            {/*    <Tab label="La commu EterelZ" {...a11yProps(3)} />*/}
-            {/*</Tabs>*/}
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
                     size="large"
@@ -131,8 +118,9 @@ export default function Home(props) {
         <div>
             <Box sx={{flexGrow: 1}}>
                 <AppBar
+                    className={classes.navbar}
                     position="static"
-                    color="primary"
+                    // color="primary"
                 >
                     <Toolbar>
                         <NavLink to="/">
@@ -142,7 +130,9 @@ export default function Home(props) {
                                 className={classes.logo}
                             />
                         </NavLink>
-                        <Box xs={{flexGrow: 1}}/>
+                        <Box xs={{flexGrow: 1}}>
+                            <p className="disclaimer">Corporation of Gamers</p>
+                        </Box>
                         <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                             {/*<Tabs*/}
                             {/*    value={value}*/}
