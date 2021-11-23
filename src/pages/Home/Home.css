@@ -4,13 +4,13 @@ body {
 .colour-block {
     background: #823A9C !important;
     width: 100%;
-    padding: 5% 5% 2% 5%;
+    padding: 3% 5% 2% 5%;
     color: #fff !important;
 }
 .black-block {
     background: #121212;
     width: 100%;
-    padding: 10% 5% 2% 5%;
+    padding: 7% 5% 2% 5%;
     color: #823A9C;
 }
 /*------------------*/

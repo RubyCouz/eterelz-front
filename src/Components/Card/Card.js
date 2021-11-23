@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import ReactPlayer from 'react-player'
 
 import './Card.css'
-import {assertWrappingType} from "graphql";
 
 const reactPlayerStyle = {
     margin: 0,
