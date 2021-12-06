@@ -1,8 +1,9 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-
 import './Footer.css'
-import Box from "@material-ui/core/Box";
+import Box from '@material-ui/core/Box'
+
+import '@fortawesome/fontawesome-free/css/all.min.css'
 
 export default function Footer() {
 
@@ -36,19 +37,22 @@ export default function Footer() {
                         <Grid item xs={12}>
                             <ul className="plateformList">
                                 <li>
-                                    <img src="./img/eterelz/icons/youtube.png" alt="youtube icon" className="icon"/>
+                                    <i className="fab fa-youtube fa-3x icon youtubeIcon"/>
                                 </li>
                                 <li>
-                                    <img src="./img/eterelz/icons/twitter.png" alt="twiter icon" className="icon"/>
+                                    <i className="fab fa-twitter fa-3x icon twitterIcon"/>
                                 </li>
                                 <li>
-                                    <img src="./img/eterelz/icons/facebook.png" alt="facebook icon" className="icon"/>
+                                    <i className="fab fa-twitch fa-3x icon twitchIcon"/>
                                 </li>
                                 <li>
-                                    <img src="./img/eterelz/icons/discord.png" alt="discord icon" className="icon"/>
+                                    <i className="fab fa-facebook-f fa-3x icon facebookIcon"/>
                                 </li>
                                 <li>
-                                    <img src="./img/eterelz/icons/twitch.png" alt="twitch icon" className="icon"/>
+                                    <i className="fab fa-discord fa-3x icon discordIcon"/>
+                                </li>
+                                <li>
+                                    <i className="fab fa-tiktok fa-3x icon tiktokIcon"/>
                                 </li>
                             </ul>
                         </Grid>

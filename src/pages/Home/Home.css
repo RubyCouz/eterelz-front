@@ -1,38 +1,42 @@
 body {
     margin: 0;
 }
+
 .colour-block {
-    background: #823A9C !important;
+    background: #8618ad !important;
     width: 100%;
     padding: 5% 5% 2% 5%;
-    color: #fff !important;
+    color: #fff;
 }
+
 .black-block {
     background: #121212;
     width: 100%;
     padding: 7% 5% 2% 5%;
-    color: #823A9C;
+    color: #8618ad;
 }
+
 /*------------------*/
 /*  SKEW CLOCKWISE  */
 /*------------------*/
-.skew-cc{
+.skew-cc {
     width: 100%;
     height: 100px;
     position: absolute;
     left: 0;
-    background: linear-gradient(to right bottom, #823A9C 49%, #121212 50%),
-                linear-gradient(-50deg, #121212 16px, #000 0);
+    background: linear-gradient(to right bottom, #8618ad 49%, #121212 50%),
+    linear-gradient(-50deg, #121212 16px, #000 0);
 }
+
 /*-------------------------*/
 /* SKEW COUNTER CLOCKWISE  */
 /*-------------------------*/
-.skew-c{
+.skew-c {
     width: 100%;
     height: 100px;
     position: absolute;
     left: 0;
-    background: linear-gradient(to left bottom, #121212 49%, #823A9C 50%);
+    background: linear-gradient(to left bottom, #121212 49%, #8618ad 50%);
 }
 
 .homeCollapsible {
@@ -47,7 +51,7 @@ body {
 .divider-up-to-down {
     height: 100%;
     width: 100%;
-    background: #823A9C;
+    background: #8618ad;
     clip-path: polygon(95% 0%, 100% 0, 5% 100%, 0% 100%);
 }
 
@@ -62,10 +66,34 @@ body {
     padding-top: 5%;
 }
 
+.polygon1 {
+    background: #8618ad;
+    -webkit-clip-path: polygon(50% 0%, 75% 50%, 50% 100%, 25% 50%);
+    clip-path: polygon(50% 0%, 75% 50%, 50% 100%, 25% 50%);
+    width: 100%;
+    height: 50vh;
+}
+
+.polygon2 {
+    background: #8618ad;
+    -webkit-clip-path: polygon(50% 25%, 100% 50%, 50% 75%, 0 50%);
+    clip-path: polygon(50% 25%, 100% 50%, 50% 75%, 0 50%);
+    width: 100%;
+    height: 50vh;
+}
+
+.polygon3 {
+    background: #8618ad;
+    -webkit-clip-path: polygon(50% 100%, 0% 100%, 0% 50%, 100% 50%, 100% 0%, 50% 0%);
+    clip-path: polygon(50% 100%, 0% 100%, 0% 50%, 100% 50%, 100% 0%, 50% 0%);
+    width: 100%;
+    height: 50vh;
+}
+
 .blockStat {
     padding-top: 9% !important;
 }
 
 .footer {
-    padding-top: 5% !important;
+    padding-top: 7% !important;
 }

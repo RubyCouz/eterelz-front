@@ -17,7 +17,7 @@ import WidgetDiscord from '../../Components/WidgetDiscord/WidgetDiscord'
 import HomeStream from '../../Components/HomeStream/HomeStream'
 import HomeMatches from '../../Components/HomeMatches/HomeMatches'
 import Footer from '../../Components/Footer/Footer'
-import Stats from '../../Components/Stats/Stats'
+// import Stats from '../../Components/Stats/Stats'
 
 export default function Home(props) {
 
@@ -56,50 +56,50 @@ export default function Home(props) {
                             <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 3, sm: 8, md: 12}}>
                                 <Grid item xs={6} sm={6} md={6}>
                                     <Card
-                                    title="Event Name"
-                                    firstContent="Some Description"
-                                    secondContent=""
-                                    firstAction="Action 1"
-                                    firstLink=""
-                                    secondAction="Action 2"
-                                    secondLink=""
-                                    thirdAction="Action 3"
-                                    thirdLink=""
+                                        title="Event Name"
+                                        firstContent="Some Description"
+                                        secondContent=""
+                                        firstAction="Action 1"
+                                        firstLink=""
+                                        secondAction="Action 2"
+                                        secondLink=""
+                                        thirdAction="Action 3"
+                                        thirdLink=""
                                     />
                                     <Card
-                                    title="Event Name"
-                                    firstContent="Some Description"
-                                    secondContent=""
-                                    firstAction="Action 1"
-                                    firstLink=""
-                                    secondAction="Action 2"
-                                    secondLink=""
-                                    thirdAction="Action 3"
-                                    thirdLink=""
+                                        title="Event Name"
+                                        firstContent="Some Description"
+                                        secondContent=""
+                                        firstAction="Action 1"
+                                        firstLink=""
+                                        secondAction="Action 2"
+                                        secondLink=""
+                                        thirdAction="Action 3"
+                                        thirdLink=""
                                     />
                                 </Grid>
                                 <Grid item xs={6} sm={6} md={6}>
                                     <Card
-                                    title="Event Name"
-                                    firstContent="Some Description"
-                                    secondContent=""
-                                    firstAction="Action 1"
-                                    firstLink=""
-                                    secondAction="Action 2"
-                                    secondLink=""
-                                    thirdAction="Action 3"
-                                    thirdLink=""
+                                        title="Event Name"
+                                        firstContent="Some Description"
+                                        secondContent=""
+                                        firstAction="Action 1"
+                                        firstLink=""
+                                        secondAction="Action 2"
+                                        secondLink=""
+                                        thirdAction="Action 3"
+                                        thirdLink=""
                                     />
                                     <Card
-                                    title="Event Name"
-                                    firstContent="Some Description"
-                                    secondContent=""
-                                    firstAction="Action 1"
-                                    firstLink=""
-                                    secondAction="Action 2"
-                                    secondLink=""
-                                    thirdAction="Action 3"
-                                    thirdLink=""
+                                        title="Event Name"
+                                        firstContent="Some Description"
+                                        secondContent=""
+                                        firstAction="Action 1"
+                                        firstLink=""
+                                        secondAction="Action 2"
+                                        secondLink=""
+                                        thirdAction="Action 3"
+                                        thirdLink=""
                                     />
                                 </Grid>
                             </Grid>
@@ -192,7 +192,39 @@ export default function Home(props) {
                 </div>
                 <div className="skew-cc"/>
                 <div className="black-block">
-                    <Stats/>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <div className="polygon1"/>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <div className="polygon2"/>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <div className="polygon3"/>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+
+                        </Grid>
+                    </Grid>
                 </div>
                 <div className="skew-c"/>
                 <div className="colour-block blockStat">

@@ -1,6 +1,7 @@
 import React, {Suspense, lazy, useState, useEffect} from 'react'
 import Loading from './pages/Loading'
 
+
 const Index = lazy(() => import('./pages/Index'))
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         widget(crate)
     }, [crate]
     )
+
 
     return (
         <Suspense fallback={<Loading/>}>
