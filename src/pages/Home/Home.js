@@ -65,6 +65,8 @@ export default function Home(props) {
                                         secondLink=""
                                         thirdAction="Action 3"
                                         thirdLink=""
+                                        bgUrl="./img/background/lan.jpg"
+                                        opacity="1"
                                     />
                                     <Card
                                         title="Event Name"
@@ -76,6 +78,8 @@ export default function Home(props) {
                                         secondLink=""
                                         thirdAction="Action 3"
                                         thirdLink=""
+                                        bgUrl="./img/background/evennementiel.jpg"
+                                        opacity="1"
                                     />
                                 </Grid>
                                 <Grid item xs={6} sm={6} md={6}>
@@ -89,6 +93,8 @@ export default function Home(props) {
                                         secondLink=""
                                         thirdAction="Action 3"
                                         thirdLink=""
+                                        bgUrl="./img/background/esport.jpg"
+                                        opacity="1"
                                     />
                                     <Card
                                         title="Event Name"
@@ -100,6 +106,8 @@ export default function Home(props) {
                                         secondLink=""
                                         thirdAction="Action 3"
                                         thirdLink=""
+                                        bgUrl="./img/background/recrutement.jpg"
+                                        opacity="1"
                                     />
                                 </Grid>
                             </Grid>

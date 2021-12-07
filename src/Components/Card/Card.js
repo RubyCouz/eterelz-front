@@ -10,7 +10,13 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import ReactPlayer from 'react-player'
 
+import {makeStyles} from "@material-ui/core/styles";
+
+
 import './Card.css'
+
+
+
 
 const reactPlayerStyle = {
     margin: 0,
@@ -18,6 +24,15 @@ const reactPlayerStyle = {
 }
 
 export default function Card(props) {
+    const useStyle = makeStyles((theme) => ({
+            backgroundUrl: {
+                '&:before': {
+                    opacity: props.opacity,
+                    backgroundImage: 'url(' + props.bgUrl + ')'
+                }
+            }
+        })
+    )
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -26,8 +41,11 @@ export default function Card(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    let classes = useStyle()
+
     return (
-        <div className="demo-wrap">
+        <div className={classes.backgroundUrl + ' demo-wrap'}>
             <div className="demo-content">
                 <LittleCard sx={{maxWidth: 345}} className="card">
                     <CardHeader className="cardHeader"

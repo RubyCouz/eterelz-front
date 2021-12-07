@@ -36,6 +36,8 @@ export default function HomeCarousel(props) {
                             firstAction="Contacter le Capitaine"
                             secondAction="Voir profil Heroes Lounge"
                             thirdAction="Voir leurs derniers matchs"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="more2"
@@ -47,6 +49,8 @@ export default function HomeCarousel(props) {
                             firstAction="Contacter le Capitaine"
                             secondAction="Voir profil Heroes Lounge"
                             thirdAction="Voir leurs derniers matchs"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="more3"
@@ -59,6 +63,8 @@ export default function HomeCarousel(props) {
                             firstAction="Contacter le Capitaine"
                             secondAction="Voir profil Heroes Lounge"
                             thirdAction="Voir leurs derniers matchs"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="more4"
@@ -70,6 +76,8 @@ export default function HomeCarousel(props) {
                             firstAction="Contacter le Capitaine"
                             secondAction="Voir profil Heroes Lounge"
                             thirdAction="Voir leurs derniers matchs"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                     </div>
                 </div>
@@ -90,6 +98,8 @@ export default function HomeCarousel(props) {
                             firstLink="https://discord.gg/86W82Xc"
                             secondAction="Se renseigner sur la licence"
                             secondLink="https://warhammer40000.com/fr"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="more6"
@@ -103,6 +113,8 @@ export default function HomeCarousel(props) {
                             secondLink="https://store.steampowered.com/app/527430/Warhammer_40000_Inquisitor__Martyr/"
                             thirdAction="Plus d'informations sur les développeurs"
                             thirdLink="https://neocoregames.com/en"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                     </div>
                 </div>
@@ -123,6 +135,8 @@ export default function HomeCarousel(props) {
                             firstLink="https://discord.gg/86W82Xc"
                             secondAction="Plus d'informations sur le jeu"
                             secondLink="https://store.steampowered.com/app/1517290/Battlefield_2042/"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="more8"
@@ -132,6 +146,8 @@ export default function HomeCarousel(props) {
                             link="https://www.twitch.tv/hellrogiv"
                             firstContent=""
                             secondContent=""
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                     </div>
                 </div>
@@ -152,6 +168,8 @@ export default function HomeCarousel(props) {
                             firstLink="https://discord.gg/86W82Xc"
                             secondAction="Plus d'informations sur le jeu"
                             secondLink="https://store.steampowered.com/app/1203220/NARAKA_BLADEPOINT/"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                     </div>
                 </div>
@@ -172,6 +190,8 @@ export default function HomeCarousel(props) {
                             firstLink="https://discord.gg/86W82Xc"
                             secondAction="Plus d'informations sur le jeu"
                             secondLink="https://store.steampowered.com/app/1240440/Halo_Infinite/"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="moreHalo"
@@ -183,6 +203,8 @@ export default function HomeCarousel(props) {
                             firstAction="Contacter le Capitaine"
                             secondAction="Voir profil"
                             thirdAction="Voir leurs derniers matchs"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                     </div>
                 </div>
@@ -203,6 +225,8 @@ export default function HomeCarousel(props) {
                             firstLink="https://discord.gg/86W82Xc"
                             secondAction="Plus d'informations sur le jeu"
                             secondLink="https://store.steampowered.com/app/1085660/Destiny_2/"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                     </div>
                 </div>
@@ -223,6 +247,8 @@ export default function HomeCarousel(props) {
                             firstLink="https://discord.gg/86W82Xc"
                             secondAction="Plus d'informations sur Waven"
                             secondLink="https://www.waven-game.com/fr/"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="more13"
@@ -231,6 +257,8 @@ export default function HomeCarousel(props) {
                             firstContent=""
                             secondContent=""
                             firstAction={<a href="https://www.twitch.tv/peaceotto">Twitch</a>}
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="more14"
@@ -239,6 +267,8 @@ export default function HomeCarousel(props) {
                             firstContent=""
                             secondContent=""
                             firstAction={<a href="https://www.twitch.tv/petitdbl">Twitch</a>}
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                     </div>
                 </div>
@@ -259,6 +289,8 @@ export default function HomeCarousel(props) {
                             firstLink="https://discord.gg/86W82Xc"
                             secondAction="Défiez ou proposer un événement et/ou tournoi"
                             secondLink="https://discord.gg/86W82Xc"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                         <Card
                             moreVertIconId="more16"
@@ -267,6 +299,8 @@ export default function HomeCarousel(props) {
                             firstContent=""
                             secondContent=""
                             url="https://www.twitch.tv/videos/1200846507"
+                            bgUrl="./img/background/bg_eterelz.jpg"
+                            opacity="0.5"
                         />
                     </div>
                 </div>
