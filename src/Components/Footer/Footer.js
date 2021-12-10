@@ -1,32 +1,27 @@
 import React from 'react'
-import Grid from '@material-ui/core/Grid'
 import './Footer.css'
-import Box from '@material-ui/core/Box'
+import { Box, Grid } from "@mui/material"
 
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
 export default function Footer() {
 
     return (
-        <div>
+        <>
             <Grid
                 container
                 spacing={1}
                 direction="row"
-                justifyContent="space-around"
+                justifyContent="space-between"
                 alignItems="center"
             >
-                <Grid item xs={1}>
+                <Grid item>
                     <div>
                         <img src="./img/eterelz/logo/logo_blanc.png" alt="" className="logo"/>
+                        <span className="footerTitle">ETERELZ</span>
                     </div>
                 </Grid>
-                <Grid item xs={8}>
-                    <div>
-                        <p className="footerTitle">ETERELZ</p>
-                    </div>
-                </Grid>
-                <Grid item xs={3}>
+                <Grid item>
                     <Grid
                         container
                         spacing={12}
@@ -61,24 +56,24 @@ export default function Footer() {
             </Grid>
             <Grid
                 container
-                spacing={3}
+                spacing={2}
                 direction="row"
-                justifyContent="space-around"
+                justifyContent="space-between"
                 alignItems="center"
             >
-                <Grid item xs={3} sm={3} md={3}>
+                <Grid item xs={6} sm={3} order={{ xs: 1, sm: 1 }}>
                     <h2>Recrutement</h2>
                     <h2>Infos sur la commu Eterelz</h2>
                 </Grid>
-                <Grid item xs={6} sm={6} md={6}>
+                <Grid item xs={12} sm={6} order={{ xs: 3, sm: 2 }}>
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias culpa cum dolorum fugit harum
                         hic molestias neque nesciunt non omnis porro quasi quibusdam quisquam, ratione recusandae
                         suscipit veritatis voluptas!
                     </p>
                 </Grid>
-                <Grid item xs={3} sm={3} md={3}>
-                    <Box xs={{ textAlign: 'left'}}>
+                <Grid item xs={6} sm={3} order={{ xs: 2, sm: 3 }}>
+                    <Box>
                         <ul>
                             <li>
                                 <a href="https://mui.com/system/flexbox/#align-items" title="redirection">Liens 1</a>
@@ -104,13 +99,13 @@ export default function Footer() {
                   justifyContent="space-around"
                   alignItems="center"
             >
-                <Grid item xs={12} sm={12} md={12}>
+                <Grid item xs={12}>
                     <Box sx={{ textAlign: 'center'}}>
                         <span>@ 2021 Eterelz. All right reserved</span>
                     </Box>
                 </Grid>
             </Grid>
-        </div>
+        </>
     )
 
 }
