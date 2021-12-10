@@ -29,7 +29,7 @@ export default function Home(props) {
     };
 
     return (
-        <div>
+        <div className="bg">
             <Box sx={{flexGrow: 1}}>
                 <Navbar/>
             </Box>
@@ -57,7 +57,8 @@ export default function Home(props) {
                                 <Grid item xs={6} sm={6} md={6}>
                                     <Card
                                         title="Event Name"
-                                        firstContent="Some Description"
+                                        firstContent=" Lorem ipsum dolor sit Accusantium ipsa laboriosam natus numquam
+                rerum? Aut, beatae dolorem ea in itaque minus modi quae quam qui quisquam rem suscipit tempora vel?"
                                         secondContent=""
                                         firstAction="Action 1"
                                         firstLink=""
@@ -70,7 +71,7 @@ export default function Home(props) {
                                     />
                                     <Card
                                         title="Event Name"
-                                        firstContent="Some Description"
+                                        firstContent=" Lorem ipsum ?"
                                         secondContent=""
                                         firstAction="Action 1"
                                         firstLink=""
@@ -85,7 +86,8 @@ export default function Home(props) {
                                 <Grid item xs={6} sm={6} md={6}>
                                     <Card
                                         title="Event Name"
-                                        firstContent="Some Description"
+                                        firstContent=" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ipsa laboriosam natus numquam
+                rerum? Aut,"
                                         secondContent=""
                                         firstAction="Action 1"
                                         firstLink=""
@@ -98,7 +100,8 @@ export default function Home(props) {
                                     />
                                     <Card
                                         title="Event Name"
-                                        firstContent="Some Description"
+                                        firstContent=" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ipsa laboriosam natus numquam
+                rerum? Aut, beatae dolorem ea in itaque minus modi quae quam qui quisquam rem suscipit tempora vel?"
                                         secondContent=""
                                         firstAction="Action 1"
                                         firstLink=""
@@ -117,7 +120,7 @@ export default function Home(props) {
                 <div className="skew-cc"/>
                 <div className="black-block">
                     <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 4, sm: 8, md: 12}}>
-                        <Grid item xs={5} sm={5} md={5} className="column">
+                        <Grid item xs={9} sm={9} md={9} className="column">
                             <div>
                                 <Accordion
                                     className="homeCollapsible"
@@ -145,10 +148,7 @@ export default function Home(props) {
                                 </Accordion>
                             </div>
                         </Grid>
-                        <Grid item xs={2} sm={2} md={2}>
-                            <div className="divider-up-to-down"/>
-                        </Grid>
-                        <Grid item xs={5} sm={5} md={5}>
+                        <Grid item xs={3} sm={3} md={3}>
                             <WidgetDiscord/>
                         </Grid>
 

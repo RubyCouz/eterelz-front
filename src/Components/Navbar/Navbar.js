@@ -77,8 +77,21 @@ export default function Home(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem
+                onClick={handleProfileMenuOpen}
+                className="userMenu"
+            >
+                <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="primary-search-account-menu"
+                    aria-haspopup="true"
+                    color="inherit"
+                >
+                    <AccountCircle/>
+                </IconButton>
+                <a href="../Auth">CONNEXION</a>
+            </MenuItem>
         </Menu>
     );
 
@@ -134,33 +147,21 @@ export default function Home(props) {
                             <p className="disclaimer">Corporation of Gamers</p>
                         </Box>
                         <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                            {/*<Tabs*/}
-                            {/*    value={value}*/}
-                            {/*    onChange={handleChange}*/}
-                            {/*    indicatorColor="secondary"*/}
-                            {/*    textColor="inherit"*/}
-                            {/*    variant="fullWidth"*/}
-                            {/*    aria-label="full width tabs example"*/}
-                            {/*>*/}
-                            {/*    <Tab label="Tournois / Event" {...a11yProps(0)} />*/}
-                            {/*    <Tab label="Les Streams" {...a11yProps(1)} />*/}
-                            {/*    <Tab label="Jeux" {...a11yProps(2)} />*/}
-                            {/*    <Tab label="La commu EterelZ" {...a11yProps(3)} />*/}
-                            {/*</Tabs>*/}
+
                         </Box>
                         <Box sx={{flexGrow: 1}}/>
                         <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-                            <IconButton
-                                size="large"
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <AccountCircle/>
-                            </IconButton>
+                            {/*<IconButton*/}
+                            {/*    size="large"*/}
+                            {/*    edge="end"*/}
+                            {/*    aria-label="account of current user"*/}
+                            {/*    aria-controls={menuId}*/}
+                            {/*    aria-haspopup="true"*/}
+                            {/*    onClick={handleProfileMenuOpen}*/}
+                            {/*    color="inherit"*/}
+                            {/*>*/}
+                            {/*    <AccountCircle/>*/}
+                            {/*</IconButton>*/}
                         </Box>
                         <Box sx={{display: {xs: 'flex', md: 'none'}}}>
                             <IconButton
@@ -178,24 +179,6 @@ export default function Home(props) {
                 </AppBar>
                 {renderMobileMenu}
                 {renderMenu}
-                {/*<SwipeableViews*/}
-                {/*    axis={props.theme === 'rtl' ? 'x-reverse' : 'x'}*/}
-                {/*    index={value}*/}
-                {/*    onChangeIndex={handleChangeIndex}*/}
-                {/*>*/}
-                {/*    <TabPanel value={value} index={0}>*/}
-                {/*        Page descriptif tournoi / event*/}
-                {/*    </TabPanel>*/}
-                {/*    <TabPanel value={value} index={1}>*/}
-                {/*        Page présentation Streamer, aperçu streamer en direct*/}
-                {/*    </TabPanel>*/}
-                {/*    <TabPanel value={value} index={2}>*/}
-                {/*        Page Présentation des Jeux de la commu EterelZ*/}
-                {/*    </TabPanel>*/}
-                {/*    <TabPanel value={value} index={3}>*/}
-                {/*        Page présentation commu EterelZ*/}
-                {/*    </TabPanel>*/}
-                {/*</SwipeableViews>*/}
             </Box>
         </div>
     )

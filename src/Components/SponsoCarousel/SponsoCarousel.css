@@ -1,5 +1,5 @@
 .sponsoItem {
-    background-color: #121212 !important;
+    /*background-color: #121212 !important;*/
     color: #cccccc !important;
     margin: 0;
     height: 7vh;
@@ -8,10 +8,95 @@
 }
 
 .sponsoPic {
-    height: 5vh;
+    height: 7vh;
     width: auto;
 }
 
 .alice-carousel__stage-item {
     width: 10vw;
+}
+.mrWhite0 {
+    fill: url(#mrWhiteGrad);
+}
+#mrWhite:hover .mrWhite0 {
+    fill: white;
+}
+.mrWhite1 {
+    fill: none;
+    stroke: #000000;
+    stroke-width: 0.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.twitch3 {
+    fill: #ffffff;
+}
+
+.twitch1 {
+    fill: none;
+}
+
+.twitch0 {
+    fill: url(#twitchGrad);
+}
+
+#twitch:hover .twitch0 {
+    fill: rebeccapurple;
+}
+.bg-hl {
+    fill: #ffffff;
+}
+
+.hl {
+    fill: url(#hl1);
+}
+
+#hl:hover .hl {
+    fill: url(#hl2);
+}
+
+.sg {
+    fill: url(#sgGrad);
+}
+
+#sg:hover .sg {
+    fill: #000000;
+}
+
+.steam {
+     fill: url(#steamGrad);
+ }
+
+.steam1 {
+    fill: #ffffff;
+}
+
+#steam:hover .steam {
+    fill: #000000;
+}
+.discord {
+    fill: url(#discordGrad);
+}
+
+#discord:hover .discord {
+    fill: #8A9CFC;
+}
+
+#gr {
+    fill: url(#grGrad1);
+}
+
+#gr:hover {
+    fill: url(#grGrad2);
+}
+
+#blizzard1, #blizzard2 {
+    fill: url(#blizzardGrad);
+}
+
+#blizzard:hover #blizzard2 {
+    fill: #017AFF;
+}
+#blizzard:hover #blizzard1 {
+    fill: #ffffff;
 }

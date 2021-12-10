@@ -18,3 +18,7 @@
 .snackbar_register{
     margin-left: 100%;
 }
+
+.loginButton {
+    padding: 0 !important;
+}

@@ -2,15 +2,19 @@ body {
     margin: 0;
 }
 
+.bg {
+
+}
+
 .colour-block {
-    background: #8618ad !important;
+    /*background: #8618ad !important;*/
     width: 100%;
     padding: 5% 5% 2% 5%;
     color: #fff;
 }
 
 .black-block {
-    background: #121212;
+    /*background: #121212;*/
     width: 100%;
     padding: 7% 5% 2% 5%;
     color: #8618ad;
@@ -24,8 +28,8 @@ body {
     height: 100px;
     position: absolute;
     left: 0;
-    background: linear-gradient(to right bottom, #8618ad 49%, #121212 50%),
-    linear-gradient(-50deg, #121212 16px, #000 0);
+    /*background: linear-gradient(to right bottom, #8618ad 49%, #121212 50%),*/
+    /*linear-gradient(-50deg, #121212 16px, #000 0);*/
 }
 
 /*-------------------------*/
@@ -36,7 +40,7 @@ body {
     height: 100px;
     position: absolute;
     left: 0;
-    background: linear-gradient(to left bottom, #121212 49%, #8618ad 50%);
+    /*background: linear-gradient(to left bottom, #121212 49%, #8618ad 50%);*/
 }
 
 .homeCollapsible {

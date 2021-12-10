@@ -6,3 +6,13 @@
     padding: 5px;
     margin: 0;
 }
+
+.userMenu {
+    background-color: #121212;
+    color: #cccccc;
+}
+
+.userMenu:hover {
+    background-color: #121212;
+    color: #8618ad;
+}
