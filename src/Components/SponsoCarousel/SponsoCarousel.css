@@ -1,15 +1,18 @@
 .sponsoItem {
     /*background-color: #121212 !important;*/
     color: #cccccc !important;
-    margin: 0;
-    height: 7vh;
+    margin: 20px;
+    height: 10vh;
     padding-top: 1vh;
-    width: 10vw;
+    width: 20vw;
+}
+
+.sponsoPic:hover {
+    transform: scale(1);
 }
 
 .sponsoPic {
-    height: 7vh;
-    width: auto;
+    height: 10vh;
 }
 
 .alice-carousel__stage-item {

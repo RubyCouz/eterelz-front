@@ -2,6 +2,7 @@ import React from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import './SponsoCarousel.css'
+import 'animate.css'
 
 const sponsoPic = [
    "sg",
@@ -27,7 +28,7 @@ const sponsoUrl = [
 
 const items = sponsoUrl.map(( url, index, key) => {
     return (
-        <div className="item sponsoItem" data-value="1">
+        <div className="item sponsoItem " data-value="1">
             <a href={url} target="_blanked" title={url}>
                 {/*<img*/}
                 {/*    src={sponsoPic[index]}*/}
@@ -35,7 +36,7 @@ const items = sponsoUrl.map(( url, index, key) => {
                 {/*    title={sponsoPic[index]}*/}
                 {/*    className="sponsoPic"*/}
                 {/*/>*/}
-                <svg id={"spritesvg1"} viewBox="0 0 34 10">
+                <svg id={"spritesvg1"} viewBox="0 0 34 10" className="sponsoPic">
                     <use xlinkHref={"./img/sponso/sponso.svg#" + sponsoPic[index]}/>
                 </svg>
             </a>
