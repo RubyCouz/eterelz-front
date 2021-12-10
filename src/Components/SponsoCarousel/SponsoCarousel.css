@@ -8,9 +8,9 @@
 }
 
 .sponsoPic:hover {
-    transform: scale(1);
+    transform: scale(1.5);
+    transition-duration: 1.5s;
 }
-
 .sponsoPic {
     height: 10vh;
 }
