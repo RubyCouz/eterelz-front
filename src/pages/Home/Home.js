@@ -54,7 +54,7 @@ export default function Home(props) {
                         <Grid item xs={6} sm={6} md={6}>
                             <h2>EVENT</h2>
                             <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 3, sm: 8, md: 12}}>
-                                <Grid item xs={6} sm={6} md={6}>
+                                <Grid item xs={6} sm={12} md={6}>
                                     <Card
                                         title="Event Name"
                                         firstContent=" Lorem ipsum dolor sit Accusantium ipsa laboriosam natus numquam
@@ -83,7 +83,7 @@ export default function Home(props) {
                                         opacity="1"
                                     />
                                 </Grid>
-                                <Grid item xs={6} sm={6} md={6}>
+                                <Grid item xs={6} sm={12} md={6}>
                                     <Card
                                         title="Event Name"
                                         firstContent=" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ipsa laboriosam natus numquam
@@ -119,8 +119,8 @@ export default function Home(props) {
                 </div>
                 <div className="skew-cc"/>
                 <div className="black-block">
-                    <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 4, sm: 8, md: 12}}>
-                        <Grid item xs={9} sm={9} md={9} className="column">
+                    <Grid container spacing={1} >
+                        <Grid item xs={12} md={6} lg={9} className="column">
                             <div>
                                 <Accordion
                                     className="homeCollapsible"
@@ -148,7 +148,7 @@ export default function Home(props) {
                                 </Accordion>
                             </div>
                         </Grid>
-                        <Grid item xs={3} sm={3} md={3}>
+                        <Grid item xs={12} md={6} lg={3}>
                             <WidgetDiscord/>
                         </Grid>
 
