@@ -4,6 +4,7 @@ import {Route, Redirect, Switch} from 'react-router-dom'
 
 const HomePage  = lazy(() => import('../pages/Home/Home'))
 const AuthPage  = lazy(() => import('../pages/Auth'))
+const SignupPage = lazy(() => import('../pages/Signup'))
 const NoFoundPage = lazy(() => import('../pages/NoFound'))
 
 
@@ -20,6 +21,7 @@ export default function Public() {
             <Redirect from={process.env.PUBLIC_URL + '/streams'} to={process.env.PUBLIC_URL + "/auth"} exact/>
             <Redirect from={process.env.PUBLIC_URL + '/backOffice'} to={process.env.PUBLIC_URL + "/auth"} exact/>
             <Route path={process.env.PUBLIC_URL + '/auth'} component={AuthPage} />
+            <Route path={process.env.PUBLIC_URL + '/signup'} component={SignupPage} />
             <Route path={process.env.PUBLIC_URL + '/404'} component={NoFoundPage} />
         </Switch>
     )

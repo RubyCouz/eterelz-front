@@ -8,16 +8,15 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-// import {makeStyles} from "@material-ui/core/styles";
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@material-ui/core/Grid'
-import {useContext, useState} from "react";
-import MuiAlert from "@material-ui/lab/Alert";
-import AuthContext from "../context/auth-context";
-import Snackbar from "@material-ui/core/Snackbar";
-import {makeStyles} from "@material-ui/core/styles";
+import {useContext, useState} from 'react'
+import MuiAlert from '@material-ui/lab/Alert'
+import AuthContext from '../context/auth-context'
+import Snackbar from '@material-ui/core/Snackbar'
+import {makeStyles} from '@material-ui/core/styles'
 
 // Alert
 function Alert(props) {
@@ -80,16 +79,11 @@ const useStyles = makeStyles((theme) => ({
 const initialState = {
     alert_message: '',
     severity: '',
-    reg_user_pseudo: '',
-    reg_user_email: '',
-    reg_user_password: '',
-    reg_user_password_confirm: '',
     log_user_email: '',
     log_user_password: ''
 }
 const initialRequestError = {
     errorValue: false,
-    requestRegister: false,
     requestLogin: false,
     logErrorValue: false
 }
@@ -100,18 +94,10 @@ export default function FullWidthTabs() {
     const theme = useTheme()
     const [value, setValue] = useState(0)
     const [state, setState] = useState({initialState})
-    const initialError = {
-        reg_user_pseudo_error: false,
-        reg_user_email_error: false,
-        reg_user_password_error: false,
-        reg_user_password_confirm_error: false,
-    }
     const initialLogError = {
         log_user_email_error: false,
         log_user_password_error: false
     }
-    //State état des textfield register
-    const [error, setError] = useState(initialError)
     //State état des textfield login
     const [logError, setLogError] = useState(initialLogError)
     //State état des erreurs pour lancement requête
@@ -120,10 +106,6 @@ export default function FullWidthTabs() {
     const [open, setOpen] = useState(false);
 
     const regexlist = {
-        // reg_user_pseudo: new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$"),
-        // reg_user_email: new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
-        // reg_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
-        // reg_user_password_confirm: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
         log_user_email: new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
         log_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
     }
@@ -146,12 +128,7 @@ export default function FullWidthTabs() {
         setState({
             ...state, [name]: value
         });
-        //Le name + 'Error' permet de renvoyer le nom de l'erreur
-        setError({
-            ...error,
-            [name + '_error']: regall
-        });
-        //Le name + 'Error' permet de renvoyer le nom de l'erreur
+
         setLogError({
             ...logError,
             [name + '_error']: regall
@@ -238,14 +215,14 @@ export default function FullWidthTabs() {
         }
     }
 
-    requestError.requestRegister = true
+    // requestError.requestRegister = true
     //parcours l'objet error et vérifie si un élément retourne false
-    for (const i in error) {
-        requestError.errorValue = error[i];
-        if (requestError.errorValue === true) {
-            requestError.requestRegister = false
-        }
-    }
+    // for (const i in error) {
+    //     requestError.errorValue = error[i];
+    //     if (requestError.errorValue === true) {
+    //         requestError.requestRegister = false
+    //     }
+    // }
     requestError.requestLogin = true
     //parcours l'objet logError et vérifie si un élément retourne false
     for (const i in logError) {
@@ -365,7 +342,7 @@ export default function FullWidthTabs() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small">Pas de compte Eterelz ? Cliquez ici !</Button>
+                            <a href="/signup" size="small">Pas de compte Eterelz ? Cliquez ici !</a>
                         </CardActions>
                     </Card>
                 </Grid>

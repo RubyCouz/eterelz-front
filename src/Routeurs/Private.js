@@ -30,7 +30,8 @@ export default function Private() {
             }
             <Redirect from={process.env.PUBLIC_URL + '/'} to={process.env.PUBLIC_URL + "/dashboard"} exact/>
             <Redirect from={process.env.PUBLIC_URL + '/auth'} to={process.env.PUBLIC_URL + "/dashboard"} exact/>
-            <Redirect from={process.env.PUBLIC_URL + '/home'} to={process.env.PUBLIC_URL + "/dashboard"} exact/>    
+            <Redirect from={process.env.PUBLIC_URL + '/home'} to={process.env.PUBLIC_URL + "/dashboard"} exact/>
+            <Redirect from={process.env.PUBLIC_URL + '/signup'} to={process.env.PUBLIC_URL + "/dashboard"} exact/>
             <Route path={process.env.PUBLIC_URL + '/dashboard'} component={DashboardPage} />
             <Route path={process.env.PUBLIC_URL + '/account'} component={AccountPage} />
             <Route path={process.env.PUBLIC_URL + '/tournaments'} component={TournamentsPage} />
