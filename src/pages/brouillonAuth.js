@@ -4,176 +4,18 @@ import {makeStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import './Auth.css'
-import AuthContext from '../context/auth-context'
-import Snackbar from '@material-ui/core/Snackbar'
-import MuiAlert from '@material-ui/lab/Alert'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 
-// Alert
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
-//Tabpanel
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
-
-    //retour du tab panel avec option
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-};
-
-// function a11yProps(index) {
-//     return {
-//         id: `full-width-tab-${index}`,
-//         'aria-controls': `full-width-tabpanel-${index}`,
-//     };
-// }
-
-//Style et thème de la navbar
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-    },
-    snackbar: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
-        },
-    },
-    margin: {
-        margin: theme.spacing(1),
-    },
-    error: {
-        '& > *': {
-            margin: theme.spacing(1),
-        },
-    },
-}));
-
-const initialState = {
-    alert_message: '',
-    severity: '',
-    reg_user_pseudo: '',
-    reg_user_email: '',
-    reg_user_password: '',
-    reg_user_password_confirm: '',
-    log_user_email: '',
-    log_user_password: ''
-}
-
-const initialError = {
-    reg_user_pseudo_error: false,
-    reg_user_email_error: false,
-    reg_user_password_error: false,
-    reg_user_password_confirm_error: false,
-}
-
-const initialLogError = {
-    log_user_email_error: false,
-    log_user_password_error: false
-}
-
-const initialRequestError = {
-    errorValue: false,
-    requestRegister: false,
-    requestLogin: false,
-    logErrorValue: false
-}
-
 export default function FullWidthTabs(props) {
 
-    //Déclaration des regex
-    const regexlist = {
-        reg_user_pseudo: new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$"),
-        reg_user_email: new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
-        reg_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
-        reg_user_password_confirm: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
-        log_user_email: new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
-        log_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
-    }
-
-    const context = useContext(AuthContext)
-
-    //style des tabs
-    let classes = useStyles()
-    // let theme = useTheme();
-    // const [setValue] = useState(0);
-
-    const handleInputChange = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-        const regall = !regexlist[name].test(value)
-        setState({
-            ...state, [name]: value
-        });
-        //Le name + 'Error' permet de renvoyer le nom de l'erreur
-        setError({
-            ...error,
-            [name + '_error']: regall
-        });
-        //Le name + 'Error' permet de renvoyer le nom de l'erreur
-        setLogError({
-            ...logError,
-            [name + '_error']: regall
-        });
-    };
-
     // création des statements et récupération des "seteur" (state = état, objet accessible uniquement pour le composant "x" permet de stocker une donnée)
-    const [state, setState] = useState({
-            stayLogged: true
-        }
-    )
+
     // const handleStayLogged = (event) => {
     //     setState({ ...state, [event.target.name]: event.target.checked });
     // };
-    //State etat des erreur pour lancement requête
-    const [requestError, setRequestError] = useState(initialRequestError)
 
-    //State etat des textfield register
-    const [error, setError] = useState(initialError)
 
-    //State etat des textfield login
-    const [logError, setLogError] = useState(initialLogError)
-
-    requestError.requestRegister = true
-    //parcours l'objet error et vérifie si un élément retourne false
-    for (const i in error) {
-        requestError.errorValue = error[i];
-        if (requestError.errorValue === true) {
-            requestError.requestRegister = false
-        }
-    }
-    requestError.requestLogin = true
-    //parcours l'objet logError et vérifie si un élément retourne false
-    for (const i in logError) {
-        requestError.logErrorValue = logError[i];
-        if (requestError.logErrorValue === true) {
-            requestError.requestLogin = false
-        }
-    }
 
     const cancel = () => {
         setState(initialState)
@@ -183,8 +25,6 @@ export default function FullWidthTabs(props) {
     }
 
 
-    // état de l'alerte
-    const [open, setOpen] = useState(false);
 
     //si onsubmit, formulaire viens chercher cet fonction (formulaire connexion)
     const mailSubmit = () => {
@@ -344,17 +184,9 @@ export default function FullWidthTabs(props) {
     //     setValue(index);
     // };
 
-    const handleClick = () => {
-        setOpen(true);
-    };
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
 
-        setOpen(false);
-    };
+
     //retour tabs
     return (
         <div className={classes.root}>
@@ -388,11 +220,8 @@ export default function FullWidthTabs(props) {
                             name="log_user_email"
                             type="text"
                             helperText="Entrer votre email"
-                            onChange={handleInputChange}
-                            value={state.log_user_email}
                             fullWidth={true}
                             required
-                            error={logError.log_user_email_error}
                         />
                         {/*<TextField*/}
                         {/*    id="standard-error-helper-text"*/}
@@ -400,11 +229,11 @@ export default function FullWidthTabs(props) {
                         {/*    name="log_user_password"*/}
                         {/*    type="password"*/}
                         {/*    helperText="Mot de passe doit contenir 8 caractères, une majuscule, une minuscule et un chiffre."*/}
-                        {/*    onChange={handleInputChange}*/}
-                        {/*    value={state.log_user_password}*/}
+                        {/*   */}
+                        {/*    */}
                         {/*    fullWidth={true}*/}
                         {/*    required*/}
-                        {/*    error={logError.log_user_password_error}*/}
+                        {/*    */}
                         {/*/>*/}
                     </div>
                     {/*<FormControlLabel*/}
@@ -424,13 +253,7 @@ export default function FullWidthTabs(props) {
                         <Button onClick={mailSubmit} variant="contained" color="primary"
                                 justifyContent="flex-end">Suivant</Button>
                     </Box>
-                    <div className={classes.snackbar}>
-                        <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-                            <Alert onClose={handleClose} severity={state.severity}>
-                                {state.alert_message}
-                            </Alert>
-                        </Snackbar>
-                    </div>
+
                 </div>
             </form>
             {/*</TabPanel>*/}
