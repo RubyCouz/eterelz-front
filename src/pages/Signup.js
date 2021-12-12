@@ -11,6 +11,7 @@ import MuiAlert from '@material-ui/lab/Alert'
 import AuthContext from '../context/auth-context'
 import Snackbar from '@material-ui/core/Snackbar'
 import {makeStyles} from '@material-ui/core/styles'
+import { useHistory} from 'react-router-dom'
 
 // Alert
 function Alert(props) {
@@ -53,7 +54,7 @@ const initialRequestError = {
 }
 
 export default function FullWidthTabs() {
-
+    const history = useHistory()
     let classes = useStyles()
     const [state, setState] = useState({initialState})
     const initialError = {
@@ -105,60 +106,60 @@ export default function FullWidthTabs() {
         setOpen(false);
     }
 
-    const login = () => {
-        let requestBody = {
-            query: `
-                    query Login($user_email: String!, $user_password: String!) {
-                        login(
-                            user_email: $user_email,
-                            user_password: $user_password
-                            ) {
-                            token
-                            }
-                        }
-                    `,
-            variables: {
-                user_email: state.reg_user_email,
-                user_password: state.reg_user_password
-            }
-        }
-        //connexion api et envoie en post les infos format json
-        fetch('http://localhost:8080/api', {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            //si erreur
-            .then(res => {
-                if (res.status !== 200 && res.status !== 201) {
-                    throw new Error('Failed')
-                }
-                return res.json()
-            })
-            .then(resData => {
-                //si erreur
-                if (resData.errors) {
-                    state.severity = 'error'
-                    state.alert_message = resData.errors[0].message;
-                    handleClick();
-                }
-                if (resData.data.login) {
-                    // si checkbox cochée
-                    // if (state.stayLogged) {
-                    // défintion cookie
-                    // }
-                    context.login()
-                }
-            })
-            .catch(err => {
-                state.severity = 'error'
-                state.alert_message = 'Information incorrect'
-                handleClick()
-            })
-    }
+    // const login = () => {
+    //     let requestBody = {
+    //         query: `
+    //                 query Login($user_email: String!, $user_password: String!) {
+    //                     login(
+    //                         user_email: $user_email,
+    //                         user_password: $user_password
+    //                         ) {
+    //                         token
+    //                         }
+    //                     }
+    //                 `,
+    //         variables: {
+    //             user_email: state.reg_user_email,
+    //             user_password: state.reg_user_password
+    //         }
+    //     }
+    //     //connexion api et envoie en post les infos format json
+    //     fetch('http://localhost:8080/api', {
+    //         method: 'POST',
+    //         body: JSON.stringify(requestBody),
+    //         credentials: 'include',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //         //si erreur
+    //         .then(res => {
+    //             if (res.status !== 200 && res.status !== 201) {
+    //                 throw new Error('Failed')
+    //             }
+    //             return res.json()
+    //         })
+    //         .then(resData => {
+    //             //si erreur
+    //             if (resData.errors) {
+    //                 state.severity = 'error'
+    //                 state.alert_message = resData.errors[0].message;
+    //                 handleClick();
+    //             }
+    //             if (resData.data.login) {
+    //                 // si checkbox cochée
+    //                 // if (state.stayLogged) {
+    //                 // défintion cookie
+    //                 // }
+    //                 context.login()
+    //             }
+    //         })
+    //         .catch(err => {
+    //             state.severity = 'error'
+    //             state.alert_message = 'Information incorrect'
+    //             handleClick()
+    //         })
+    // }
     //formulaire validation inscription
     const signup = () => {
         // trim retire les "blancs" espace tabulation ect ...
@@ -184,6 +185,8 @@ export default function FullWidthTabs() {
                         _id
                         user_login
                         user_email
+                        user_activation
+                        
                         }
                     }
                     `,
@@ -215,8 +218,10 @@ export default function FullWidthTabs() {
                     } else {
                         state.severity = "success"
                         state.alert_message = "Validation de l'inscription"
-                        login()
+                        // login()
                         handleClick()
+                        // redirection pour vérification de compte
+                         return history.push(`/verifyAccount/${resData.data.createUser.user_activation}`)
                     }
                     if (resData.data.login) {
                         context.login(
