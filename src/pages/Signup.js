@@ -53,7 +53,7 @@ const initialRequestError = {
     requestRegister: false,
 }
 
-export default function FullWidthTabs() {
+export default function Signup() {
     const history = useHistory()
     let classes = useStyles()
     const [state, setState] = useState({initialState})
@@ -184,9 +184,7 @@ export default function FullWidthTabs() {
                         {
                         _id
                         user_login
-                        user_email
-                        user_activation
-                        
+                        user_email                        
                         }
                     }
                     `,
@@ -221,7 +219,7 @@ export default function FullWidthTabs() {
                         // login()
                         handleClick()
                         // redirection pour vérification de compte
-                         return history.push(`/verifyAccount/${resData.data.createUser.user_activation}`)
+                         return history.push(`/verifyAccount`)
                     }
                     if (resData.data.login) {
                         context.login(
