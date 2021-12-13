@@ -4,11 +4,11 @@ import {useParams} from 'react-router-dom'
 import {gql, useMutation} from '@apollo/client'
 
 const CONFIRMUSER = gql`
- mutation CONFIRMUSER($token: String!) {
-     confirmUser(token: $token) {
-         user_email
-     }
- }
+    mutation CONFIRMUSER($token: String!) {
+        confirmUser(token: $token) {
+            user_email
+        }
+    }
 `
 
 export default function VerifyAccount() {
@@ -26,26 +26,31 @@ export default function VerifyAccount() {
             errorPolicy: 'all'
         }
     )
+    console.log(error)
     const confirmAccount = async () => {
-        console.log(confirmUser());
+        console.log(confirmUser())
         await confirmUser()
     }
 
     return (
         <div>
             <p>
-               Check ton mail pour vérifier ton compte :
+                Check ton mail pour vérifier ton compte :
             </p>
             <Button
                 onClick={confirmAccount}
             >
                 Vérifiez votre compte
             </Button>
-            { error &&
-            <pre>{error.graphQLErrors.map(({ message, status }, i) => (
-                <span key={i}>{status + ' ' + message}</span>
-            ))}
-            </pre>
+            {error &&
+            <div>
+                {error.graphQLErrors.map(({message, status}, i) => (
+                    status === 600 &&
+                        <p>Ce token est exipré. Veuillez renouveller la vérification de votre compte en cliquant ici</p>
+
+            ))
+            }
+            </div>
             }
         </div>
     )
