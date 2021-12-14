@@ -32,7 +32,6 @@ export default function VerifyAccount() {
     )
 
     const confirmAccount = async () => {
-        console.log(confirmUser())
         await confirmUser()
     }
 
