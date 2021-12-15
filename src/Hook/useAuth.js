@@ -5,6 +5,7 @@ export default function useAuth(callback, deps) {
 
     const [auth, setState] = useState({
         token: false,
+        accesToken: null,
         playload: null,
     })
 
@@ -15,7 +16,6 @@ export default function useAuth(callback, deps) {
     const logout = useCallback(() => {
             window.localStorage.removeItem('darkMode')
             cookies.remove("jwt_HP")
-            cookies.remove("jwt_HP_RT")
 
             setState({
                 token: false,
