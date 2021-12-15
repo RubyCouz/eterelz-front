@@ -4,6 +4,7 @@ import {useParams} from 'react-router-dom'
 import {gql, useMutation} from '@apollo/client'
 import Grid from '@material-ui/core/Grid'
 import ExpiredToken from '../Components/Errors/TokenErrors/ExpiredToken'
+import {useHistory} from 'react-router-dom'
 
 import './VerifyAccount.css'
 import Box from "@mui/material/Box";
@@ -12,13 +13,22 @@ import {TextField} from "@material-ui/core";
 const CONFIRMUSER = gql`
     mutation CONFIRMUSER($token: String!, $pass: String!) {
         confirmUser(token: $token, pass: $pass) {
-            user_email
+            token
         }
     }
 `
 
+// const LOGIN = gql`
+//     query LOGIN($user_mail: String!, $user_password: String!) {
+//         login(user_mail: $user_mail, user_password: $user_password) {
+//             token
+//         }
+//     }
+// `
+
 export default function VerifyAccount() {
 
+    const history = useHistory()
     const char1 = useRef('')
     const char2 = useRef('')
     const char3 = useRef('')
@@ -73,7 +83,7 @@ export default function VerifyAccount() {
      */
     const passTransform = () => {
         const newArray = []
-        for(const value in charArray) {
+        for (const value in charArray) {
             newArray.push(charArray[value])
         }
         const pass = newArray.join('')
@@ -91,171 +101,201 @@ export default function VerifyAccount() {
                 pass: confirmPass
             }
         })
+            .then(async resData => {
+                if (resData.errors) {
+                    // state.severity = 'error'
+                    // state.alert_message = resData.errors[0].message;
+                    // handleClick();
+                } else {
+                    // state.severity = "success"
+                    // state.alert_message = "Validation de l'inscription"
+                    // login()
+                    // handleClick()
+                    // redirection pour vérification de compte
+                    return history.push(`/dashboard`);
+                }
+            })
     }
 
-    const [confirmUser, {error}] = useMutation(
-        CONFIRMUSER,
-        {
-            variables: {
-                token: token,
-                pass: pass
-            },
-            errorPolicy: 'all'
-        }
-    )
 
-    return (
-        <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-        >
-            <Grid item xs={6} md={6} lg={6}>
-                <div className="disclaimer">
-                    {error ?
-                        <div>
-                            {error.graphQLErrors.map(({message, status}, i) => (
-                                (status === 600 ||
-                                    status === 601 ||
-                                    status === 602 ||
-                                    status === 603 ||
-                                    status === 604 ||
-                                    status === 605) &&
-                                <ExpiredToken/>
-                            ))
-                            }
-                        </div> :
-                        <div>
-                            <p>
-                                Saisissez votre code pour confirmer votre inscription !
-                            </p>
-                            <Box
-                                component="form"
-                                noValidate
-                                autoComplete="off"
+// const connection = async () => {
+//     login({variables: {user_email: '', user_password: ''}})
+// }
+
+const [confirmUser, {error}] = useMutation(
+    CONFIRMUSER,
+    {
+        variables: {
+            token: token,
+            pass: pass
+        },
+        errorPolicy: 'all'
+    }
+)
+
+// const [login] = useQuery(
+//     LOGIN,
+//     {
+//         variables: {
+//             user_mail: '',
+//             user_password: '',
+//
+//         }
+//     }
+// )
+
+return (
+    <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+    >
+        <Grid item xs={6} md={6} lg={6}>
+            <div className="disclaimer">
+                {error ?
+                    <div>
+                        {error.graphQLErrors.map(({message, status}, i) => (
+                            (status === 600 ||
+                                status === 601 ||
+                                status === 602 ||
+                                status === 603 ||
+                                status === 604 ||
+                                status === 605) &&
+                            <ExpiredToken/>
+                        ))
+                        }
+                    </div> :
+                    <div>
+                        <p>
+                            Saisissez votre code pour confirmer votre inscription !
+                        </p>
+                        <Box
+                            component="form"
+                            noValidate
+                            autoComplete="off"
+                        >
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="center"
+                                alignItems="center"
                             >
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                >
-                                    <Grid item xs={6} md={6} lg={6}>
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                        >
-                                            <Grid item xs={2} md={2} lg={2}>
-                                                <TextField
-                                                    onChange={handleChange}
-                                                    required
-                                                    type="text"
-                                                    key="char1"
-                                                    id="char1"
-                                                    name="char1"
-                                                    inputRef={char1}
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    fullWidth={true}
-                                                    inputProps={{maxlength: 1}}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2} md={2} lg={2}>
-                                                <TextField
-                                                    onChange={handleChange}
-                                                    required
-                                                    type="text"
-                                                    key="char2"
-                                                    id="char2"
-                                                    name="char2"
-                                                    inputRef={char2}
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    fullWidth={true}
-                                                    inputProps={{maxlength: 1}}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2} md={2} lg={2}>
-                                                <TextField
-                                                    onChange={handleChange}
-                                                    required
-                                                    type="text"
-                                                    key="char3"
-                                                    id="char3"
-                                                    name="char3"
-                                                    inputRef={char3}
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    fullWidth={true}
-                                                    inputProps={{maxlength: 1}}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2} md={2} lg={2}>
-                                                <TextField
-                                                    onChange={handleChange}
-                                                    required
-                                                    type="text"
-                                                    key="char4"
-                                                    id="char4"
-                                                    name="char4"
-                                                    inputRef={char4}
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    fullWidth={true}
-                                                    inputProps={{maxlength: 1}}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2} md={2} lg={2}>
-                                                <TextField
-                                                    onChange={handleChange}
-                                                    required
-                                                    type="text"
-                                                    key="char5"
-                                                    id="char5"
-                                                    name="char5"
-                                                    inputRef={char5}
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    fullWidth={true}
-                                                    inputProps={{maxlength: 1}}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2} md={2} lg={2}>
-                                                <TextField
-                                                    onChange={handleChange}
-                                                    required
-                                                    type="text"
-                                                    key="char6"
-                                                    id="char6"
-                                                    name="char6"
-                                                    inputRef={char6}
-                                                    variant="outlined"
-                                                    color="secondary"
-                                                    fullWidth={true}
-                                                    inputProps={{maxlength: 1}}
-                                                />
-                                            </Grid>
+                                <Grid item xs={6} md={6} lg={6}>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <Grid item xs={2} md={2} lg={2}>
+                                            <TextField
+                                                onChange={handleChange}
+                                                required
+                                                type="text"
+                                                key="char1"
+                                                id="char1"
+                                                name="char1"
+                                                inputRef={char1}
+                                                variant="outlined"
+                                                color="secondary"
+                                                fullWidth={true}
+                                                inputProps={{maxlength: 1}}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2} md={2} lg={2}>
+                                            <TextField
+                                                onChange={handleChange}
+                                                required
+                                                type="text"
+                                                key="char2"
+                                                id="char2"
+                                                name="char2"
+                                                inputRef={char2}
+                                                variant="outlined"
+                                                color="secondary"
+                                                fullWidth={true}
+                                                inputProps={{maxlength: 1}}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2} md={2} lg={2}>
+                                            <TextField
+                                                onChange={handleChange}
+                                                required
+                                                type="text"
+                                                key="char3"
+                                                id="char3"
+                                                name="char3"
+                                                inputRef={char3}
+                                                variant="outlined"
+                                                color="secondary"
+                                                fullWidth={true}
+                                                inputProps={{maxlength: 1}}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2} md={2} lg={2}>
+                                            <TextField
+                                                onChange={handleChange}
+                                                required
+                                                type="text"
+                                                key="char4"
+                                                id="char4"
+                                                name="char4"
+                                                inputRef={char4}
+                                                variant="outlined"
+                                                color="secondary"
+                                                fullWidth={true}
+                                                inputProps={{maxlength: 1}}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2} md={2} lg={2}>
+                                            <TextField
+                                                onChange={handleChange}
+                                                required
+                                                type="text"
+                                                key="char5"
+                                                id="char5"
+                                                name="char5"
+                                                inputRef={char5}
+                                                variant="outlined"
+                                                color="secondary"
+                                                fullWidth={true}
+                                                inputProps={{maxlength: 1}}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2} md={2} lg={2}>
+                                            <TextField
+                                                onChange={handleChange}
+                                                required
+                                                type="text"
+                                                key="char6"
+                                                id="char6"
+                                                name="char6"
+                                                inputRef={char6}
+                                                variant="outlined"
+                                                color="secondary"
+                                                fullWidth={true}
+                                                inputProps={{maxlength: 1}}
+                                            />
                                         </Grid>
                                     </Grid>
-                                    <Grid item xs={4} md={4} lg={4}>
-                                        <Button
-                                            className="confirmBtn"
-                                            variant="contained"
-                                            onClick={confirmAccount}
-                                        >
-                                            Valider
-                                        </Button>
-                                    </Grid>
                                 </Grid>
-                            </Box>
-                        </div>
-                    }
-                </div>
-            </Grid>
+                                <Grid item xs={4} md={4} lg={4}>
+                                    <Button
+                                        className="confirmBtn"
+                                        variant="contained"
+                                        onClick={confirmAccount}
+                                    >
+                                        Valider
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </div>
+                }
+            </div>
         </Grid>
-    )
+    </Grid>
+)
 
 }
