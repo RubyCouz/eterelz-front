@@ -1,20 +1,19 @@
 import React, {useEffect, useState} from 'react'
 import {BrowserRouter} from 'react-router-dom'
-import {ApolloProvider} from '@apollo/client'
 
 import {
     ThemeProvider,
     createTheme,
 } from '@material-ui/core/styles'
 import {
-    CssBaseline,
+    CssBaseline, Typography,
 } from '@material-ui/core'
 
 import './Index.css'
 
 import AuthContext from '../context/auth-context'
 import ThemeContext from '../context/theme-context'
-import {graphqlConfig} from '../context/apollo-context'
+
 import AvatarContext from '../context/avatar-context'
 
 import Routeur from '../Routeurs/Routeur'
@@ -23,8 +22,7 @@ import LoadingPage from '../pages/Loading'
 import useThemeEterelz from '../Hook/useThemeEterelz'
 import useAuth from '../Hook/useAuth'
 
-export default function Index() {
-
+export default function Index(props) {
     const [auth, login, logout, loading] = useAuth()
 
     const [avatar, setAvatar] = useState({id: null})
@@ -54,25 +52,22 @@ export default function Index() {
                         setAvatar: setAvatar,
                     }}
                 >
-                    <ApolloProvider
-                        client={graphqlConfig}
+                    <ThemeContext.Provider
+                        value={{
+                            theme: setTheme,
+                        }}
                     >
-                        <ThemeContext.Provider
-                            value={{
-                                theme: setTheme,
-                            }}
-                        >
-                            <ThemeProvider theme={createTheme(theme)}>
-                                <CssBaseline/>
-                                {
-                                    loading ?
-                                        <LoadingPage />
-                                    :
-                                        <Routeur/>
-                                }
-                            </ThemeProvider>
-                        </ThemeContext.Provider>
-                    </ApolloProvider>
+                        <ThemeProvider theme={createTheme(theme)}>
+                            <CssBaseline/>
+                            <Typography>{JSON.stringify(props.authDate)}</Typography>
+                            {
+                                loading ?
+                                    <LoadingPage />
+                                :
+                                    <Routeur/>
+                            }
+                        </ThemeProvider>
+                    </ThemeContext.Provider>
                 </AvatarContext.Provider>
             </AuthContext.Provider>
         </BrowserRouter>

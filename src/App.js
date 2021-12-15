@@ -1,8 +1,15 @@
 import React, {Suspense, lazy, useState, useEffect} from 'react'
+
+import { ApolloProvider} from '@apollo/client'
+
+import {graphqlConfig} from './context/apollo-context'
+
 import Loading from './pages/Loading'
+import VerifyAuthentify from './VerifyAuthentify'
 
 
-const Index = lazy(() => import('./pages/Index'))
+
+
 
 export default function App() {
 
@@ -28,9 +35,13 @@ export default function App() {
 
 
     return (
-        <Suspense fallback={<Loading/>}>
-            {crate}
-            <Index/>
+        <Suspense fallback={Loading}>
+            <ApolloProvider
+                client={graphqlConfig}
+            >
+                {crate}
+                <VerifyAuthentify/>
+            </ApolloProvider>
         </Suspense>
     )
 }
