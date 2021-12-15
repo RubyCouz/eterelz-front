@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef} from 'react'
 import Button from "@material-ui/core/Button";
 import {TextField} from "@material-ui/core";
 import Box from "@mui/material/Box";
@@ -7,8 +7,8 @@ import {gql, useLazyQuery} from "@apollo/client";
 import './ExpiredToken.css'
 
 const REVERIFY = gql`
-    query reVerify($email: String!) {
-        reVerify(user_email: $email) {
+    query reVerify($email: String!, $pass: String!) {
+        reVerify(user_email: $email, pass: $pass) {
             _id
             user_email
             user_login
@@ -20,21 +20,28 @@ export default function ExpiredToken() {
 
     const email = useRef('')
     let userMail
+    let pass = ''
     const verify = async () => {
         userMail = email.current.value
-        console.log(userMail)
-        await reVerify({variables: {email: userMail}})
+        // génération code sécurité
+        let len = 6
+        while (pass.length < len) {
+            pass += Math.random().toString(36).substr(2)
+            pass = pass.substr(0, len)
+        }
+        await reVerify({variables: {email: userMail, pass: pass}})
     }
 
     const [reVerify] = useLazyQuery(
         REVERIFY, {
-            email: userMail
+            email: userMail,
+            pass: pass
         }
     )
     return (
         <div>
             <p>
-                Ce token est exipré. Pour faire une autre demande, renseignez l'email utilisé pour l'inscription :
+                Ce token est expiré et / ou est non-valide. Pour faire une autre demande, renseignez l'email utilisé pour l'inscription :
             </p>
             <Box
                 component="form"
@@ -57,6 +64,7 @@ export default function ExpiredToken() {
                             inputRef={email}
                             label="Adresse Email"
                             variant="outlined"
+                            color="secondary"
                             fullWidth={true}
                             className="input"
                         />
