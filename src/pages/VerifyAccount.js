@@ -1,11 +1,11 @@
-import React, {useRef} from 'react'
+import React, {useContext, useRef} from 'react'
 import Button from '@material-ui/core/Button'
 import {useParams} from 'react-router-dom'
 import {gql, useMutation} from '@apollo/client'
 import Grid from '@material-ui/core/Grid'
 import ExpiredToken from '../Components/Errors/TokenErrors/ExpiredToken'
 import {useHistory} from 'react-router-dom'
-
+import AuthContext from '../context/auth-context'
 import './VerifyAccount.css'
 import Box from "@mui/material/Box";
 import {TextField} from "@material-ui/core";
@@ -28,6 +28,7 @@ const CONFIRMUSER = gql`
 
 export default function VerifyAccount() {
 
+    const context = useContext(AuthContext)
     const history = useHistory()
     const char1 = useRef('')
     const char2 = useRef('')
@@ -112,7 +113,8 @@ export default function VerifyAccount() {
                     // login()
                     // handleClick()
                     // redirection pour vérification de compte
-                    return history.push(`/dashboard`);
+                    context.login()
+                    return history.push(`/dashboard`)
                 }
             })
     }

@@ -355,7 +355,7 @@ export default function Dashboard(callbackfn, thisArg) {
                     </Grid>
                     <Container maxWidth="md">
                         {
-                            userGames_data !== undefined && userGames_data.userGame.length !== 0 ?
+                            userGames_data !== undefined && userGames_data.userGame !== null ?
                                 <UserGameList
                                     games={userGames_data}
                                     authUserId={context.playload ? context.playload.userId : null}
