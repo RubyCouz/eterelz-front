@@ -18,6 +18,7 @@ const CONFIRMUSER = gql`
     }
 `
 
+
 export default function VerifyAccount() {
 
     const context = useContext(AuthContext)

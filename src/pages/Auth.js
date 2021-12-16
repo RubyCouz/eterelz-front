@@ -1,9 +1,4 @@
 import * as React from 'react'
-import PropTypes from 'prop-types'
-import SwipeableViews from 'react-swipeable-views'
-import {useTheme} from '@mui/material/styles'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import TextField from '@material-ui/core/TextField'
@@ -17,43 +12,12 @@ import MuiAlert from '@material-ui/lab/Alert'
 import AuthContext from '../context/auth-context'
 import Snackbar from '@material-ui/core/Snackbar'
 import {makeStyles} from '@material-ui/core/styles'
+import 'animate.css'
+import clsx from "clsx";
 
 // Alert
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{p: 3}}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-    return {
-        id: `full-width-tab-${index}`,
-        'aria-controls': `full-width-tabpanel-${index}`,
-    };
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -74,7 +38,50 @@ const useStyles = makeStyles((theme) => ({
             margin: theme.spacing(1),
         },
     },
-}));
+    animatedItem: {
+        display: 'block',
+        animation: `$myEffect 1000ms ${theme.transitions.easing.easeInOut}`
+    },
+    animatedItemExiting: {
+        display: 'none',
+    },
+    animatedItem2: {
+        display: 'block',
+        animation: `$myEffect 1000ms ${theme.transitions.easing.easeInOut}`
+    },
+    animatedItemExiting2: {
+        display: 'none',
+    },
+    "@keyframes myEffect": {
+        "0%": {
+            opacity: 0,
+            transform: "translateY(-200%)"
+        },
+        "100%": {
+            opacity: 1,
+            transform: "translateY(0)"
+        }
+    },
+    "@keyframes myEffectExit": {
+        "0%": {
+            opacity: 1,
+            transform: "translateY(0)"
+        },
+        "100%": {
+            opacity: 0,
+            transform: "translateY(-200%)"
+        }
+    },
+    buttonsAction: {
+        marginTop: '10px',
+    },
+    nextButton: {
+        color: '#cccccc !important',
+        border: '1px solid #8618AD !important',
+        fontWeight: 'bold !important',
+        backgroundColor: '#8618AD !important',
+    }
+}))
 
 const initialState = {
     alert_message: '',
@@ -91,12 +98,12 @@ const initialRequestError = {
 export default function FullWidthTabs() {
 
     let classes = useStyles()
-    const theme = useTheme()
-    const [value, setValue] = useState(0)
+    const [panel1, setPanel1] = React.useState(false)
+    const [panel2, setPanel2] = React.useState(true)
     const [state, setState] = useState({initialState})
     const initialLogError = {
-        log_user_email_error: false,
-        log_user_password_error: false
+        log_user_email_error: '',
+        log_user_password_error: ''
     }
     //State état des textfield login
     const [logError, setLogError] = useState(initialLogError)
@@ -112,14 +119,6 @@ export default function FullWidthTabs() {
 
     const context = useContext(AuthContext)
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
-
-    const handleChangeIndex = (index) => {
-        setValue(index);
-    };
-
     const handleInputChange = (event) => {
         const target = event.target;
         const value = target.value;
@@ -133,6 +132,8 @@ export default function FullWidthTabs() {
             ...logError,
             [name + '_error']: regall
         });
+        console.log(state)
+        console.log(logError)
     };
 
     const handleClick = () => {
@@ -145,6 +146,11 @@ export default function FullWidthTabs() {
         }
 
         setOpen(false);
+    }
+
+    const handlePanel = () => {
+        setPanel1(!panel1)
+        setPanel2(!panel2)
     }
 
     const login = () => {
@@ -199,7 +205,7 @@ export default function FullWidthTabs() {
                     if (resData.data.login) {
                         // si checkbox cochée
                         // if (state.stayLogged) {
-                            // défintion cookie
+                        // défintion cookie
                         // }
                         context.login()
                     }
@@ -215,14 +221,6 @@ export default function FullWidthTabs() {
         }
     }
 
-    // requestError.requestRegister = true
-    //parcours l'objet error et vérifie si un élément retourne false
-    // for (const i in error) {
-    //     requestError.errorValue = error[i];
-    //     if (requestError.errorValue === true) {
-    //         requestError.requestRegister = false
-    //     }
-    // }
     requestError.requestLogin = true
     //parcours l'objet logError et vérifie si un élément retourne false
     for (const i in logError) {
@@ -251,86 +249,104 @@ export default function FullWidthTabs() {
                             <Typography variant="body2">
                                 <form className="auth-form">
                                     <h1>Connexion</h1>
-                                    <SwipeableViews
-                                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                                        index={value}
-                                        onChangeIndex={handleChangeIndex}
+                                    <Box
+                                        className={clsx(classes.animatedItem, {
+                                            [classes.animatedItemExiting]: panel1
+                                        })}
                                     >
-                                        <TabPanel value={value} index={0} dir={theme.direction}>
-                                            <div className="form-control">
-                                                <div>
-                                                    <TextField
-                                                        id="standard-error-helper-text"
-                                                        label="Email"
-                                                        name="log_user_email"
-                                                        type="text"
-                                                        helperText="Entrer votre email"
-                                                        fullWidth={true}
-                                                        required
-                                                        onChange={handleInputChange}
-                                                        value={state.log_user_email}
-                                                        error={logError.log_user_email_error}
-                                                    />
-                                                </div>
-                                                <Button value="Annuler"
+                                        <div className="form-control" id="panel1">
+                                            <div>
+                                                <TextField
+                                                    id="standard-error-helper-text"
+                                                    label="Email"
+                                                    name="log_user_email"
+                                                    type="text"
+                                                    helperText={logError.log_user_email_error && 'Saisissez un email valide'}
+                                                    fullWidth={true}
+                                                    required
+                                                    onChange={handleInputChange}
+                                                    value={state.log_user_email}
+                                                    variant="outlined"
+                                                    error={logError.log_user_email_error === '' ? false : logError.log_user_email_error}
+                                                />
+                                            </div>
+                                            <Grid container
+                                                  direction="row"
+                                                  justifyContent="space-around"
+                                                  alignItems="center"
+                                            >
+                                                <Grid item xs={6} md={6} lg={6} alignItems="left">
+                                                    <Button value="Retour"
+                                                            variant="outlined"
+                                                    >
+                                                        <a href="/home" title="retour à l'accueil">Retour</a>
+                                                    </Button>
+                                                </Grid>
+                                                <Grid item xs={6} md={6} lg={6}>
+                                                    <Box textAlign="right" className={classes.buttonsAction}>
+                                                        <Button
+                                                            value="Suivant"
+                                                            variant="outlined"
+                                                            className={classes.nextButton}
+                                                            onClick={handlePanel}
+                                                        >
+                                                            Suivant
+                                                        </Button>
+                                                    </Box>
+                                                </Grid>
+                                            </Grid>
+                                        </div>
+                                    </Box>
+                                    <Box
+                                        className={clsx(classes.animatedItem2, {
+                                            [classes.animatedItemExiting2]: panel2
+                                        })}
+                                    >
+                                        <div className="form-control" id="panel2">
+                                            <div>
+                                                <TextField
+                                                    id="standard-error-helper-text"
+                                                    label="Mot de passe"
+                                                    name="log_user_password"
+                                                    type="password"
+                                                    helperText={logError.log_user_password_error && "Saisissez un mot de passe valide"}
+                                                    fullWidth={true}
+                                                    variant="outlined"
+                                                    onChange={handleInputChange}
+                                                    value={state.log_user_password}
+                                                    error={logError.log_user_password_error === '' ? false : logError.log_user_password_error}
+                                                    required
+                                                />
+                                            </div>
+                                            <Grid container
+                                                  direction="row"
+                                                  justifyContent="space-around"
+                                                  alignItems="center"
+                                            >
+                                                <Grid item xs={6} md={6} lg={6} alignItems="left">
+                                                    <Button
+                                                        value="retour"
                                                         variant="outlined"
-                                                >
-                                                    <a href="/home" title="retour à l'accueil">Retour</a>
-                                                </Button>
-                                                <Tabs
-                                                    value={value}
-                                                    onChange={handleChange}
-                                                    aria-label="full width tabs example"
-                                                >
-                                                    <Tab
-                                                        label="" {...a11yProps(0)}
-                                                        sx={{
-                                                            display: 'none'
-                                                        }}
-
-                                                    />
-                                                    <Tab label="Suivant"
-                                                         {...a11yProps(1)}
-                                                    />
-                                                </Tabs>
-                                            </div>
-                                        </TabPanel>
-                                        <TabPanel value={value} index={1} dir={theme.direction}>
-                                            <div className="form-control">
-                                                <div>
-                                                    <TextField
-                                                        id="standard-error-helper-text"
-                                                        label="Mot de passe"
-                                                        name="log_user_password"
-                                                        type="password"
-                                                        helperText="Entrer votre mot de passe"
-                                                        fullWidth={true}
-                                                        onChange={handleInputChange}
-                                                        value={state.log_user_password}
-                                                        error={logError.log_user_password_error}
-                                                        required
-                                                    />
-                                                </div>
-                                                <Tabs
-                                                    value={value}
-                                                    onChange={handleChange}
-                                                    indicatorColor="secondary"
-                                                    textColor="inherit"
-                                                    variant="fullWidth"
-                                                    aria-label="full width tabs example"
-                                                >
-                                                    <Tab label="Retour" {...a11yProps(0)} />
-                                                </Tabs>
-                                                <Button variant="contained"
-                                                        color="primary"
-                                                        justifyContent="flex-end"
-                                                        onClick={login}
-                                                >
-                                                    Valider
-                                                </Button>
-                                            </div>
-                                        </TabPanel>
-                                    </SwipeableViews>
+                                                        onClick={handlePanel}
+                                                    >
+                                                        Retour
+                                                    </Button>
+                                                </Grid>
+                                                <Grid item xs={6} md={6} lg={6} alignItems="left">
+                                                    <Box textAlign="right" className={classes.buttonsAction}>
+                                                        <Button variant="contained"
+                                                                color="primary"
+                                                                justifyContent="flex-end"
+                                                                onClick={login}
+                                                                className={classes.nextButton}
+                                                        >
+                                                            Valider
+                                                        </Button>
+                                                    </Box>
+                                                </Grid>
+                                            </Grid>
+                                        </div>
+                                    </Box>
                                     <div className={classes.snackbar}>
                                         <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
                                             <Alert onClose={handleClose} severity={state.severity}>
@@ -342,7 +358,7 @@ export default function FullWidthTabs() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <a href="/signup" size="small">Pas de compte Eterelz ? Cliquez ici !</a>
+                            <a href="/signup">Pas de compte Eterelz ? Cliquez ici !</a>
                         </CardActions>
                     </Card>
                 </Grid>

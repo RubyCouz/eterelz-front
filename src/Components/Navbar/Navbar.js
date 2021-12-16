@@ -37,8 +37,6 @@ export default function Home(props) {
 
     const classes = useStyles();
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
 
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
@@ -48,52 +46,10 @@ export default function Home(props) {
         setMobileMoreAnchorEl(null);
     }
 
-    const handleProfileMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    }
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    }
-
-    const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
 
     const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem
-                onClick={handleProfileMenuOpen}
-                className="userMenu"
-            >
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle/>
-                </IconButton>
-                <a href="../Auth">CONNEXION</a>
-            </MenuItem>
-        </Menu>
-    );
+
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
@@ -112,7 +68,7 @@ export default function Home(props) {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem onClick={handleProfileMenuOpen}>
+            <MenuItem>
                 <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -157,10 +113,12 @@ export default function Home(props) {
                                 aria-label="account of current user"
                                 aria-controls={menuId}
                                 aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
                                 color="inherit"
                             >
-                                <AccountCircle/>
+                                <a href="../Auth" title="Connexion">
+                                    <AccountCircle/>
+                                </a>
+
                             </IconButton>
                         </Box>
                         <Box sx={{display: {xs: 'flex', md: 'none'}}}>
@@ -178,7 +136,6 @@ export default function Home(props) {
                     </Toolbar>
                 </AppBar>
                 {renderMobileMenu}
-                {renderMenu}
             </Box>
         </div>
     )

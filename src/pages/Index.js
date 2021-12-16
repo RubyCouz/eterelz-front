@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {BrowserRouter} from 'react-router-dom'
 import {ApolloProvider} from '@apollo/client'
 
@@ -13,14 +13,14 @@ import {
 import './Index.css'
 
 import AuthContext from '../context/auth-context'
-import ThemeContext from '../context/theme-context'
+// import ThemeContext from '../context/theme-context'
 import {graphqlConfig} from '../context/apollo-context'
 import AvatarContext from '../context/avatar-context'
 
 import Routeur from '../Routeurs/Routeur'
 import LoadingPage from '../pages/Loading'
 
-import useThemeEterelz from '../Hook/useThemeEterelz'
+// import useThemeEterelz from '../Hook/useThemeEterelz'
 import useAuth from '../Hook/useAuth'
 
 export default function Index() {
@@ -29,14 +29,18 @@ export default function Index() {
 
     const [avatar, setAvatar] = useState({id: null})
     
-    const [theme, setTheme] = useThemeEterelz()
+    // const [theme, setTheme] = useThemeEterelz()
 
-    useEffect(() => {
-        let darkModeLS = window.localStorage.getItem('darkMode')
-        darkModeLS !== 'null' && setTheme(darkModeLS)
-    }, [login, logout, setTheme])
+    // useEffect(() => {
+    //     let darkModeLS = window.localStorage.getItem('darkMode')
+    //     darkModeLS !== 'null' && setTheme(darkModeLS)
+    // }, [login, logout, setTheme])
 
-
+    const theme = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
 
     return (
         <BrowserRouter>
@@ -57,11 +61,11 @@ export default function Index() {
                     <ApolloProvider
                         client={graphqlConfig}
                     >
-                        <ThemeContext.Provider
-                            value={{
-                                theme: setTheme,
-                            }}
-                        >
+                        {/*<ThemeContext.Provider*/}
+                        {/*    value={{*/}
+                        {/*        theme: darkTheme,*/}
+                        {/*    }}*/}
+                        {/*>*/}
                             <ThemeProvider theme={createTheme(theme)}>
                                 <CssBaseline/>
                                 {
@@ -71,7 +75,7 @@ export default function Index() {
                                         <Routeur/>
                                 }
                             </ThemeProvider>
-                        </ThemeContext.Provider>
+                        {/*</ThemeContext.Provider>*/}
                     </ApolloProvider>
                 </AvatarContext.Provider>
             </AuthContext.Provider>
