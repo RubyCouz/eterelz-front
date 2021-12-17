@@ -141,7 +141,13 @@ export default function FullWidthTabs() {
                 email: user_email.current.value,
                 password: user_password.current.value,
             },
-            errorPolicy: 'all'
+            errorPolicy: 'all',
+            onCompleted: data => {
+                context.login()
+            },
+            onError: error => {
+                setInvalidUSer(true)
+            },
         }
     )
 
@@ -183,59 +189,17 @@ export default function FullWidthTabs() {
     const connectUser = async () => {
         //initialise couleur error pour alert snackbar
         state.severity = 'error'
-        const email = user_email.current.value
-        const password = user_password.current.value
+
         if (requestError.requestLogin === true) {
             //requête envoyée à api
-            await login({
-                variables: {
-                    email: email,
-                    password: password
-                }
-            })
-
-            if (data) {
-                context.login()
-                return history.push(`/dashboard`)
-              // return setLog(true)
-            }
-            if (error) {
-                return setInvalidUSer(true)
-            }
-
-            // .then(async res => {
-            //     if (res.status !== 200 && res.status !== 201) {
-            //         throw new Error('Failed')
-            //     }
-            //     return res.json()
-            // })
-            // .then(async resData => {
-            //     //si erreur
-            //     if (resData.errors) {
-            //         state.severity = 'error'
-            //         state.alert_message = resData.errors[0].message;
-            //         handleClick();
-            //     }
-            //     if (resData.data.login) {
-            //         context.login()
-            //     }
-            // })
-            // .catch(err => {
-            //     state.severity = 'error'
-            //     state.alert_message = 'Information incorrect'
-            //     handleClick()
-            // })
+            login()
         } else {
             state.alert_message = 'Email ou mot de passe incorrect';
             handleClick()
         }
-
     }
+    
     useEffect(() => {
-        if (log) {
-            context.login()
-            return history.push(`/dashboard`)
-        }
         if(invalidUser){
             error.graphQLErrors.map(({message, status}, i) => {
                     if (status === 500) {
