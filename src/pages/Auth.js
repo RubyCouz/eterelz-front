@@ -7,13 +7,15 @@ import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@material-ui/core/Grid'
-import {useContext, useState} from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
 import MuiAlert from '@material-ui/lab/Alert'
 import AuthContext from '../context/auth-context'
 import Snackbar from '@material-ui/core/Snackbar'
 import {makeStyles} from '@material-ui/core/styles'
+import {useHistory} from 'react-router-dom'
 import 'animate.css'
-import clsx from "clsx";
+import clsx from 'clsx'
+import {gql, useLazyQuery} from '@apollo/client'
 
 // Alert
 function Alert(props) {
@@ -95,11 +97,24 @@ const initialRequestError = {
     logErrorValue: false
 }
 
+const LOGIN = gql`
+    query LOGIN($email: String!, $password: String!) {
+        login(user_email: $email, user_password: $password) {
+            token
+        }
+    }
+`
+
 export default function FullWidthTabs() {
 
+    const user_email = useRef('')
+    const user_password = useRef('')
+
     let classes = useStyles()
-    const [panel1, setPanel1] = React.useState(false)
-    const [panel2, setPanel2] = React.useState(true)
+    const [log, setLog] = useState(false)
+    const [invalidUser, setInvalidUSer] = useState(false)
+    const [panel1, setPanel1] = useState(false)
+    const [panel2, setPanel2] = useState(true)
     const [state, setState] = useState({initialState})
     const initialLogError = {
         log_user_email_error: '',
@@ -118,11 +133,26 @@ export default function FullWidthTabs() {
     }
 
     const context = useContext(AuthContext)
+    const history = useHistory()
+    const [login, {error, loading, data}] = useLazyQuery(
+        LOGIN,
+        {
+            variables: {
+                email: user_email.current.value,
+                password: user_password.current.value,
+            },
+            errorPolicy: 'all'
+        }
+    )
+
 
     const handleInputChange = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
+        const value = event.target.value.trim()
+        const name = event.target.name
+        //enlève les espaces
+        if (value.length === 0) {
+            return
+        }
         const regall = !regexlist[name].test(value)
         setState({
             ...state, [name]: value
@@ -132,8 +162,6 @@ export default function FullWidthTabs() {
             ...logError,
             [name + '_error']: regall
         });
-        console.log(state)
-        console.log(logError)
     };
 
     const handleClick = () => {
@@ -144,7 +172,6 @@ export default function FullWidthTabs() {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
     }
 
@@ -153,73 +180,74 @@ export default function FullWidthTabs() {
         setPanel2(!panel2)
     }
 
-    const login = () => {
+    const connectUser = async () => {
         //initialise couleur error pour alert snackbar
-        state.severity = 'error';
-        //enlève les espaces
-        if (state.log_user_email.trim().length === 0 || state.log_user_password.trim().length === 0) {
-            return
-        }
+        state.severity = 'error'
+        const email = user_email.current.value
+        const password = user_password.current.value
         if (requestError.requestLogin === true) {
             //requête envoyée à api
-            let requestBody = {
-                query: `
-                    query Login($user_email: String!, $user_password: String!) {
-                        login(
-                            user_email: $user_email,
-                            user_password: $user_password
-                            ) {
-                            token
-                            }
-                        }
-                    `,
+            await login({
                 variables: {
-                    user_email: state.log_user_email,
-                    user_password: state.log_user_password,
-                    stayLogged: state.stayLogged
-                }
-            }
-            //connexion api et envoie en post les infos format json
-            fetch('http://localhost:8080/api', {
-                method: 'POST',
-                body: JSON.stringify(requestBody),
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
+                    email: email,
+                    password: password
                 }
             })
-                //si erreur
-                .then(res => {
-                    if (res.status !== 200 && res.status !== 201) {
-                        throw new Error('Failed')
-                    }
-                    return res.json()
-                })
-                .then(resData => {
-                    //si erreur
-                    if (resData.errors) {
-                        state.severity = 'error'
-                        state.alert_message = resData.errors[0].message;
-                        handleClick();
-                    }
-                    if (resData.data.login) {
-                        // si checkbox cochée
-                        // if (state.stayLogged) {
-                        // défintion cookie
-                        // }
-                        context.login()
-                    }
-                })
-                .catch(err => {
-                    state.severity = 'error'
-                    state.alert_message = 'Information incorrect'
-                    handleClick()
-                })
+
+            if (data) {
+                context.login()
+                return history.push(`/dashboard`)
+              // return setLog(true)
+            }
+            if (error) {
+                return setInvalidUSer(true)
+            }
+
+            // .then(async res => {
+            //     if (res.status !== 200 && res.status !== 201) {
+            //         throw new Error('Failed')
+            //     }
+            //     return res.json()
+            // })
+            // .then(async resData => {
+            //     //si erreur
+            //     if (resData.errors) {
+            //         state.severity = 'error'
+            //         state.alert_message = resData.errors[0].message;
+            //         handleClick();
+            //     }
+            //     if (resData.data.login) {
+            //         context.login()
+            //     }
+            // })
+            // .catch(err => {
+            //     state.severity = 'error'
+            //     state.alert_message = 'Information incorrect'
+            //     handleClick()
+            // })
         } else {
             state.alert_message = 'Email ou mot de passe incorrect';
             handleClick()
         }
+
     }
+    useEffect(() => {
+        if (log) {
+            context.login()
+            return history.push(`/dashboard`)
+        }
+        if(invalidUser){
+            error.graphQLErrors.map(({message, status}, i) => {
+                    if (status === 500) {
+                        state.severity = 'error'
+                        state.alert_message = message
+                        handleClick()
+                    }
+                    return error
+                }
+            )
+        }
+    })
 
     requestError.requestLogin = true
     //parcours l'objet logError et vérifie si un élément retourne false
@@ -249,6 +277,12 @@ export default function FullWidthTabs() {
                             <Typography variant="body2">
                                 <form className="auth-form">
                                     <h1>Connexion</h1>
+                                    {error &&
+                                    error.graphQLErrors.map(({message, status}, i) => (
+                                        (status === 800) &&
+                                        <span>message</span>
+                                    ))
+                                    }
                                     <Box
                                         className={clsx(classes.animatedItem, {
                                             [classes.animatedItemExiting]: panel1
@@ -261,7 +295,11 @@ export default function FullWidthTabs() {
                                                     label="Email"
                                                     name="log_user_email"
                                                     type="text"
-                                                    helperText={logError.log_user_email_error && 'Saisissez un email valide'}
+                                                    inputRef={user_email}
+                                                    helperText={
+                                                        logError.log_user_email_error &&
+                                                        'Saisissez un email valide'
+                                                    }
                                                     fullWidth={true}
                                                     required
                                                     onChange={handleInputChange}
@@ -309,6 +347,7 @@ export default function FullWidthTabs() {
                                                     label="Mot de passe"
                                                     name="log_user_password"
                                                     type="password"
+                                                    inputRef={user_password}
                                                     helperText={logError.log_user_password_error && "Saisissez un mot de passe valide"}
                                                     fullWidth={true}
                                                     variant="outlined"
@@ -337,7 +376,7 @@ export default function FullWidthTabs() {
                                                         <Button variant="contained"
                                                                 color="primary"
                                                                 justifyContent="flex-end"
-                                                                onClick={login}
+                                                                onClick={connectUser}
                                                                 className={classes.nextButton}
                                                         >
                                                             Valider
@@ -363,7 +402,6 @@ export default function FullWidthTabs() {
                     </Card>
                 </Grid>
                 <Grid item xs>
-
                 </Grid>
             </Grid>
         </Box>
