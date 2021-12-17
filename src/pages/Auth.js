@@ -106,10 +106,6 @@ const LOGIN = gql`
 `
 
 export default function FullWidthTabs() {
-
-    const user_email = useRef('')
-    const user_password = useRef('')
-
     let classes = useStyles()
     const [log, setLog] = useState(false)
     const [invalidUser, setInvalidUSer] = useState(false)
@@ -138,8 +134,8 @@ export default function FullWidthTabs() {
         LOGIN,
         {
             variables: {
-                email: user_email.current.value,
-                password: user_password.current.value,
+                email: state.log_user_email,
+                password: state.log_user_password,
             },
             errorPolicy: 'all',
             onCompleted: data => {
@@ -155,10 +151,7 @@ export default function FullWidthTabs() {
     const handleInputChange = (event) => {
         const value = event.target.value.trim()
         const name = event.target.name
-        //enlève les espaces
-        if (value.length === 0) {
-            return
-        }
+
         const regall = !regexlist[name].test(value)
         setState({
             ...state, [name]: value
@@ -259,7 +252,6 @@ export default function FullWidthTabs() {
                                                     label="Email"
                                                     name="log_user_email"
                                                     type="text"
-                                                    inputRef={user_email}
                                                     helperText={
                                                         logError.log_user_email_error &&
                                                         'Saisissez un email valide'
@@ -311,7 +303,6 @@ export default function FullWidthTabs() {
                                                     label="Mot de passe"
                                                     name="log_user_password"
                                                     type="password"
-                                                    inputRef={user_password}
                                                     helperText={logError.log_user_password_error && "Saisissez un mot de passe valide"}
                                                     fullWidth={true}
                                                     variant="outlined"
