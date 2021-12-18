@@ -104,6 +104,11 @@ export default function VerifyAccount() {
                 pass: confirmPass
             }
         })
+            .then(res => {
+                if (res.errors) {
+                    console.log(res.errors)
+                }
+            })
             .then(async resData => {
                 if (resData.errors) {
                     // state.severity = 'error'
@@ -119,17 +124,24 @@ export default function VerifyAccount() {
                     return history.push(`/dashboard`)
                 }
             })
+            .catch(e => {
+
+            })
+
     }
 
-    const [confirmUser, {error}] = useMutation(
+    let [confirmUser, {error}] = useMutation(
         CONFIRMUSER,
         {
             variables: {
                 token: token,
                 pass: pass
             },
-            errorPolicy: 'all'
-        }
+            errorPolicy: 'all',
+            onError: (error) => {
+                console.log(error.message)
+            }
+        },
     )
 
     return (
@@ -143,16 +155,7 @@ export default function VerifyAccount() {
                 <div className="disclaimer">
                     {error ?
                         <div>
-                            {error.graphQLErrors.map(({message, status}, i) => (
-                                (status === 600 ||
-                                    status === 601 ||
-                                    status === 602 ||
-                                    status === 603 ||
-                                    status === 604 ||
-                                    status === 605) &&
                                 <ExpiredToken/>
-                            ))
-                            }
                         </div> :
                         <div>
                             <p>
