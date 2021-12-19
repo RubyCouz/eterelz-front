@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from 'react'
+import React, {useContext, useRef, useState} from 'react'
 import Button from '@material-ui/core/Button'
 import {useParams} from 'react-router-dom'
 import {gql, useMutation} from '@apollo/client'
@@ -8,7 +8,19 @@ import {useHistory} from 'react-router-dom'
 import AuthContext from '../context/auth-context'
 import './VerifyAccount.css'
 import Box from '@mui/material/Box'
-import {TextField} from '@material-ui/core'
+import {Slide, TextField} from '@material-ui/core'
+import SnackbarError from '../Components/Snackbar/SnackbarError'
+import {makeStyles} from "@material-ui/core/styles";
+
+function SlideTransition(props) {
+    return <Slide {...props} direction="up"/>;
+}
+
+const useStyle = makeStyles({
+    snackbar: {
+        width: '100%',
+    },
+})
 
 const CONFIRMUSER = gql`
     mutation CONFIRMUSER($token: String!, $pass: String!) {
@@ -23,6 +35,7 @@ export default function VerifyAccount() {
 
     const context = useContext(AuthContext)
     const history = useHistory()
+    const classes = useStyle()
     const char1 = useRef('')
     const char2 = useRef('')
     const char3 = useRef('')
@@ -39,6 +52,19 @@ export default function VerifyAccount() {
         console.log('ok')
     }
     let pass
+
+    const [state, setState] = useState({
+        alert_message: '',
+        severity: '',
+        statusCode: ''
+    })
+    const [open, setOpen] = useState(false)
+    const [sBar, setSbar] = useState({
+        Transition: Slide,
+        vertical: 'bottom',
+        horizontal: 'center',
+    })
+    const {vertical, horizontal} = sBar
     /**
      * récupération de chaque caractère du code et stockage
      * dans un tableau au changement de valeur d'un des input
@@ -118,15 +144,43 @@ export default function VerifyAccount() {
                 pass: pass
             },
             errorPolicy: 'all',
-            onError: (error) => {
-                console.log(error.message)
-            },
+            onError: (({networkError}) => {
+                if (networkError) {
+                    console.log(networkError.result.errors)
+                    networkError.result.errors.map(({message, statusCode}) => {
+                        console.log(statusCode)
+                        setState({
+                            ...state,
+                            severity: 'error',
+                            alert_message: message,
+                            statusCode: statusCode
+                        })
+                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        return error
+                    })
+                }
+            }),
             onCompleted: data => {
                 context.login()
                 return history.push('/dashboard')
             }
         },
     )
+
+    const handleClick = (Transition, newSbar) => {
+        setOpen(true)
+        setSbar({
+            Transition,
+            ...newSbar
+        })
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false)
+    }
 
     return (
         <Grid
@@ -142,10 +196,8 @@ export default function VerifyAccount() {
                             Votre inscription a bien été prise en compte. Suivez les indications dans le mail qui vous
                             sera envoyé pour valider votre inscription.
                         </p> :
-                        error ?
-                            <div>
-                                <ExpiredToken/>
-                            </div> :
+                        state.statusCode === 600 ?
+                            <ExpiredToken/> :
                             <div>
                                 <p>
                                     Saisissez votre code pour confirmer votre inscription !
@@ -179,7 +231,6 @@ export default function VerifyAccount() {
                                                         name="char1"
                                                         inputRef={char1}
                                                         variant="outlined"
-                                                        color="secondary"
                                                         fullWidth={true}
                                                         inputProps={{maxlength: 1}}
                                                     />
@@ -195,7 +246,6 @@ export default function VerifyAccount() {
                                                         name="char2"
                                                         inputRef={char2}
                                                         variant="outlined"
-                                                        color="secondary"
                                                         fullWidth={true}
                                                         inputProps={{maxlength: 1}}
                                                     />
@@ -211,7 +261,6 @@ export default function VerifyAccount() {
                                                         name="char3"
                                                         inputRef={char3}
                                                         variant="outlined"
-                                                        color="secondary"
                                                         fullWidth={true}
                                                         inputProps={{maxlength: 1}}
                                                     />
@@ -227,7 +276,6 @@ export default function VerifyAccount() {
                                                         name="char4"
                                                         inputRef={char4}
                                                         variant="outlined"
-                                                        color="secondary"
                                                         fullWidth={true}
                                                         inputProps={{maxlength: 1}}
                                                     />
@@ -243,7 +291,6 @@ export default function VerifyAccount() {
                                                         name="char5"
                                                         inputRef={char5}
                                                         variant="outlined"
-                                                        color="secondary"
                                                         fullWidth={true}
                                                         inputProps={{maxlength: 1}}
                                                     />
@@ -258,7 +305,6 @@ export default function VerifyAccount() {
                                                         name="char6"
                                                         inputRef={char6}
                                                         variant="outlined"
-                                                        color="secondary"
                                                         fullWidth={true}
                                                         inputProps={{maxlength: 1}}
                                                     />
@@ -278,7 +324,18 @@ export default function VerifyAccount() {
                                 </Box>
                             </div>
                     }
+
                 </div>
+                <SnackbarError
+                    class={classes.snackbar}
+                    anchorOrigin={{vertical, horizontal}}
+                    open={open}
+                    transitionComponent={sBar.Transition}
+                    onClose={handleClose}
+                    message={state.alert_message}
+                    key={sBar.Transition.name}
+                    severity={state.severity}
+                />
             </Grid>
         </Grid>
     )

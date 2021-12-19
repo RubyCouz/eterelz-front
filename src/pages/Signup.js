@@ -215,53 +215,6 @@ export default function Signup() {
         }
     }
 
-
-//     fetch('http://localhost:8080/api', {
-//         method: 'POST',
-//         body: JSON.stringify(requestRegister),
-//         credentials: 'include',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         }
-//     })
-//         .then(res => {
-//             if (res.status !== 200 && res.status !== 201) {
-//                 throw new Error('Failed')
-//             }
-//             return res.json()
-//         })
-//         .then(resData => {
-//             if (resData.errors) {
-//                 state.severity = 'error'
-//                 state.alert_message = resData.errors[0].message;
-//                 handleClick();
-//             } else {
-//                 state.severity = "success"
-//                 state.alert_message = "Validation de l'inscription"
-//                 // login()
-//                 handleClick()
-//                 // redirection pour vérification de compte
-//                  return history.push(`/verifyAccount`)
-//             }
-//             if (resData.data.login) {
-//                 context.login(
-//                     resData.data.login.token,
-//                 )
-//             }
-//         })
-//         .catch(err => {
-//             console.log(err)
-//         })
-//     state.severity = "success"
-//     state.alert_message = "Validation de l'inscription"
-//     handleClick()
-// } else {
-//     state.severity = 'error';
-//     state.alert_message = 'Information incorrect';
-//     handleClick();
-// }
-
-
     return (
         <Box sx={{flexGrow: 1}}>
             <Grid
