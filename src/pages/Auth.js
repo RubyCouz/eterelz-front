@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useRef, useState} from 'react'
 import {Card, CardActions, CardContent, Box, Typography, TextField, Button, Grid} from '@mui/material'
 import AuthContext from '../context/auth-context'
 import {makeStyles} from '@material-ui/core/styles'
@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import {gql, useLazyQuery} from '@apollo/client'
 import {Slide} from "@material-ui/core";
 import SnackbarError from '../Components/Snackbar/SnackbarError'
+import validForm from "../Tools/ValidForms";
 
 function SlideTransition(props) {
     return <Slide {...props} direction="up"/>;
@@ -75,18 +76,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const initialState = {
-    alert_message: '',
-    severity: '',
-    log_user_email: '',
-    log_user_password: ''
-}
-const initialRequestError = {
-    errorValue: false,
-    requestLogin: false,
-    logErrorValue: false
-}
-
 const LOGIN = gql`
     query LOGIN($email: String!, $password: String!) {
         login(user_email: $email, user_password: $password) {
@@ -95,20 +84,17 @@ const LOGIN = gql`
     }
 `
 
-export default function FullWidthTabs() {
+export default function Auth() {
     let classes = useStyles()
+    const email = useRef('')
+    const password = useRef('')
+
     const [panel1, setPanel1] = useState(false)
     const [panel2, setPanel2] = useState(true)
-    const [state, setState] = useState({initialState})
-    const initialLogError = {
-        log_user_email_error: '',
-        log_user_password_error: ''
-    }
-    //State état des textfield login
-    const [logError, setLogError] = useState(initialLogError)
-    //State état des erreurs pour lancement requête
-    const [requestError] = useState(initialRequestError)
-
+    const [state, setState] = useState({
+        alert_message: '',
+        severity: '',
+    })
     const [open, setOpen] = useState(false)
     const [sBar, setSbar] = useState({
         Transition: Slide,
@@ -116,6 +102,13 @@ export default function FullWidthTabs() {
         horizontal: 'center',
     });
     const {vertical, horizontal} = sBar
+
+    const [checkForm, setCheckForm] = useState({
+        emailValue: '',
+        passwordValue: '',
+        emailMessage: '',
+        passwordMessage: ''
+    })
     const handleClick = (Transition, newSbar) => {
         setOpen(true)
         setSbar({
@@ -130,18 +123,14 @@ export default function FullWidthTabs() {
         }
         setOpen(false)
     }
-    const regexlist = {
-        log_user_email: new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
-        log_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
-    }
 
     const context = useContext(AuthContext)
     const [login, {error}] = useLazyQuery(
         LOGIN,
         {
             variables: {
-                email: state.log_user_email,
-                password: state.log_user_password,
+                email: email.current.value,
+                password: password.current.value,
             },
             errorPolicy: 'all',
             onCompleted: data => {
@@ -151,8 +140,11 @@ export default function FullWidthTabs() {
             onError: (({networkError}) => {
                 if (networkError) {
                     error.networkError.result.errors.map(({message, status}) => {
-                        state.severity = 'error'
-                        state.alert_message = message
+                        setState({
+                            ...state,
+                            severity: 'error',
+                            alert_message: message
+                        })
                         handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
                         return error
                     })
@@ -161,49 +153,53 @@ export default function FullWidthTabs() {
         }
     )
 
-    const handleInputChange = (event) => {
-        const value = event.target.value.trim()
-        const name = event.target.name
-
-        const regall = !regexlist[name].test(value)
-        setState({
-            ...state, [name]: value
-        });
-
-        setLogError({
-            ...logError,
-            [name + '_error']: regall
-        });
-    };
-
     const handlePanel = () => {
         setPanel1(!panel1)
         setPanel2(!panel2)
     }
 
+    const handleInputChange = async (event) => {
+        const input = event.target.name
+        const value = event.target.value
+        const response = await validForm(input, value)
+        setCheckForm({
+            ...checkForm,
+            [input + 'Value']: value,
+            [input + 'Message']: response
+        })
+    }
+
     const connectUser = async () => {
-        //initialise couleur error pour alert snackbar
-        state.severity = 'error'
-        if (requestError.requestLogin === true) {
-            //requête envoyée à api
+        if(checkForm.emailMessage !== '' || checkForm.passwordMessage !== '') {
+            if(checkForm.emailMessage !== '') {
+                setState({
+                    ...state,
+                    severity: 'error',
+                    alert_message: checkForm.emailMessage
+                })
+            }
+            if(checkForm.passwordMessage !== '') {
+                setState({
+                    ...state,
+                    severity: 'error',
+                    alert_message: checkForm.passwordMessage
+                })
+            }
+            handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+        } else {
             try {
                 await login()
+                setState({
+                    ...state,
+                    severity: 'success',
+                    alert_message: 'Connexion ok'
+                })
+                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
             } catch (e) {
                 console.log(e)
             }
-        } else {
-            state.alert_message = 'Email ou mot de passe incorrect';
-            handleClick()
         }
-    }
 
-    requestError.requestLogin = true
-    //parcours l'objet logError et vérifie si un élément retourne false
-    for (const i in logError) {
-        requestError.logErrorValue = logError[i];
-        if (requestError.logErrorValue === true) {
-            requestError.requestLogin = false
-        }
     }
 
     return (
@@ -232,20 +228,23 @@ export default function FullWidthTabs() {
                                         <div className="form-control" id="panel1">
                                             <div>
                                                 <TextField
-                                                    id="standard-error-helper-text"
+                                                    id="email"
                                                     label="Email"
-                                                    name="log_user_email"
+                                                    name="email"
                                                     type="text"
                                                     helperText={
-                                                        logError.log_user_email_error &&
-                                                        'Saisissez un email valide'
+                                                        checkForm.emailMessage !== '' && checkForm.emailMessage
                                                     }
+                                                    inputRef={email}
                                                     fullWidth={true}
                                                     required
                                                     onChange={handleInputChange}
-                                                    value={state.log_user_email}
+                                                    value={checkForm.emailValue}
                                                     variant="outlined"
-                                                    error={logError.log_user_email_error === '' ? false : logError.log_user_email_error}
+                                                    error={
+                                                        (checkForm.emailMessage === '') ?
+                                                            false : checkForm.emailMessage
+                                                    }
                                                 />
                                             </div>
                                             <Grid container
@@ -254,22 +253,28 @@ export default function FullWidthTabs() {
                                                   alignItems="center"
                                             >
                                                 <Grid item xs={6} md={6} lg={6} alignItems="left">
-                                                    <Button value="Retour"
-                                                            variant="outlined"
-                                                    >
-                                                        <a href="/home" title="retour à l'accueil">Retour</a>
-                                                    </Button>
+                                                    <Box textAlign="left" className={classes.buttonsAction}>
+                                                        <Button value="Retour"
+                                                                variant="outlined"
+                                                        >
+                                                            <a href="/home" title="retour à l'accueil">Retour</a>
+                                                        </Button>
+                                                    </Box>
                                                 </Grid>
                                                 <Grid item xs={6} md={6} lg={6}>
                                                     <Box textAlign="right" className={classes.buttonsAction}>
-                                                        <Button
-                                                            value="Suivant"
-                                                            variant="outlined"
-                                                            className={classes.nextButton}
-                                                            onClick={handlePanel}
-                                                        >
-                                                            Suivant
-                                                        </Button>
+                                                        {
+                                                            checkForm.emailValue !== '' &&
+                                                            <Button
+                                                                value="Suivant"
+                                                                variant="outlined"
+                                                                className={classes.nextButton}
+                                                                onClick={handlePanel}
+                                                            >
+                                                                Suivant
+                                                            </Button>
+                                                        }
+
                                                     </Box>
                                                 </Grid>
                                             </Grid>
@@ -285,14 +290,15 @@ export default function FullWidthTabs() {
                                                 <TextField
                                                     id="standard-error-helper-text"
                                                     label="Mot de passe"
-                                                    name="log_user_password"
+                                                    name="password"
                                                     type="password"
-                                                    helperText={logError.log_user_password_error && "Saisissez un mot de passe valide"}
+                                                    helperText={checkForm.passwordMessage !== '' && "Saisissez un mot de passe valide"}
+                                                    inputRef={password}
                                                     fullWidth={true}
                                                     variant="outlined"
                                                     onChange={handleInputChange}
                                                     value={state.log_user_password}
-                                                    error={logError.log_user_password_error === '' ? false : logError.log_user_password_error}
+                                                    error={checkForm.passwordMessage === '' ? false : checkForm.passwordMessage}
                                                     required
                                                 />
                                             </div>

@@ -1,5 +1,4 @@
 import React, {
-    useContext,
     useEffect,
     useState,
 } from 'react'
@@ -20,8 +19,6 @@ import {
 } from '@apollo/client'
 
 import CreateIcon from '@material-ui/icons/Create'
-
-import ThemeContext from '../../context/theme-context'
 
 export default function TableRowEdit(props) {
 
@@ -64,16 +61,16 @@ export default function TableRowEdit(props) {
     const [sendValidData] = useMutation(UPDATE_VAR, {
         onCompleted: (dataUpdate) => {
             if (dataUpdate.updateUser) {
-                //A modifier (mettre dans le template) (WIP)
-                if (typeof entryValue === 'boolean') {
-                    //Comment faire mieux
-                    if (queryName === 'user_isDark'){
-                        changeTheme.theme(entryValue)
-                    }
-                    /*if (processAfterSend){
-                        processAfterSend(valueBoolean)
-                    }*/
-                }
+                // //A modifier (mettre dans le template) (WIP)
+                // if (typeof entryValue === 'boolean') {
+                //     //Comment faire mieux
+                //     if (queryName === 'user_isDark'){
+                //         changeTheme.theme(entryValue)
+                //     }
+                //     /*if (processAfterSend){
+                //         processAfterSend(valueBoolean)
+                //     }*/
+                // }
                 setError(<Typography>Changement effectué</Typography>)
             } else {
                 setError(<Typography>Erreur</Typography>)
@@ -97,7 +94,6 @@ export default function TableRowEdit(props) {
         },
     })
 
-    const changeTheme = useContext(ThemeContext)
     //Temporaire (WIP)
     const [error, setError] = useState()
 

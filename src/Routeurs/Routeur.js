@@ -3,7 +3,6 @@ import AuthContext from '../context/auth-context'
 import PublicRouteur from './Public'
 import PrivateRouteur from './Private'
 
-
 export default function Routeur() {
     
     const authContext = useContext(AuthContext)

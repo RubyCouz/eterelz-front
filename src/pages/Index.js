@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import {BrowserRouter} from 'react-router-dom'
 import {ApolloProvider} from '@apollo/client'
-
 import {
     ThemeProvider,
     createTheme,
@@ -9,18 +8,12 @@ import {
 import {
     CssBaseline,
 } from '@material-ui/core'
-
 import './Index.css'
-
 import AuthContext from '../context/auth-context'
-// import ThemeContext from '../context/theme-context'
 import {graphqlConfig} from '../context/apollo-context'
 import AvatarContext from '../context/avatar-context'
-
 import Routeur from '../Routeurs/Routeur'
 import LoadingPage from '../pages/Loading'
-
-// import useThemeEterelz from '../Hook/useThemeEterelz'
 import useAuth from '../Hook/useAuth'
 
 export default function Index() {
@@ -28,17 +21,10 @@ export default function Index() {
     const [auth, login, logout, loading] = useAuth()
 
     const [avatar, setAvatar] = useState({id: null})
-    
-    // const [theme, setTheme] = useThemeEterelz()
-
-    // useEffect(() => {
-    //     let darkModeLS = window.localStorage.getItem('darkMode')
-    //     darkModeLS !== 'null' && setTheme(darkModeLS)
-    // }, [login, logout, setTheme])
 
     const theme = createTheme({
         palette: {
-            mode: 'dark',
+            type: 'dark',
         },
     });
 
@@ -61,12 +47,7 @@ export default function Index() {
                     <ApolloProvider
                         client={graphqlConfig}
                     >
-                        {/*<ThemeContext.Provider*/}
-                        {/*    value={{*/}
-                        {/*        theme: darkTheme,*/}
-                        {/*    }}*/}
-                        {/*>*/}
-                            <ThemeProvider theme={createTheme(theme)}>
+                            <ThemeProvider theme={theme}>
                                 <CssBaseline/>
                                 {
                                     loading ?
@@ -75,7 +56,6 @@ export default function Index() {
                                         <Routeur/>
                                 }
                             </ThemeProvider>
-                        {/*</ThemeContext.Provider>*/}
                     </ApolloProvider>
                 </AvatarContext.Provider>
             </AuthContext.Provider>

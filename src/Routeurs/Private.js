@@ -1,9 +1,6 @@
 import React, {lazy, useContext} from 'react'
-
 import {Route, Redirect, Switch} from 'react-router-dom'
-
 import AuthContext from '../context/auth-context'
-
 const DashboardPage = lazy(() => import('../pages/Dashboard'))
 const AccountPage = lazy(() => import('../pages/Account/Account'))
 const TournamentsPage = lazy(() => import('../pages/Tournaments'))
@@ -13,7 +10,6 @@ const StreamsPage = lazy(() => import('../pages/Streams'))
 const StreamUser = lazy(() => import('../pages/StreamUser'))
 const BackOfficePage = lazy(() => import('../pages/BackOffice'))
 const NoFoundPage = lazy(() => import('../pages/NoFound'))
-
 
 export default function Private() {
 

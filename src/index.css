@@ -3,48 +3,45 @@ body {
   padding: 0;
   font-family: sans-serif;
   background-image: url("./bg2.jpg");
-  /*background-color: #121212 !important;*/
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   height: 100vh;
   background-attachment: fixed;
-  color: #cccccc !important;
 }
 
-.form-control label,
-.form-control input,
-.form_control textarea {
-  width: 100%;
-  display: block;
-}
+/*.form-control label,*/
+/*.form-control input,*/
+/*.form_control textarea {*/
+/*  width: 100%;*/
+/*  display: block;*/
+/*}*/
 
-.form-control label {
-  margin-bottom: 0.5rem;
-}
+/*.form-control label {*/
+/*  margin-bottom: 0.5rem;*/
+/*}*/
 
-.form-control {
-  margin-bottom: 1rem;
-}
+/*.form-control {*/
+/*  margin-bottom: 1rem;*/
+/*}*/
 
-.form-actions button, .btn{
-  background: darkgreen;
-  font: inherit;
-  border: 1px solid darkgreen;
-  border-radius: 3px;
-  padding: 0.25rem 1rem;
-  margin-right: 1rem;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.26);
-  color: floralwhite;
-  cursor: pointer;
-}
+/*.form-actions button, .btn{*/
+/*  background: darkgreen;*/
+/*  font: inherit;*/
+/*  border: 1px solid darkgreen;*/
+/*  border-radius: 3px;*/
+/*  padding: 0.25rem 1rem;*/
+/*  margin-right: 1rem;*/
+/*  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.26);*/
+/*  cursor: pointer;*/
+/*}*/
 
-.form-actions button:hover,
-.form-actions button:active,
-.btn:hover, .btn:active{
-  background: #282c34;
-  border-color: #282c34;
-}
-.fileInput {
-  display: none !important;
-}
+/*.form-actions button:hover,*/
+/*.form-actions button:active,*/
+/*.btn:hover, .btn:active{*/
+/*  background: #282c34;*/
+/*  border-color: #282c34;*/
+/*}*/
+/*.fileInput {*/
+/*  display: none !important;*/
+/*}*/

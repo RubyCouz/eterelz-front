@@ -6,249 +6,261 @@ import Button from '@material-ui/core/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@material-ui/core/Grid'
-import {useContext, useState} from 'react'
-import MuiAlert from '@material-ui/lab/Alert'
-import AuthContext from '../context/auth-context'
-import Snackbar from '@material-ui/core/Snackbar'
+import {useRef, useState} from 'react'
 import {makeStyles} from '@material-ui/core/styles'
-import { useHistory} from 'react-router-dom'
+import SnackbarError from "../Components/Snackbar/SnackbarError";
+import {Slide} from "@material-ui/core";
+import validForm from "../Tools/ValidForms";
+import {gql, useMutation} from "@apollo/client";
+import {useHistory} from "react-router-dom";
 
-// Alert
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
+function SlideTransition(props) {
+    return <Slide {...props} direction="up"/>;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     root: {
         width: '100%',
     },
     snackbar: {
         width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
-        },
     },
-    margin: {
-        margin: theme.spacing(1),
+    card: {
+        backgroundColor: '#303030'
     },
-    error: {
-        '& > *': {
-            margin: theme.spacing(1),
-        },
+    input: {
+        marginBottom: '10px'
     },
-}));
+    buttonsAction: {
+        marginTop: '10px',
+    },
+    nextButton: {
+        color: '#cccccc !important',
+        border: '1px solid #8618AD !important',
+        fontWeight: 'bold !important',
+        backgroundColor: '#8618AD !important',
+    }
+})
 
-const initialState = {
-    alert_message: '',
-    severity: '',
-    reg_user_pseudo: '',
-    reg_user_email: '',
-    reg_user_password: '',
-    reg_user_password_confirm: '',
-    log_user_email: '',
-    log_user_password: ''
-}
-const initialRequestError = {
-    errorValue: false,
-    requestRegister: false,
-}
+const CREATEUSER = gql`
+    mutation CREATEUSER($user_login: String!, $email: String!, $password: String!) {
+        createUser(
+            userInput: {
+                user_login: $user_login, user_email: $email, user_password: $password
+            }) {
+            _id
+            user_email
+        }
+    }
+`
 
 export default function Signup() {
-    const history = useHistory()
     let classes = useStyles()
-    const [state, setState] = useState({initialState})
-    const initialError = {
-        reg_user_pseudo_error: false,
-        reg_user_email_error: false,
-        reg_user_password_error: false,
-        reg_user_password_confirm_error: false,
-    }
-    //State état des textfield register
-    const [error, setError] = useState(initialError)
-    //State état des erreurs pour lancement requête
-    const [requestError] = useState(initialRequestError)
+    const history = useHistory()
+    const pseudo = useRef('')
+    const email = useRef('')
+    const password = useRef('')
+    const confirmPassword = useRef('')
+
+    const [state, setState] = useState({
+        alert_message: '',
+        severity: '',
+    })
     // état de l'alerte
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
+    const [sBar, setSbar] = useState({
+        Transition: Slide,
+        vertical: 'bottom',
+        horizontal: 'center',
+    })
+    const [checkForm, setCheckForm] = useState({
+        pseudoValue: '',
+        pseudoMessage: '',
+        emailValue: '',
+        passwordValue: '',
+        emailMessage: '',
+        passwordMessage: '',
+        confirmPasswordValue: '',
+        confirmPasswordMessage: ''
+    })
+    const {vertical, horizontal} = sBar
 
-    const regexlist = {
-        reg_user_pseudo: new RegExp("^[^@&\"()<>!_$*€£`+=\\/;?#]+$"),
-        reg_user_email: new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$"),
-        reg_user_password: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
-        reg_user_password_confirm: new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"),
+    const [createUser, {error}] = useMutation(
+        CREATEUSER, {
+            variables: {
+                user_login: pseudo.current.value,
+                email: email.current.value,
+                password: password.current.value
+            },
+            errorPolicy: 'all',
+            onCompleted: data => {
+                console.log(data)
+                setState({
+                    ...state,
+                    severity: 'success',
+                    alert_message: 'Inscription effectuée'
+                })
+                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                return history.push('/verifyAccount')
+            },
+            onError: (({networkError}) => {
+                if (networkError) {
+                    error.networkError.result.errors.map(({message, status}) => {
+                        setState({
+                            ...state,
+                            severity: 'error',
+                            alert_message: message
+                        })
+                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        return error
+                    })
+                }
+            })
+        }
+    )
+
+
+    const handleInputChange = async (event) => {
+        const value = event.target.value;
+        const input = event.target.name;
+        const response = await validForm(input, value)
+        setCheckForm({
+            ...checkForm,
+            [input + 'Value']: value,
+            [input + 'Message']: response
+        })
     }
 
-    const context = useContext(AuthContext)
-
-    const handleInputChange = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-        const regall = !regexlist[name].test(value)
-        setState({
-            ...state, [name]: value
-        });
-        //Le name + 'Error' permet de renvoyer le nom de l'erreur
-        setError({
-            ...error,
-            [name + '_error']: regall
-        });
-    };
-
-    const handleClick = () => {
-        setOpen(true);
-    };
+    const handleClick = (Transition, newSbar) => {
+        setOpen(true)
+        setSbar({
+            Transition,
+            ...newSbar
+        })
+    }
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-
-        setOpen(false);
+        setOpen(false)
     }
 
-    // const login = () => {
-    //     let requestBody = {
-    //         query: `
-    //                 query Login($user_email: String!, $user_password: String!) {
-    //                     login(
-    //                         user_email: $user_email,
-    //                         user_password: $user_password
-    //                         ) {
-    //                         token
-    //                         }
-    //                     }
-    //                 `,
-    //         variables: {
-    //             user_email: state.reg_user_email,
-    //             user_password: state.reg_user_password
-    //         }
-    //     }
-    //     //connexion api et envoie en post les infos format json
-    //     fetch('http://localhost:8080/api', {
-    //         method: 'POST',
-    //         body: JSON.stringify(requestBody),
-    //         credentials: 'include',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-    //         //si erreur
-    //         .then(res => {
-    //             if (res.status !== 200 && res.status !== 201) {
-    //                 throw new Error('Failed')
-    //             }
-    //             return res.json()
-    //         })
-    //         .then(resData => {
-    //             //si erreur
-    //             if (resData.errors) {
-    //                 state.severity = 'error'
-    //                 state.alert_message = resData.errors[0].message;
-    //                 handleClick();
-    //             }
-    //             if (resData.data.login) {
-    //                 // si checkbox cochée
-    //                 // if (state.stayLogged) {
-    //                 // défintion cookie
-    //                 // }
-    //                 context.login()
-    //             }
-    //         })
-    //         .catch(err => {
-    //             state.severity = 'error'
-    //             state.alert_message = 'Information incorrect'
-    //             handleClick()
-    //         })
-    // }
-    //formulaire validation inscription
-    const signup = () => {
-        // trim retire les "blancs" espace tabulation ect ...
-        if (state.reg_user_email.trim().length === 0 || state.reg_user_password.trim().length === 0) {
-            return
-        }
-        //si mdp 1 différent de mdp 2
-        if (state.reg_user_password_confirm !== state.reg_user_password) {
-            state.alert_message = "Mots de passes différents";
-            requestError.requestRegister = false
-            handleClick();
-        }
-        if (requestError.requestRegister === true) {
-            let requestRegister = {
-                query: `
-                    mutation CreateUser($user_login: String!, $user_email: String!, $user_password: String!) {
-                        createUser(userInput: {
-                            user_login: $user_login,
-                            user_email: $user_email,
-                            user_password: $user_password
-                        })
-                        {
-                        _id
-                        user_login
-                        user_email                        
-                        }
-                    }
-                    `,
-                variables: {
-                    user_login: state.reg_user_pseudo,
-                    user_email: state.reg_user_email,
-                    user_password: state.reg_user_password
-                }
-            }
-            fetch('http://localhost:8080/api', {
-                method: 'POST',
-                body: JSON.stringify(requestRegister),
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+    const signup = async () => {
+        if (password.current.value !== confirmPassword.current.value) {
+            console.log('mdp !=')
+            setState({
+                ...state,
+                severity: 'error',
+                alert_message: 'Les mots de passe doivent être identique'
             })
-                .then(res => {
-                    if (res.status !== 200 && res.status !== 201) {
-                        throw new Error('Failed')
-                    }
-                    return res.json()
+            handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+        } else if (checkForm.passwordValue === '' ||
+            checkForm.emailValue === '' ||
+            checkForm.pseudoValue === '' ||
+            checkForm.confirmPasswordValue === ''
+        ) {
+            console.log('champs vide')
+            setState({
+                ...state,
+                severity: 'error',
+                alert_message: 'Vous devez remplir entièrement ce formulaire pour le valider'
+            })
+            handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+        } else if (checkForm.pseudoMessage !== '' ||
+            checkForm.emailMessage !== '' ||
+            checkForm.passwordMessage !== '' ||
+            checkForm.confirmPasswordMessage !== '') {
+            console.log('données ivalide')
+            if (checkForm.emailMessage !== '') {
+                setState({
+                    ...state,
+                    severity: 'error',
+                    alert_message: checkForm.emailMessage
                 })
-                .then(resData => {
-                    if (resData.errors) {
-                        state.severity = 'error'
-                        state.alert_message = resData.errors[0].message;
-                        handleClick();
-                    } else {
-                        state.severity = "success"
-                        state.alert_message = "Validation de l'inscription"
-                        // login()
-                        handleClick()
-                        // redirection pour vérification de compte
-                         return history.push(`/verifyAccount`)
-                    }
-                    if (resData.data.login) {
-                        context.login(
-                            resData.data.login.token,
-                        )
-                    }
+                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+            }
+            if (checkForm.passwordMessage !== '') {
+                setState({
+                    ...state,
+                    severity: 'error',
+                    alert_message: checkForm.passwordMessage
                 })
-                .catch(err => {
-                    console.log(err)
+                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+            }
+            if (checkForm.pseudoMessage !== '') {
+                setState({
+                    ...state,
+                    severity: 'error',
+                    alert_message: checkForm.pseudoMessage
                 })
-            state.severity = "success"
-            state.alert_message = "Validation de l'inscription"
-            handleClick()
-        } else {
-            state.severity = 'error';
-            state.alert_message = 'Information incorrect';
-            handleClick();
-        }
-    };
+                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+            }
+            if (checkForm.confirmPasswordMessage !== '') {
+                setState({
+                    ...state,
+                    severity: 'error',
+                    alert_message: checkForm.confirmPasswordMessage
+                })
+                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+            }
 
-    requestError.requestRegister = true
-//parcours l'objet error et vérifie si un élément retourne false
-    for (const i in error) {
-        requestError.errorValue = error[i];
-        if (requestError.errorValue === true) {
-            requestError.requestRegister = false
+        } else {
+            try {
+                await createUser()
+                // return history.push('/verifyAccount')
+            } catch (e) {
+                console.log(e)
+            }
         }
     }
-    requestError.requestLogin = true
+
+
+//     fetch('http://localhost:8080/api', {
+//         method: 'POST',
+//         body: JSON.stringify(requestRegister),
+//         credentials: 'include',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         }
+//     })
+//         .then(res => {
+//             if (res.status !== 200 && res.status !== 201) {
+//                 throw new Error('Failed')
+//             }
+//             return res.json()
+//         })
+//         .then(resData => {
+//             if (resData.errors) {
+//                 state.severity = 'error'
+//                 state.alert_message = resData.errors[0].message;
+//                 handleClick();
+//             } else {
+//                 state.severity = "success"
+//                 state.alert_message = "Validation de l'inscription"
+//                 // login()
+//                 handleClick()
+//                 // redirection pour vérification de compte
+//                  return history.push(`/verifyAccount`)
+//             }
+//             if (resData.data.login) {
+//                 context.login(
+//                     resData.data.login.token,
+//                 )
+//             }
+//         })
+//         .catch(err => {
+//             console.log(err)
+//         })
+//     state.severity = "success"
+//     state.alert_message = "Validation de l'inscription"
+//     handleClick()
+// } else {
+//     state.severity = 'error';
+//     state.alert_message = 'Information incorrect';
+//     handleClick();
+// }
+
 
     return (
         <Box sx={{flexGrow: 1}}>
@@ -264,83 +276,144 @@ export default function Signup() {
                     <Card sx={{
                         minWidth: 275,
                         marginTop: '35%'
-                    }}>
-                        <CardContent>
+                    }}
+                          className={classes.card}
+                    >
+                        <CardContent
+                            className={classes.card}>
                             <Typography variant="body2">
-                                <form className="auth-form">
+                                <form>
                                     <h1>Inscription</h1>
-                                    <div className="form-control">
-                                        <TextField
-                                            id="standard-error-helper-text"
-                                            label="Pseudo"
-                                            name="reg_user_pseudo"
-                                            type="text"
-                                            helperText="Caractères spéciaux non autorisés"
-                                            onChange={handleInputChange}
-                                            value={state.reg_user_pseudo}
-                                            fullWidth={true}
-                                            required
-                                            error={error.reg_user_pseudo_error}
-                                        />
-                                        <TextField
-                                            id="standard-error-helper-text"
-                                            label="Email"
-                                            name="reg_user_email"
-                                            type="text"
-                                            helperText="Entrer votre email"
-                                            onChange={handleInputChange}
-                                            value={state.reg_user_email}
-                                            fullWidth={true}
-                                            required
-                                            error={error.reg_user_email_error}
-                                        />
-                                        <TextField
-                                            id="standard-error-helper-text"
-                                            label="Mot de passe"
-                                            name="reg_user_password"
-                                            type="password"
-                                            helperText="Mot de passe doit contenir 8 caractères, une majuscule, une minuscule et un chiffre"
-                                            onChange={handleInputChange}
-                                            value={state.reg_user_password}
-                                            fullWidth={true}
-                                            required
-                                            error={error.reg_user_password_error}
-                                        />
-                                        <TextField
-                                            id="standard-error-helper-text"
-                                            label="Vérification de mot de passe"
-                                            name="reg_user_password_confirm"
-                                            type="password"
-                                            helperText="Entrer une seconde fois votre mot de passe."
-                                            onChange={handleInputChange}
-                                            value={state.reg_user_password_confirm}
-                                            fullWidth={true}
-                                            required
-                                            error={error.reg_user_password_confirm_error}
-                                        />
-                                        <Button value="Annuler"
+                                    <Grid
+                                        container
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <Grid item xs={12} md={12} lg={12}>
+                                            <TextField
+                                                className={classes.input}
+                                                id="login"
+                                                label="Pseudo"
+                                                name="pseudo"
+                                                type="text"
+                                                inputRef={pseudo}
+                                                helperText={checkForm.pseudoMessage !== '' && checkForm.pseudoMessage}
                                                 variant="outlined"
-                                        >
-                                            <a href="/home" title="retour à l'accueil">Retour</a>
-                                        </Button>
-                                        <Button value="Signup"
+                                                onChange={handleInputChange}
+                                                value={checkForm.pseudoValue}
+                                                fullWidth={true}
+                                                required
+                                                error={checkForm.pseudoMessage === '' ? false : checkForm.pseudoMessage}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid
+                                        container
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <Grid item xs={12} md={12} lg={12}>
+                                            <TextField
+                                                className={classes.input}
+                                                id="email"
+                                                label="Email"
+                                                name="email"
+                                                inputRef={email}
+                                                type="text"
+                                                helperText={checkForm.emailMessage !== '' && checkForm.emailMessage}
                                                 variant="outlined"
-                                                onClick={signup}
-                                        >
-                                            S'inscrire
-                                        </Button>
-                                    </div>
-                                    <div className={classes.snackbar}>
-                                        <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-                                            <Alert onClose={handleClose} severity={state.severity}>
-                                                {state.alert_message}
-                                            </Alert>
-                                        </Snackbar>
-                                    </div>
+                                                onChange={handleInputChange}
+                                                value={checkForm.emailValue}
+                                                fullWidth={true}
+                                                required
+                                                error={checkForm.emailMessage === '' ? false : checkForm.emailMessage}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid
+                                        container
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <Grid item xs={12} md={12} lg={12}>
+                                            <TextField
+                                                className={classes.input}
+                                                id="standard-error-helper-text"
+                                                label="Mot de passe"
+                                                name="password"
+                                                inputRef={password}
+                                                type="text"
+                                                helperText={checkForm.passwordMessage !== '' && checkForm.passwordMessage}
+                                                variant="outlined"
+                                                onChange={handleInputChange}
+                                                value={checkForm.passwordValue}
+                                                fullWidth={true}
+                                                required
+                                                error={checkForm.passwordMessage === '' ? false : checkForm.passwordMessage}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid
+                                        container
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <Grid item xs={12} md={12} lg={12}>
+                                            <TextField
+                                                className={classes.input}
+                                                id="standard-error-helper-text"
+                                                label="Vérification de mot de passe"
+                                                name="confirmPassword"
+                                                inputRef={confirmPassword}
+                                                type="text"
+                                                variant="outlined"
+                                                helperText={checkForm.confirmPasswordMessage !== '' && checkForm.confirmPasswordMessage}
+                                                onChange={handleInputChange}
+                                                value={checkForm.confirmPasswordValue}
+                                                fullWidth={true}
+                                                required
+                                                error={checkForm.confirmPasswordMessage === '' ? false : checkForm.confirmPasswordMessage}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid
+                                        container
+                                    >
+                                        <Grid item xs={6} md={6} lg={6}>
+                                            <Button value="Annuler"
+                                                    variant="outlined"
+                                            >
+                                                <a href="/auth" title="retour à la connexion">Retour</a>
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={6} md={6} lg={6}>
+                                            <Box textAlign="right" className={classes.buttonsAction}>
+                                                <Button value="Signup"
+                                                        variant="contained"
+                                                        color="primary"
+                                                        justifyContent="flex-end"
+                                                        onClick={signup}
+                                                        className={classes.nextButton}
+                                                >
+                                                    S'inscrire
+                                                </Button>
+                                            </Box>
+                                        </Grid>
+                                    </Grid>
                                 </form>
                             </Typography>
                         </CardContent>
                     </Card>
+                    <SnackbarError
+                        class={classes.snackbar}
+                        anchorOrigin={{vertical, horizontal}}
+                        open={open}
+                        transitionComponent={sBar.Transition}
+                        onClose={handleClose}
+                        message={state.alert_message}
+                        key={sBar.Transition.name}
+                        severity={state.severity}
+                    />
                 </Grid>
                 <Grid item xs>
 

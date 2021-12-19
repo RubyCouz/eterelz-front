@@ -8,7 +8,6 @@ const SignupPage = lazy(() => import('../pages/Signup'))
 const NoFoundPage = lazy(() => import('../pages/NoFound'))
 const ConfirmAccountPage = lazy(() => import('../pages/VerifyAccount'))
 
-
 export default function Public() {
     return (
         <Switch>

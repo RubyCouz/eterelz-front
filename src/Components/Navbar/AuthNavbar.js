@@ -110,7 +110,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AuthNavbar(props) {
     const auth = useContext(AuthContext)
-    console.log(auth)
     const classes = useStyles()
 
     const [state, setState] = React.useState({
