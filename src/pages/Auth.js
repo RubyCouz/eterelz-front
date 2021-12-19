@@ -139,7 +139,7 @@ export default function Auth() {
             },
             onError: (({networkError}) => {
                 if (networkError) {
-                    error.networkError.result.errors.map(({message, status}) => {
+                    networkError.result.errors.map(({message, status}) => {
                         setState({
                             ...state,
                             severity: 'error',
