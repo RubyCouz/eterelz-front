@@ -4,11 +4,11 @@ import AuthContext from '../context/auth-context'
 import {makeStyles} from '@material-ui/core/styles'
 import 'animate.css'
 import clsx from 'clsx'
-import {gql, useLazyQuery} from '@apollo/client'
+import { useLazyQuery} from '@apollo/client'
 import {Slide} from "@material-ui/core";
 import SnackbarError from '../Components/Snackbar/SnackbarError'
 import validForm from "../Tools/ValidForms";
-
+import {LOGIN} from '../Queries/UserQueries'
 function SlideTransition(props) {
     return <Slide {...props} direction="up"/>;
 }
@@ -76,13 +76,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const LOGIN = gql`
-    query LOGIN($email: String!, $password: String!) {
-        login(user_email: $email, user_password: $password) {
-            token
-        }
-    }
-`
+// const LOGIN = gql`
+//     query LOGIN($email: String!, $password: String!) {
+//         login(user_email: $email, user_password: $password) {
+//             token
+//         }
+//     }
+// `
 
 export default function Auth() {
     let classes = useStyles()

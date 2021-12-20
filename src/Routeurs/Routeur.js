@@ -17,9 +17,9 @@ export default function Routeur() {
             {
                 token ?
                     isActive ?
-                        <PublicRouteur/>
-                        :
                         <PrivateRouteur/>
+                        :
+                    <PublicRouteur/>
                     :
                     <PublicRouteur/>
             }
