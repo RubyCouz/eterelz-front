@@ -119,7 +119,6 @@ export default function Signup() {
         }
     )
 
-
     const handleInputChange = async (event) => {
         const value = event.target.value;
         const input = event.target.name;

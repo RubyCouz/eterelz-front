@@ -76,14 +76,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-// const LOGIN = gql`
-//     query LOGIN($email: String!, $password: String!) {
-//         login(user_email: $email, user_password: $password) {
-//             token
-//         }
-//     }
-// `
-
 export default function Auth() {
     let classes = useStyles()
     const email = useRef('')

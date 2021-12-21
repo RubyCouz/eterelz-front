@@ -5,7 +5,6 @@ import PrivateRouteur from './Private'
 export default function Routeur() {
 
     const authContext = useContext(AuthContext)
-    console.log(authContext)
     let isActive
     if(authContext.playload !== null) {
         isActive = authContext.playload.is_active

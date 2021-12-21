@@ -1,5 +1,6 @@
 // import React from 'react'
 import {gql} from '@apollo/client'
+
 /**
  * création d'un utilisateur
  * @type {DocumentNode}
@@ -63,3 +64,16 @@ export const UPDATE_USER = gql`
         }
     }
 `;
+/**
+ * ajout d'utilisateur par admin
+ * @type {DocumentNode}
+ */
+export const CREATEDBYADMIN = gql`
+    mutation createdByAdmin($email: String!) {
+        createdByAdmin(email: $email) {
+            _id
+            user_login
+            user_email
+        }
+    }
+`

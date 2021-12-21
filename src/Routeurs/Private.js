@@ -8,7 +8,7 @@ const EventsPage = lazy(() => import('../pages/Events'))
 const ClansPage = lazy(() => import('../pages/Clan'))
 const StreamsPage = lazy(() => import('../pages/Streams'))
 const StreamUser = lazy(() => import('../pages/StreamUser'))
-const BackOfficePage = lazy(() => import('../pages/BackOffice'))
+const BackOfficePage = lazy(() => import('../pages/Admin/BackOffice'))
 const NoFoundPage = lazy(() => import('../pages/NoFound'))
 
 export default function Private() {
