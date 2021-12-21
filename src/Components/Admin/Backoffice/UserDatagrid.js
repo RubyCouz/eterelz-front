@@ -303,12 +303,13 @@ export default function UserDatagrid() {
             errorPolicy: 'all',
             onCompleted: data2 => {
                 console.log(data2)
+                handleClose()
             },
             onError: error => {
                 console.log(error)
             }
         })
-        handleClose()
+
         return user
     }
     return (

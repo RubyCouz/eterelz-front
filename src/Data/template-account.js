@@ -1,6 +1,6 @@
 import processDisplayFormatDate from "../Tools/FormatDate"
 import processDisplayDiffTime from "../Tools/DiffTime"
-import templateRegex from '../Data/template-regex'
+import templateRegex from './template-regex'
 
 /*
 const processAfterSendModifiedTheme = (valueBoolean) => {

@@ -25,8 +25,8 @@ export default function UpdateUserForm(props) {
         userStateMessage: '',
     })
     const handleInputChange = async (event) => {
-        const value = event.target.value;
-        const input = event.target.name;
+        const value = event.target.value
+        const input = event.target.name
         const response = await validForm(input, value)
         setCheckForm({
             ...checkForm,

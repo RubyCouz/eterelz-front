@@ -1,4 +1,7 @@
 const templateRegex = {
+    /**
+     * form User
+     */
     pseudo : {
         regex : new RegExp('^[^@&\'()<>!_$*€£`+=\\/;?#]+$'),
         message : 'Caractères spéciaux non autorisés dans le pseudo',
@@ -46,6 +49,24 @@ const templateRegex = {
     },
     userState : {
         regex : new RegExp('^[a-zA-Zàâäéèëêùûüìîïòôöçãñõ\\s\\-]+$'),
+        message : 'Etat non valide',
+        message_empty: 'Vous devez remplir ce champs'
+    },
+    /**
+     * form Game
+     */
+    gameName : {
+        regex : new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        message : 'Titre du jeu non valide',
+        message_empty: 'Vous devez remplir ce champs'
+    },
+    gameDesc : {
+        regex : new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        message : 'Etat non valide',
+        message_empty: 'Vous devez remplir ce champs'
+    },
+    gamePic : {
+        regex : new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
         message : 'Etat non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
