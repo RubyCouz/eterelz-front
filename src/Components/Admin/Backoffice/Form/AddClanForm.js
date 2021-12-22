@@ -61,7 +61,7 @@ export default function AddUserForm(props) {
                             id="outlined-basic"
                             label="Description"
                             variant="outlined"
-                            type="datetime-local"
+                            type="text"
                             inputRef={props.input.clanDesc}
                             helperText={checkForm.clanDescMessage !== '' && checkForm.clanDescMessage}
                             error={checkForm.clanDescMessage !== ''}
@@ -152,10 +152,9 @@ export default function AddUserForm(props) {
                     </FormControl>
                 </Grid>
             </Grid>
-            <Grid container spacing={2}
-            >
+            <Grid container spacing={2}>
                 <Grid item xs={6} md={6} lg={6}>
-                    <Button onClick={props.handleClose}>Retour</Button>
+                    <Button onClick={props.handleCloseModal}>Retour</Button>
                 </Grid>
                 <Grid item xs={6} md={6} lg={6}>
                     <Button onClick={() => {props.addClan()}}>Valider</Button>

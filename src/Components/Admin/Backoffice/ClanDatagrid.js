@@ -150,6 +150,7 @@ export default function ClanDatagrid () {
     };
     // affichage menu action dans dataGrid
     const ActionMenu = ({index, clan}) => {
+        console.log(clan)
         const handleModal = async () => (
             setState({
                 ...state,
@@ -184,7 +185,7 @@ export default function ClanDatagrid () {
         {field: 'col6', headerName: 'Recrutement', flex: 1},
         {field: 'col7', headerName: 'En activité', flex: 1},
         {field: 'col8', headerName: 'Créateur', flex: 1},
-        {field: 'col9', headerName: 'Créé le', flex: 1},
+        {field: 'col9', headerName: 'Dans la commu depuis le', flex: 1},
         {field: 'col10', headerName: 'Dernière mise à jour', flex: 1},
         {
             field: 'col11',
@@ -197,7 +198,7 @@ export default function ClanDatagrid () {
                     <div className="d-flex justify-content-between align-items-center" style={{cursor: "pointer"}}>
                         <ActionMenu
                             index={params.row.id}
-                            user={params.value.clan}
+                            clan={params.value.clan}
                         />
                     </div>
                 )
@@ -207,13 +208,14 @@ export default function ClanDatagrid () {
     if (data !== undefined) {
         let i = 1
         data.clans.map((clan, key) => {
+            console.log(clan)
             const userData = {
                 id: i,
                 col1: clan.clan_banner,
-                col2: clan.event_name,
-                col3: clan.event_desc,
+                col2: clan.clan_name,
+                col3: clan.clan_desc,
                 col4: clan.clan_discord,
-                col5: clan.clan_membre,
+                col5: clan.clan_population,
                 col6: clan.clan_recrut,
                 col7: clan.clan_activity,
                 col8: clan.clan_creator.user_login,
@@ -229,7 +231,7 @@ export default function ClanDatagrid () {
     const addClan = () => {
         createClan({
             variables: {
-                createEvent: {
+                createClan: {
                     clan_name: ref.clanName.current.value,
                     clan_desc: ref.clanDesc.current.value,
                     clan_banner: ref.clanBanner.current.value,

@@ -27,7 +27,8 @@ export default function UpdateUserForm(props) {
     const handleInputChange = async (event) => {
         const value = event.target.value
         const input = event.target.name
-        const response = await validForm(input, value)
+        const required = event.target.required
+        const response = await validForm(input, value, required)
         setCheckForm({
             ...checkForm,
             [input + 'Value']: value,
@@ -60,6 +61,7 @@ export default function UpdateUserForm(props) {
                             name="pseudo"
                             value={checkForm.pseudoValue}
                             onChange={handleInputChange}
+                            required
                         />
                     </FormControl>
                 </Grid>
@@ -79,9 +81,9 @@ export default function UpdateUserForm(props) {
                             name="email"
                             value={checkForm.emailValue}
                             onChange={handleInputChange}
+                            required
                         />
                     </FormControl>
-
                 </Grid>
                 <Grid
                     item
@@ -203,7 +205,7 @@ export default function UpdateUserForm(props) {
                     item
                     xs={6} md={6} lg={6}
                 >
-                    <Button onClick={props.handleClose}>Retour</Button>
+                    <Button onClick={props.handleCloseModal}>Retour</Button>
                 </Grid>
                 <Grid
                     item

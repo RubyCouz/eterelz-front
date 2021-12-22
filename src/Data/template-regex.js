@@ -96,7 +96,12 @@ const templateRegex = {
 
     clanName: {
         regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
-        message: 'Description non valide',
+        message: 'Nom de clan non valide',
+        message_empty: 'Vous devez remplir ce champs'
+    },
+    clanDate: {
+        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        message: 'Date non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanDesc: {
@@ -106,27 +111,27 @@ const templateRegex = {
     },
     clanBanner: {
         regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
-        message: 'Description non valide',
+        message: 'Fichier non pris en charge',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanDiscord: {
         regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
-        message: 'Description non valide',
+        message: 'Nom de serveur discord discord non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanPopulation: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
-        message: 'Description non valide',
+        regex: new RegExp('^[\\d]+$'),
+        message: 'Seuls les nombres sont acceptés',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanRecrut: {
         regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
-        message: 'Description non valide',
+        message: 'Champ non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanActivity: {
         regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
-        message: 'Description non valide',
+        message: 'Champ non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
 }

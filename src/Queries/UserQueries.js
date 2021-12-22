@@ -39,6 +39,11 @@ export const USER_QUERY = gql`
         user_role
         createdAt
         user_isActive
+        user_discord
+        user_address
+        user_zip
+        user_city
+        user_state
     }
 `;
 /**

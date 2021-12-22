@@ -15,13 +15,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@material-ui/icons/Edit";
 import BlockIcon from "@mui/icons-material/Block";
 import Loading from "../../../pages/Loading";
-import {Backdrop, Box, LinearProgress, Modal} from "@material-ui/core";
+import {Backdrop, Box, LinearProgress, Modal, Slide} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import UpdateUserForm from './Form/UpdateUserForm'
 import AddUserForm from "./Form/AddUserForm";
 import formatDate from "../../../Tools/FormatDate";
 import styled from "@emotion/styled";
+import SnackbarError from "../../Snackbar/SnackbarError";
+import {makeStyles} from "@material-ui/core/styles";
 
 const style = {
     position: 'absolute',
@@ -34,7 +36,7 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
+const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
     flexDirection: 'column',
     '& .ant-empty-img-1': {
         fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626',
@@ -53,16 +55,18 @@ const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
         fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
 }));
+
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
         <GridOverlay>
-            <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-                <LinearProgress />
+            <div style={{position: 'absolute', top: 0, width: '100%'}}>
+                <LinearProgress/>
             </div>
         </GridOverlay>
     );
 }
+
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
@@ -101,17 +105,32 @@ function CustomNoRowsOverlay() {
                         d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z"
                     />
                     <g className="ant-empty-img-4" transform="translate(149.65 15.383)">
-                        <ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" />
-                        <path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" />
+                        <ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815"/>
+                        <path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z"/>
                     </g>
                 </g>
             </svg>
-            <Box sx={{ mt: 1 }}>No Rows</Box>
+            <Box sx={{mt: 1}}>No Rows</Box>
         </StyledGridOverlay>
     );
 }
 
+// effet apparitions alert
+function SlideTransition(props) {
+    return <Slide {...props} direction="up"/>;
+}
+
+const useStyle = makeStyles((theme) => ({
+    snackbar: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+    },
+}))
+
 export default function UserDatagrid() {
+    const classes = useStyle()
     const {data} = useQuery(LIST_USERS);
     const [updateUser] = useMutation(UPDATE_USER, {
         refetchQueries: [{query: LIST_USERS}],
@@ -121,18 +140,27 @@ export default function UserDatagrid() {
     })
     const [state, setState] = useState({
         openModal: false,
-        user: ''
+        user: '',
+        alert_message: '',
+        severity: '',
+        error: ''
     })
-
+    const [open, setOpen] = useState(false)
+    const [sBar, setSbar] = useState({
+        Transition: Slide,
+        vertical: 'bottom',
+        horizontal: 'center',
+    });
+    const {vertical, horizontal} = sBar
     const ref = {
-         login: useRef(''),
-         email: useRef(''),
-         address: useRef(''),
-         city: useRef(''),
-         role: useRef(''),
-         zip: useRef(''),
-         userState: useRef(''),
-         discord: useRef(''),
+        login: useRef(''),
+        email: useRef(''),
+        address: useRef(''),
+        city: useRef(''),
+        role: useRef(''),
+        zip: useRef(''),
+        userState: useRef(''),
+        discord: useRef(''),
     }
     // construction dataGrid
     const rows: GridRowsProp = []
@@ -179,6 +207,8 @@ export default function UserDatagrid() {
             })
         },
     ]
+
+
     const handleModalCreate = async () => (
         setState({
             ...state,
@@ -186,11 +216,27 @@ export default function UserDatagrid() {
             openModal: true
         })
     )
-    const handleClose = () => {
+    const handleCloseModal = () => {
         setState({
             ...state, openModal: false
         })
     };
+
+    const handleClick = (Transition, newSbar) => {
+        setOpen(true)
+        setSbar({
+            Transition,
+            ...newSbar
+        })
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false)
+    }
+
     // sélection icon actif ou non
     const IsActiveIcon = ({index, bool}) => {
         if (bool) {
@@ -235,9 +281,30 @@ export default function UserDatagrid() {
                             id: user._id,
                             update: {user_isActive: !user.user_isActive},
                         },
-                    });
-                }
-                }
+                        errorPolicy: 'all',
+                        onCompleted: data => {
+                            setState({
+                                ...state,
+                                severity: 'success',
+                                alert_message: 'Modification effectuée'
+                            })
+                            handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        },
+                        onError: (({networkError}) => {
+                            if (networkError) {
+                                networkError.result.errors.map(({message, status}) => {
+                                    setState({
+                                        ...state,
+                                        severity: 'error',
+                                        alert_message: message
+                                    })
+                                    handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                                    return null
+                                })
+                            }
+                        })
+                    })
+                }}
             >
                 <BlockIcon style={{color: red[500]}}/>
             </IconButton>
@@ -275,12 +342,27 @@ export default function UserDatagrid() {
             },
             errorPolicy: 'all',
             onCompleted: data1 => {
-                console.log(data1)
-                handleClose()
+                setState({
+                    ...state,
+                    severity: 'success',
+                    alert_message: 'Invitation envoyée'
+                })
+                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                handleCloseModal()
             },
-            onError: error => {
-                console.log(error)
-            }
+            onError: (({networkError}) => {
+                if (networkError) {
+                    networkError.result.errors.map(({message, status}) => {
+                        setState({
+                            ...state,
+                            severity: 'error',
+                            alert_message: message
+                        })
+                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        return null
+                    })
+                }
+            })
         })
     }
 // mis à jour des infos utilisateur
@@ -300,13 +382,28 @@ export default function UserDatagrid() {
                 }
             },
             errorPolicy: 'all',
-            onCompleted: data2 => {
-                console.log(data2)
-                handleClose()
+            onCompleted: data => {
+                setState({
+                    ...state,
+                    severity: 'success',
+                    alert_message: 'Modification effectuée'
+                })
+                 handleCloseModal()
+                // await handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
             },
-            onError: error => {
-                console.log(error)
-            }
+            onError: (({networkError}) => {
+                if (networkError) {
+                    networkError.result.errors.map(({message, status}) => {
+                        setState({
+                            ...state,
+                            severity: 'error',
+                            alert_message: message
+                        })
+                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        return networkError
+                    })
+                }
+            })
         })
 
         return user
@@ -336,7 +433,7 @@ export default function UserDatagrid() {
                     />
                     <Modal
                         open={state.openModal}
-                        onClose={handleClose}
+                        onClose={handleCloseModal}
                         key={state.user !== null ? state.user._id : 'createUserModal'}
                         closeAfterTransition
                         BackdropComponent={Backdrop}
@@ -347,23 +444,35 @@ export default function UserDatagrid() {
                                 item
                                 xs={12} md={12} lg={12}
                             >
+                                {state.networkError &&
+                                state.networkError.result.errors.map(({message, status}) => {
+                                    setState({
+                                        ...state,
+                                        severity: 'error',
+                                        alert_message: message
+                                    })
+
+                                    handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                                    return null
+                                })
+                                }
                                 {state.user ?
                                     <UpdateUserForm
-                                    style={style}
-                                    input={ref}
-                                    state={state}
-                                    handleClose={() => {
-                                        handleClose()
-                                    }}
-                                    updateProfil={() => {
-                                        updateProfil(state.user)
-                                    }}
+                                        style={style}
+                                        input={ref}
+                                        state={state}
+                                        handleCloseModal={() => {
+                                            handleCloseModal()
+                                        }}
+                                        updateProfil={() => {
+                                            updateProfil(state.user)
+                                        }}
                                     /> :
                                     <AddUserForm
                                         style={style}
                                         refEmail={ref.email}
-                                        handleClose={() => {
-                                            handleClose()
+                                        handleCloseModal={() => {
+                                            handleCloseModal()
                                         }}
                                         createUserProfil={() => {
                                             createUserProfil()
@@ -375,6 +484,16 @@ export default function UserDatagrid() {
                     </Modal>
                 </div>
             }
+            <SnackbarError
+                class={classes.snackbar}
+                anchorOrigin={{vertical, horizontal}}
+                open={open}
+                transitionComponent={sBar.Transition}
+                onClose={handleClose}
+                message={state.alert_message}
+                key={sBar.Transition.name}
+                severity={state.severity}
+            />
         </>
     )
 }

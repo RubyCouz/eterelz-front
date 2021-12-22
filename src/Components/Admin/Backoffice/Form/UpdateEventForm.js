@@ -3,6 +3,10 @@ import Grid from "@material-ui/core/Grid";
 import {Box, FormControl, TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import validForm from "../../../../Tools/ValidForms";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import {Stack} from "@mui/material";
+import {DesktopDateTimePicker} from "@mui/lab";
 
 export default function UpdateEventForm(props) {
     const [checkForm, setCheckForm] = useState({
@@ -17,6 +21,8 @@ export default function UpdateEventForm(props) {
         eventWinnerValue: '',
         eventWinnerMessage: '',
     })
+    const [value, setValue] = React.useState(new Date(checkForm.eventDescValue ? checkForm.eventDescValue : ''));
+
     const handleInputChange = async (event) => {
         const value = event.target.value
         const input = event.target.name
@@ -37,6 +43,22 @@ export default function UpdateEventForm(props) {
             <Grid container spacing={2}>
                 <Grid item xs={12} md={12} lg={12}>
                     <FormControl fullWidth>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <Stack spacing={3}>
+                                <DesktopDateTimePicker
+                                    label="Date de l'évènement"
+                                    value={value}
+                                    onChange={(newValue) => {
+                                        setValue(newValue);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} variant="outlined" name="eventDate" inputRef={props.input.eventDate}/>}
+                                />
+                            </Stack>
+                        </LocalizationProvider>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={12} lg={12}>
+                    <FormControl fullWidth>
                         <TextField
                             id="outlined-basic"
                             label="Nom de l'event"
@@ -47,22 +69,6 @@ export default function UpdateEventForm(props) {
                             error={checkForm.eventNameMessage !== ''}
                             name="eventName"
                             value={checkForm.eventNameValue ? checkForm.eventNameValue : ''}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={12} lg={12}>
-                    <FormControl fullWidth>
-                        <TextField
-                            id="outlined-basic"
-                            label="Date"
-                            variant="outlined"
-                            type="datetime-local"
-                            inputRef={props.input.eventDate}
-                            helperText={checkForm.eventDateMessage !== '' && checkForm.eventDateMessage}
-                            error={checkForm.eventDateMessage !== ''}
-                            name="email"
-                            value={checkForm.eventDateValue ? checkForm.eventDateValue : ''}
                             onChange={handleInputChange}
                         />
                     </FormControl>
@@ -87,7 +93,7 @@ export default function UpdateEventForm(props) {
             <Grid container spacing={2}
             >
                 <Grid item xs={6} md={6} lg={6}>
-                    <Button onClick={props.handleClose}>Retour</Button>
+                    <Button onClick={props.handleCloseModal}>Retour</Button>
                 </Grid>
                 <Grid item xs={6} md={6} lg={6}>
                     <Button onClick={() => {props.updateEvent(props.state.game)}}>Valider</Button>

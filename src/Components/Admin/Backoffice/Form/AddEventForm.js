@@ -3,18 +3,17 @@ import Grid from "@material-ui/core/Grid";
 import {Box, FormControl, TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import validForm from "../../../../Tools/ValidForms";
-import DateTimePicker from '@mui/lab/DateTimePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {Stack} from "@mui/material";
-import {DesktopDateTimePicker, MobileDateTimePicker} from "@mui/lab";
+import {DesktopDateTimePicker} from "@mui/lab";
 
 export default function AddUserForm(props) {
     const [checkForm, setCheckForm] = useState({
         eventNameValue: '',
         eventNameMessage: '',
-        // eventDateValue: '',
-        // eventDateMessage: '',
+        eventDateValue: '',
+        eventDateMessage: '',
         eventDescValue: '',
         eventDescMessage: '',
         eventScoreValue: '',
@@ -22,10 +21,8 @@ export default function AddUserForm(props) {
         eventWinnerValue: '',
         eventWinnerMessage: '',
     })
-    const [value, setValue] = React.useState(new Date(checkForm.eventDescValue ? checkForm.eventDescValue : ''));
-    const handleChange = (newValue) => {
-        setValue(newValue);
-    };
+    const [value, setValue] = React.useState(new Date(checkForm.eventDateValue ? checkForm.eventDateValue : ''));
+
     const handleInputChange = async (event) => {
         const value = event.target.value
         const input = event.target.name
@@ -54,7 +51,7 @@ export default function AddUserForm(props) {
                                     onChange={(newValue) => {
                                         setValue(newValue);
                                     }}
-                                    renderInput={(params) => <TextField {...params} variant="outlined" />}
+                                    renderInput={(params) => <TextField {...params} variant="outlined" name="eventDate" inputRef={props.input.eventDate}/>}
                                 />
                             </Stack>
                         </LocalizationProvider>
@@ -86,7 +83,7 @@ export default function AddUserForm(props) {
                             inputRef={props.input.eventDesc}
                             helperText={checkForm.eventDescMessage !== '' && checkForm.eventDescMessage}
                             error={checkForm.eventDescMessage !== ''}
-                            name="email"
+                            name="eventDesc"
                             value={checkForm.eventDescValue ? checkForm.eventDescValue : ''}
                             onChange={handleInputChange}
                         />
@@ -96,7 +93,7 @@ export default function AddUserForm(props) {
             <Grid container spacing={2}
             >
                 <Grid item xs={6} md={6} lg={6}>
-                    <Button onClick={props.handleClose}>Retour</Button>
+                    <Button onClick={props.handleCloseModal}>Retour</Button>
                 </Grid>
                 <Grid item xs={6} md={6} lg={6}>
                     <Button onClick={() => {

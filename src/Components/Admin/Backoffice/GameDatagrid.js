@@ -58,7 +58,6 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
 }));
-
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
@@ -69,7 +68,6 @@ function CustomLoadingOverlay() {
         </GridOverlay>
     );
 }
-
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
