@@ -82,3 +82,10 @@ export const CREATEDBYADMIN = gql`
         }
     }
 `
+
+export const DELETEUSER = gql`
+mutation deleteUser($id: ID!) {
+    deleteUser(id: $id) {
+        _id
+    }
+}`

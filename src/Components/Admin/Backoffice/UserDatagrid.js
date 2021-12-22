@@ -1,4 +1,5 @@
 import React, {
+    useContext,
     useRef,
     useState
 } from 'react'
@@ -6,24 +7,27 @@ import {
     useMutation,
     useQuery
 } from '@apollo/client'
-import {LIST_USERS, UPDATE_USER, CREATEDBYADMIN} from "../../../Queries/UserQueries";
-import {DataGrid, GridColDef, GridOverlay, GridRowsProp, GridToolbar} from "@mui/x-data-grid";
-import IconButton from "@material-ui/core/IconButton";
-import CheckIcon from "@mui/icons-material/Check";
-import {blue, green, red} from "@material-ui/core/colors";
-import CloseIcon from "@mui/icons-material/Close";
-import EditIcon from "@material-ui/icons/Edit";
-import BlockIcon from "@mui/icons-material/Block";
-import Loading from "../../../pages/Loading";
-import {Backdrop, Box, LinearProgress, Modal, Slide} from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import {LIST_USERS, UPDATE_USER, CREATEDBYADMIN, DELETEUSER} from "../../../Queries/UserQueries"
+import {DataGrid, GridColDef, GridOverlay, GridRowsProp, GridToolbar} from "@mui/x-data-grid"
+import IconButton from "@material-ui/core/IconButton"
+import CheckIcon from "@mui/icons-material/Check"
+import {blue, green, red} from "@material-ui/core/colors"
+import CloseIcon from "@mui/icons-material/Close"
+import EditIcon from "@material-ui/icons/Edit"
+import BlockIcon from "@mui/icons-material/Block"
+import Loading from "../../../pages/Loading"
+import {Backdrop, Box, LinearProgress, Modal, Slide} from "@material-ui/core"
+import Grid from "@material-ui/core/Grid"
+import Button from "@material-ui/core/Button"
 import UpdateUserForm from './Form/UpdateUserForm'
-import AddUserForm from "./Form/AddUserForm";
-import formatDate from "../../../Tools/FormatDate";
-import styled from "@emotion/styled";
-import SnackbarError from "../../Snackbar/SnackbarError";
-import {makeStyles} from "@material-ui/core/styles";
+import AddUserForm from "./Form/AddUserForm"
+import formatDate from "../../../Tools/FormatDate"
+import styled from "@emotion/styled"
+import SnackbarError from "../../Snackbar/SnackbarError"
+import {makeStyles} from "@material-ui/core/styles"
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import Typography from "@material-ui/core/Typography";
+import AuthContext from '../../../context/auth-context'
 
 const style = {
     position: 'absolute',
@@ -35,7 +39,7 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-};
+}
 const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
     flexDirection: 'column',
     '& .ant-empty-img-1': {
@@ -54,7 +58,7 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
         fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
-}));
+}))
 
 // barre de chargement de données
 function CustomLoadingOverlay() {
@@ -117,7 +121,7 @@ function CustomNoRowsOverlay() {
 
 // effet apparitions alert
 function SlideTransition(props) {
-    return <Slide {...props} direction="up"/>;
+    return <Slide {...props} direction="up"/>
 }
 
 const useStyle = makeStyles((theme) => ({
@@ -130,15 +134,21 @@ const useStyle = makeStyles((theme) => ({
 }))
 
 export default function UserDatagrid() {
+    const auth = useContext(AuthContext)
+    console.log(auth)
     const classes = useStyle()
-    const {data} = useQuery(LIST_USERS);
+    const {data} = useQuery(LIST_USERS)
     const [updateUser] = useMutation(UPDATE_USER, {
         refetchQueries: [{query: LIST_USERS}],
-    });
+    })
     const [createdByAdmin] = useMutation(CREATEDBYADMIN, {
         refetchQueries: [{query: LIST_USERS}]
     })
+    const [deleteUser] = useMutation(DELETEUSER, {
+        refetchQueries: [{query: LIST_USERS}]
+    })
     const [state, setState] = useState({
+        deleteModal: false,
         openModal: false,
         user: '',
         alert_message: '',
@@ -208,6 +218,13 @@ export default function UserDatagrid() {
         },
     ]
 
+    const handleDeleteModal = async (user) => (
+        setState({
+            ...state,
+            user: user,
+            deleteModal: true
+        })
+    )
 
     const handleModalCreate = async () => (
         setState({
@@ -218,9 +235,11 @@ export default function UserDatagrid() {
     )
     const handleCloseModal = () => {
         setState({
-            ...state, openModal: false
+            ...state,
+            openModal: false,
+            deleteModal: false
         })
-    };
+    }
 
     const handleClick = (Transition, newSbar) => {
         setOpen(true)
@@ -259,7 +278,7 @@ export default function UserDatagrid() {
             setState({
                 ...state,
                 user: user,
-                openModal: true
+                openModal: true,
             })
         )
         return <div>
@@ -308,6 +327,19 @@ export default function UserDatagrid() {
             >
                 <BlockIcon style={{color: red[500]}}/>
             </IconButton>
+            {user._id !== auth.playload.userId &&
+            <IconButton
+                color="secondary"
+                aria-label="Delete user"
+                id={'delete' + user._id}
+                onClick={() => {
+                    handleDeleteModal(user)
+                }}
+            >
+                <DeleteForeverIcon style={{color: red[500]}}
+                />
+            </IconButton>
+            }
         </div>
     }
     // envoie de data dans le tableau rows et dans la modal
@@ -388,7 +420,7 @@ export default function UserDatagrid() {
                     severity: 'success',
                     alert_message: 'Modification effectuée'
                 })
-                 handleCloseModal()
+                handleCloseModal()
                 // await handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
             },
             onError: (({networkError}) => {
@@ -407,6 +439,36 @@ export default function UserDatagrid() {
         })
 
         return user
+    }
+    const deleteProfil = (user) => {
+        deleteUser({
+            variables: {
+                id: user._id
+            },
+            errorPolicy: 'all',
+            onCompleted: data => {
+                setState({
+                    ...state,
+                    severity: 'success',
+                    alert_message: 'Modification effectuée'
+                })
+                handleCloseModal()
+                // await handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+            },
+            onError: (({networkError}) => {
+                if (networkError) {
+                    networkError.result.errors.map(({message, status}) => {
+                        setState({
+                            ...state,
+                            severity: 'error',
+                            alert_message: message
+                        })
+                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        return networkError
+                    })
+                }
+            })
+        })
     }
     return (
         <>
@@ -431,6 +493,7 @@ export default function UserDatagrid() {
                             NoRowsOverlay: CustomNoRowsOverlay,
                         }}
                     />
+                    {state.openModal &&
                     <Modal
                         open={state.openModal}
                         onClose={handleCloseModal}
@@ -444,18 +507,6 @@ export default function UserDatagrid() {
                                 item
                                 xs={12} md={12} lg={12}
                             >
-                                {state.networkError &&
-                                state.networkError.result.errors.map(({message, status}) => {
-                                    setState({
-                                        ...state,
-                                        severity: 'error',
-                                        alert_message: message
-                                    })
-
-                                    handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
-                                    return null
-                                })
-                                }
                                 {state.user ?
                                     <UpdateUserForm
                                         style={style}
@@ -482,6 +533,51 @@ export default function UserDatagrid() {
                             </Grid>
                         </Grid>
                     </Modal>
+                    }
+                    {
+                        state.deleteModal &&
+                        <Modal
+                            open={state.deleteModal}
+                            onClose={handleCloseModal}
+                            key={state.user.user_id}
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{timeout: 500}}
+                        >
+                            <Grid container>
+                                <Grid
+                                    item
+                                    xs={12} md={12} lg={12}
+                                >
+                                    <Box sx={style}>
+                                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                                            Suppression de
+                                            l'utilisateur {state.user.user_login ? state.user.user_login : state.user.user_email}
+                                        </Typography>
+                                        <Typography id="modal-modal-description" sx={{mt: 2}}>
+                                            Etes-vous sûr de vouloir supprimer cet utilisateur ?
+                                        </Typography>
+                                        <Grid container spacing={2}>
+                                            <Grid
+                                                item
+                                                xs={6} md={6} lg={6}
+                                            >
+                                                <Button onClick={handleCloseModal}>Retour</Button>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={6} md={6} lg={6}
+                                            >
+                                                <Button onClick={() => {
+                                                    deleteProfil(state.user)
+                                                }}>Valider</Button>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </Modal>
+                    }
                 </div>
             }
             <SnackbarError
