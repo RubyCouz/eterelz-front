@@ -1,16 +1,20 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import styled from '@emotion/styled'
 import {DataGrid, GridColDef, GridOverlay, GridRowsProp, GridToolbar} from '@mui/x-data-grid'
 import {Backdrop, Box, LinearProgress, Modal} from '@material-ui/core'
 import Loading from "../../../pages/Loading";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import UpdateUserForm from "./Form/UpdateUserForm";
-import AddUserForm from "./Form/AddUserForm";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import {green, red} from "@material-ui/core/colors";
 import BlockIcon from "@mui/icons-material/Block";
+import {LISTEVENT, CREATEEVENT, UPDATEEVENT} from '../../../Queries/EventQueries'
+import {useMutation, useQuery} from "@apollo/client";
+import formatDate from "../../../Tools/FormatDate";
+import AddEventForm from './Form/AddEventForm'
+import UpdateEventForm from './Form/UpdateEventForm'
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -22,7 +26,7 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
+const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
     flexDirection: 'column',
     '& .ant-empty-img-1': {
         // fill: '#262626',
@@ -31,12 +35,12 @@ const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
     },
     '& .ant-empty-img-2': {
         // fill: '#595959',
-        fill:'#f5f5f7',
+        fill: '#f5f5f7',
         // fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959',
     },
     '& .ant-empty-img-3': {
         // fill: '#434343',
-        fill: '#dce0e6' ,
+        fill: '#dce0e6',
         // fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343',
     },
     '& .ant-empty-img-4': {
@@ -57,8 +61,8 @@ const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
 function CustomLoadingOverlay() {
     return (
         <GridOverlay>
-            <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-                <LinearProgress />
+            <div style={{position: 'absolute', top: 0, width: '100%'}}>
+                <LinearProgress/>
             </div>
         </GridOverlay>
     );
@@ -101,28 +105,50 @@ function CustomNoRowsOverlay() {
                         d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z"
                     />
                     <g className="ant-empty-img-4" transform="translate(149.65 15.383)">
-                        <ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" />
-                        <path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" />
+                        <ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815"/>
+                        <path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z"/>
                     </g>
                 </g>
             </svg>
-            <Box sx={{ mt: 1 }}>No Rows</Box>
+            <Box sx={{mt: 1}}>No Rows</Box>
         </StyledGridOverlay>
     );
 }
 
-export default function EventDatagrid () {
+export default function EventDatagrid() {
     const [state, setState] = useState({
         openModal: false,
-        user: ''
+        event: ''
     })
-
+    const ref = {
+        eventName: useRef(''),
+        eventDesc: useRef(''),
+    }
+    const {data} = useQuery(LISTEVENT)
+    const [createEvent] = useMutation(CREATEEVENT, {
+        refetchQueries: [{query: LISTEVENT}]
+    })
+    const [updateEvent] = useMutation(UPDATEEVENT, {
+        refetchQueries: [{query: UPDATEEVENT}]
+    })
+    const handleModalCreate = async () => (
+        setState({
+            ...state,
+            event: null,
+            openModal: true
+        })
+    )
+    const handleClose = () => {
+        setState({
+            ...state, openModal: false
+        })
+    };
     // affichage menu action dans dataGrid
-    const ActionMenu = ({index, user}) => {
+    const ActionMenu = ({index, event}) => {
         const handleModal = async () => (
             setState({
                 ...state,
-                user: user,
+                event: event,
                 openModal: true
             })
         )
@@ -130,7 +156,10 @@ export default function EventDatagrid () {
             <IconButton
                 color="secondary"
                 aria-label="add an alarm"
-                id={user._id}
+                id={event._id}
+                onClick={() => {
+                    handleModal()
+                }}
             >
                 <EditIcon style={{color: green[500]}}
                 />
@@ -142,7 +171,7 @@ export default function EventDatagrid () {
     }
     const rows: GridRowsProp = []
     const columns: GridColDef[] = [
-        {field: 'col1', headerName: 'Nom', flex: 1},
+        {field: 'col1', headerName: 'Nom de l\'event', flex: 1},
         {field: 'col2', headerName: 'Date', flex: 1},
         {field: 'col3', headerName: 'Description', flex: 1},
         {field: 'col4', headerName: 'Créateur', flex: 1},
@@ -161,13 +190,73 @@ export default function EventDatagrid () {
                     <div className="d-flex justify-content-between align-items-center" style={{cursor: "pointer"}}>
                         <ActionMenu
                             index={params.row.id}
-                            user={params.value.user}
+                            event={params.value.event}
                         />
                     </div>
                 )
             })
         },
     ]
+    if (data !== undefined) {
+        let i = 1
+        data.events.map((event, key) => {
+            const userData = {
+                id: i,
+                col1: event.event_name,
+                col2: event.event_date,
+                col3: event.event_desc,
+                col4: event.event_creator.user_login,
+                col5: event.event_score,
+                col6: event.event_winner,
+                col7: formatDate(event.createdAt),
+                col8: formatDate(event.updatedAt),
+                col9: {event: event}
+            }
+            rows.push(userData)
+            i++
+            return rows
+        })
+    }
+    const addEvent = () => {
+        createEvent({
+            variables: {
+                createEvent: {
+                    event_name: ref.eventName.current.value,
+                    event_date: ref.eventDate.current.value,
+                    event_desc: ref.eventDesc.current.value,
+                }
+            },
+            errorPolicy: 'all',
+            onCompleted: data => {
+                console.log(data)
+                handleClose()
+            },
+            onError: error => {
+                console.log(error)
+            }
+        })
+    }
+    const updateEventInfo = (event) => {
+        updateEvent({
+            variables: {
+                id: event._id,
+                update: {
+                    event_name: ref.eventName.current.value,
+                    event_date: ref.eventDate.current.value,
+                    event_desc: ref.eventDesc.current.value,
+                }
+            },
+            errorPolicy: 'all',
+            onCompleted: data => {
+                console.log(data)
+                handleClose()
+            },
+            onError: error => {
+                console.log(error)
+            }
+        })
+        return event
+    }
     return (
         <>
             {/*{data === undefined ?*/}
@@ -176,58 +265,63 @@ export default function EventDatagrid () {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={12} lg={12}>
                         <Box textAlign="right">
-                            <Button color="secondary">Ajouter un évènement</Button>
+                            <Button color="secondary" onClick={() => {
+                                handleModalCreate()
+                            }}>Ajouter un évènement</Button>
                         </Box>
                     </Grid>
                 </Grid>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    components={{
-                        Toolbar: GridToolbar,
-                        LoadingOverlay: CustomLoadingOverlay,
-                        NoRowsOverlay: CustomNoRowsOverlay,
-                    }}
-                />
-                {/*<Modal*/}
-                {/*    open={state.openModal}*/}
-                {/*    onClose={handleClose}*/}
-                {/*    key={state.user !== null ? state.user._id : 'createUserModal'}*/}
-                {/*    closeAfterTransition*/}
-                {/*    BackdropComponent={Backdrop}*/}
-                {/*    BackdropProps={{timeout: 500}}*/}
-                {/*>*/}
-                {/*    <Grid container>*/}
-                {/*        <Grid*/}
-                {/*            item*/}
-                {/*            xs={12} md={12} lg={12}*/}
-                {/*        >*/}
-                {/*            {state.user ?*/}
-                {/*                <UpdateUserForm*/}
-                {/*                    style={style}*/}
-                {/*                    input={ref}*/}
-                {/*                    state={state}*/}
-                {/*                    handleClose={() => {*/}
-                {/*                        handleClose()*/}
-                {/*                    }}*/}
-                {/*                    updateProfil={() => {*/}
-                {/*                        updateProfil(state.user)*/}
-                {/*                    }}*/}
-                {/*                /> :*/}
-                {/*                <AddUserForm*/}
-                {/*                    style={style}*/}
-                {/*                    refEmail={ref.email}*/}
-                {/*                    handleClose={() => {*/}
-                {/*                        handleClose()*/}
-                {/*                    }}*/}
-                {/*                    createUserProfil={() => {*/}
-                {/*                        createUserProfil()*/}
-                {/*                    }}*/}
-                {/*                />*/}
-                {/*            }*/}
-                {/*        </Grid>*/}
-                {/*    </Grid>*/}
-                {/*</Modal>*/}
+                {data ?
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        components={{
+                            Toolbar: GridToolbar,
+                            LoadingOverlay: CustomLoadingOverlay,
+                            NoRowsOverlay: CustomNoRowsOverlay,
+                        }}
+                    /> :
+                    <Loading/>
+                }
+                <Modal
+                    open={state.openModal}
+                    onClose={handleClose}
+                    key={state.event !== null ? state.event._id : 'createEventModal'}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{timeout: 500}}
+                >
+                    <Grid container>
+                        <Grid
+                            item
+                            xs={12} md={12} lg={12}
+                        >
+                            {state.event ?
+                                <UpdateEventForm
+                                    style={style}
+                                    input={ref}
+                                    state={state}
+                                    handleClose={() => {
+                                        handleClose()
+                                    }}
+                                    updateEvent={() => {
+                                        updateEventInfo(state.event)
+                                    }}
+                                /> :
+                                <AddEventForm
+                                    style={style}
+                                    input={ref}
+                                    handleClose={() => {
+                                        handleClose()
+                                    }}
+                                    addEvent={() => {
+                                        addEvent()
+                                    }}
+                                />
+                            }
+                        </Grid>
+                    </Grid>
+                </Modal>
             </div>
             }
         </>

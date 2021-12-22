@@ -1,16 +1,20 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import styled from '@emotion/styled'
 import {DataGrid, GridColDef, GridOverlay, GridRowsProp, GridToolbar} from '@mui/x-data-grid'
 import {Backdrop, Box, LinearProgress, Modal} from '@material-ui/core'
 import Loading from "../../../pages/Loading";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import UpdateUserForm from "./Form/UpdateUserForm";
-import AddUserForm from "./Form/AddUserForm";
+import AddClanForm from "./Form/AddClanForm";
+import UpdateClanForm from './Form/UpdateClanForm'
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import {green, red} from "@material-ui/core/colors";
 import BlockIcon from "@mui/icons-material/Block";
+import {useMutation, useQuery} from "@apollo/client";
+import {LISTCLAN, CREATECLAN, UPDATECLAN} from "../../../Queries/ClanQueries";
+import formatDate from "../../../Tools/FormatDate";
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -114,15 +118,42 @@ function CustomNoRowsOverlay() {
 export default function ClanDatagrid () {
     const [state, setState] = useState({
         openModal: false,
-        user: ''
+        clan: ''
     })
-
+    const ref = {
+        clanName: useRef(''),
+        clanDesc: useRef(''),
+        clanBanner: useRef(''),
+        clanDiscord: useRef(''),
+        clanPopulation: useRef(''),
+        clanRecrut: useRef(''),
+        clanActivity: useRef(''),
+    }
+    const {data} = useQuery(LISTCLAN)
+    const [createClan] = useMutation(CREATECLAN, {
+        refetchQueries: [{query: LISTCLAN}]
+    })
+    const [updateClan] = useMutation(UPDATECLAN, {
+        refetchQueries: [{query: LISTCLAN}]
+    })
+    const handleModalCreate = async () => (
+        setState({
+            ...state,
+            clan: null,
+            openModal: true
+        })
+    )
+    const handleClose = () => {
+        setState({
+            ...state, openModal: false
+        })
+    };
     // affichage menu action dans dataGrid
-    const ActionMenu = ({index, user}) => {
+    const ActionMenu = ({index, clan}) => {
         const handleModal = async () => (
             setState({
                 ...state,
-                user: user,
+                clan: clan,
                 openModal: true
             })
         )
@@ -130,7 +161,10 @@ export default function ClanDatagrid () {
             <IconButton
                 color="secondary"
                 aria-label="add an alarm"
-                id={user._id}
+                id={clan._id}
+                onClick={() => {
+                    handleModal()
+                }}
             >
                 <EditIcon style={{color: green[500]}}
                 />
@@ -142,19 +176,18 @@ export default function ClanDatagrid () {
     }
     const rows: GridRowsProp = []
     const columns: GridColDef[] = [
-        {field: 'col1', headerName: 'Nom', flex: 1},
-        {field: 'col2', headerName: 'Date', flex: 1},
+        {field: 'col1', headerName: 'Bannière', flex: 1},
+        {field: 'col2', headerName: 'Nom du clan', flex: 1},
         {field: 'col3', headerName: 'Description', flex: 1},
-        {field: 'col4', headerName: 'Bannière', flex: 1},
-        {field: 'col5', headerName: 'Discord', flex: 1},
-        {field: 'col6', headerName: 'Nombre de membres', flex: 1},
-        {field: 'col7', headerName: 'Recrutement', flex: 1},
-        {field: 'col8', headerName: 'En activité', flex: 1},
-        {field: 'col9', headerName: 'Créateur', flex: 1},
-        {field: 'col10', headerName: 'Créé le', flex: 1},
-        {field: 'col11', headerName: 'Dernière mise à jour', flex: 1},
+        {field: 'col4', headerName: 'Discord', flex: 1},
+        {field: 'col5', headerName: 'Nombre de membres', flex: 1},
+        {field: 'col6', headerName: 'Recrutement', flex: 1},
+        {field: 'col7', headerName: 'En activité', flex: 1},
+        {field: 'col8', headerName: 'Créateur', flex: 1},
+        {field: 'col9', headerName: 'Créé le', flex: 1},
+        {field: 'col10', headerName: 'Dernière mise à jour', flex: 1},
         {
-            field: 'col12',
+            field: 'col11',
             headerName: 'Action',
             flex: 1,
             sortable: false,
@@ -164,13 +197,83 @@ export default function ClanDatagrid () {
                     <div className="d-flex justify-content-between align-items-center" style={{cursor: "pointer"}}>
                         <ActionMenu
                             index={params.row.id}
-                            user={params.value.user}
+                            user={params.value.clan}
                         />
                     </div>
                 )
             })
         },
     ]
+    if (data !== undefined) {
+        let i = 1
+        data.clans.map((clan, key) => {
+            const userData = {
+                id: i,
+                col1: clan.clan_banner,
+                col2: clan.event_name,
+                col3: clan.event_desc,
+                col4: clan.clan_discord,
+                col5: clan.clan_membre,
+                col6: clan.clan_recrut,
+                col7: clan.clan_activity,
+                col8: clan.clan_creator.user_login,
+                col9: formatDate(clan.createdAt),
+                col10: formatDate(clan.updatedAt),
+                col11: {clan: clan}
+            }
+            rows.push(userData)
+            i++
+            return rows
+        })
+    }
+    const addClan = () => {
+        createClan({
+            variables: {
+                createEvent: {
+                    clan_name: ref.clanName.current.value,
+                    clan_desc: ref.clanDesc.current.value,
+                    clan_banner: ref.clanBanner.current.value,
+                    clan_discord: ref.clanDiscord.current.value,
+                    clan_population: ref.clanPopulation.current.value,
+                    clan_recrut:ref.clanRecrut.current.value,
+                    clan_activity: ref.clanActivity.current.value,
+                }
+            },
+            errorPolicy: 'all',
+            onCompleted: data => {
+                console.log(data)
+                handleClose()
+            },
+            onError: error => {
+                console.log(error)
+            }
+        })
+    }
+    const updateClanInfo = (clan) => {
+        updateClan({
+            variables: {
+                id: clan._id,
+                update: {
+                    clan_name: ref.clanName.current.value,
+                    clan_desc: ref.clanDesc.current.value,
+                    clan_banner: ref.clanBanner.current.value,
+                    clan_discord: ref.clanDiscord.current.value,
+                    clan_population: ref.clanPopulation.current.value,
+                    clan_recrut:ref.clanRecrut.current.value,
+                    clan_activity: ref.clanActivity.current.value,
+                }
+            },
+            errorPolicy: 'all',
+            onCompleted: data => {
+                console.log(data)
+                handleClose()
+            },
+            onError: error => {
+                console.log(error)
+            }
+        })
+        return clan
+    }
     return (
         <>
             {/*{data === undefined ?*/}
@@ -179,58 +282,63 @@ export default function ClanDatagrid () {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={12} lg={12}>
                         <Box textAlign="right">
-                            <Button color="secondary">Ajouter un clan</Button>
+                            <Button color="secondary" onClick={() => {
+                                handleModalCreate()
+                            }}>Ajouter un clan</Button>
                         </Box>
                     </Grid>
                 </Grid>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    components={{
-                        Toolbar: GridToolbar,
-                        LoadingOverlay: CustomLoadingOverlay,
-                        NoRowsOverlay: CustomNoRowsOverlay,
-                    }}
-                />
-                {/*<Modal*/}
-                {/*    open={state.openModal}*/}
-                {/*    onClose={handleClose}*/}
-                {/*    key={state.user !== null ? state.user._id : 'createUserModal'}*/}
-                {/*    closeAfterTransition*/}
-                {/*    BackdropComponent={Backdrop}*/}
-                {/*    BackdropProps={{timeout: 500}}*/}
-                {/*>*/}
-                {/*    <Grid container>*/}
-                {/*        <Grid*/}
-                {/*            item*/}
-                {/*            xs={12} md={12} lg={12}*/}
-                {/*        >*/}
-                {/*            {state.user ?*/}
-                {/*                <UpdateUserForm*/}
-                {/*                    style={style}*/}
-                {/*                    input={ref}*/}
-                {/*                    state={state}*/}
-                {/*                    handleClose={() => {*/}
-                {/*                        handleClose()*/}
-                {/*                    }}*/}
-                {/*                    updateProfil={() => {*/}
-                {/*                        updateProfil(state.user)*/}
-                {/*                    }}*/}
-                {/*                /> :*/}
-                {/*                <AddUserForm*/}
-                {/*                    style={style}*/}
-                {/*                    refEmail={ref.email}*/}
-                {/*                    handleClose={() => {*/}
-                {/*                        handleClose()*/}
-                {/*                    }}*/}
-                {/*                    createUserProfil={() => {*/}
-                {/*                        createUserProfil()*/}
-                {/*                    }}*/}
-                {/*                />*/}
-                {/*            }*/}
-                {/*        </Grid>*/}
-                {/*    </Grid>*/}
-                {/*</Modal>*/}
+                {data ?
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        components={{
+                            Toolbar: GridToolbar,
+                            LoadingOverlay: CustomLoadingOverlay,
+                            NoRowsOverlay: CustomNoRowsOverlay,
+                        }}
+                    /> :
+                    <Loading/>
+                }
+                <Modal
+                    open={state.openModal}
+                    onClose={handleClose}
+                    key={state.clan !== null ? state.clan._id : 'createClanModal'}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{timeout: 500}}
+                >
+                    <Grid container>
+                        <Grid
+                            item
+                            xs={12} md={12} lg={12}
+                        >
+                            {state.clan ?
+                                <UpdateClanForm
+                                    style={style}
+                                    input={ref}
+                                    state={state}
+                                    handleClose={() => {
+                                        handleClose()
+                                    }}
+                                    updateClan={() => {
+                                        updateClanInfo(state.clan)
+                                    }}
+                                /> :
+                                <AddClanForm
+                                    style={style}
+                                    input={ref}
+                                    handleClose={() => {
+                                        handleClose()
+                                    }}
+                                    addClan={() => {
+                                        addClan()
+                                    }}
+                                />
+                            }
+                        </Grid>
+                    </Grid>
+                </Modal>
             </div>
             }
         </>

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.20",
+    "@date-io/date-fns": "^2.11.0",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
@@ -63,6 +64,7 @@
   "devDependencies": {
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@material-ui/icons": "^4.11.2",
+    "@mui/lab": "^5.0.0-alpha.61",
     "@mui/material": "^5.0.2",
     "@widgetbot/react-embed": "^1.4.0",
     "clsx": "^1.1.1",

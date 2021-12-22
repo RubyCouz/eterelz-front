@@ -37,9 +37,12 @@ export const LISTGAMES = gql`
             ...GameQuery
         }
     }`
-
+/**
+ * modification jeu
+ * @type {DocumentNode}
+ */
 export const UPDATEGAME = gql`
-mutation UpdateGame($id: ID!, $update: GameUpdateInput!) {
+mutation UpdateGame($id: ID!, $update: GameInput!) {
     updateGame(_id: $id, GameInput: $update) {
         _id
     }

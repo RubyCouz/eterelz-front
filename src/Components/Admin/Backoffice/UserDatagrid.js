@@ -285,7 +285,6 @@ export default function UserDatagrid() {
     }
 // mis à jour des infos utilisateur
     const updateProfil = (user) => {
-        console.log(user._id)
         updateUser({
             variables: {
                 id: user._id,

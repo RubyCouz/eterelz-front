@@ -4,14 +4,18 @@ import {Box, FormControl, TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import validForm from "../../../../Tools/ValidForms";
 
-export default function AddGameForm(props) {
+export default function UpdateEventForm(props) {
     const [checkForm, setCheckForm] = useState({
-        gameNameValue: '',
-        gameNameMessage: '',
-        gameDescValue: '',
-        gameDescMessage: '',
-        gamePicValue: '',
-        gamePicMessage: '',
+        eventNameValue: '',
+        eventNameMessage: '',
+        eventDateValue: '',
+        eventDateMessage: '',
+        eventDescValue: '',
+        eventDescMessage: '',
+        eventScoreValue: '',
+        eventScoreMessage: '',
+        eventWinnerValue: '',
+        eventWinnerMessage: '',
     })
     const handleInputChange = async (event) => {
         const value = event.target.value
@@ -35,14 +39,30 @@ export default function AddGameForm(props) {
                     <FormControl fullWidth>
                         <TextField
                             id="outlined-basic"
-                            label="Titre"
+                            label="Nom de l'event"
                             variant="outlined"
                             type="text"
-                            inputRef={props.input.gameName}
-                            helperText={checkForm.gameNameMessage !== '' && checkForm.gameNameMessage}
-                            error={checkForm.gameNameMessage !== ''}
-                            name="gameName"
-                            value={checkForm.gameNameValue ? checkForm.gameNameValue : ''}
+                            inputRef={props.input.eventName}
+                            helperText={checkForm.eventNameMessage !== '' && checkForm.eventNameMessage}
+                            error={checkForm.eventNameMessage !== ''}
+                            name="eventName"
+                            value={checkForm.eventNameValue ? checkForm.eventNameValue : ''}
+                            onChange={handleInputChange}
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={12} lg={12}>
+                    <FormControl fullWidth>
+                        <TextField
+                            id="outlined-basic"
+                            label="Date"
+                            variant="outlined"
+                            type="datetime-local"
+                            inputRef={props.input.eventDate}
+                            helperText={checkForm.eventDateMessage !== '' && checkForm.eventDateMessage}
+                            error={checkForm.eventDateMessage !== ''}
+                            name="email"
+                            value={checkForm.eventDateValue ? checkForm.eventDateValue : ''}
                             onChange={handleInputChange}
                         />
                     </FormControl>
@@ -54,27 +74,11 @@ export default function AddGameForm(props) {
                             label="Description"
                             variant="outlined"
                             type="text"
-                            inputRef={props.input.gameDesc}
-                            helperText={checkForm.gameDescMessage !== '' && checkForm.gameDescMessage}
-                            error={checkForm.gameDescMessage !== ''}
-                            name="gameDesc"
-                            value={checkForm.gameDescValue ? checkForm.gameDescValue : ''}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={12} lg={12}>
-                    <FormControl fullWidth>
-                        <TextField
-                            id="outlined-basic"
-                            label="Image"
-                            variant="outlined"
-                            type="text"
-                            inputRef={props.input.gamePic}
-                            helperText={checkForm.gamePicMessage !== '' && checkForm.gamePicMessage}
-                            error={checkForm.gamePicMessage !== ''}
-                            name="gamePic"
-                            value={checkForm.gamePicValue ? checkForm.gamePicValue : ''}
+                            inputRef={props.input.eventDesc}
+                            helperText={checkForm.eventDescMessage !== '' && checkForm.eventDescMessage}
+                            error={checkForm.eventDescMessage !== ''}
+                            name="email"
+                            value={checkForm.eventDescValue ? checkForm.eventDescValue : ''}
                             onChange={handleInputChange}
                         />
                     </FormControl>
@@ -86,7 +90,7 @@ export default function AddGameForm(props) {
                     <Button onClick={props.handleClose}>Retour</Button>
                 </Grid>
                 <Grid item xs={6} md={6} lg={6}>
-                    <Button onClick={() => {props.addGame()}}>Valider</Button>
+                    <Button onClick={() => {props.updateEvent(props.state.game)}}>Valider</Button>
                 </Grid>
             </Grid>
         </Box>

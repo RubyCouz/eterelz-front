@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react'
+import React, {useRef, useState} from 'react'
 import styled from '@emotion/styled'
 import {DataGrid, GridColDef, GridOverlay, GridRowsProp, GridToolbar} from '@mui/x-data-grid'
 import {Backdrop, Box, LinearProgress, Modal} from '@material-ui/core'
@@ -14,7 +14,6 @@ import {useMutation, useQuery} from "@apollo/client";
 import formatDate from "../../../Tools/FormatDate";
 import AddGameForm from './Form/AddGameForm'
 import UpdateGameForm from './Form/UpdateGameForm'
-import isAuth from '../../../context/auth-context'
 
 
 const style = {
@@ -120,7 +119,6 @@ function CustomNoRowsOverlay() {
 }
 
 export default function GameDatagrid() {
-    const auth = useContext(isAuth)
     const [state, setState] = useState({
         openModal: false,
         game: ''
@@ -228,9 +226,9 @@ export default function GameDatagrid() {
         createGame({
             variables: {
                 createGame: {
-                    game_name: ref.name.current.value,
-                    game_desc: ref.desc.current.value,
-                    game_pic: ref.desc.current.value,
+                    game_name: ref.gameName.current.value,
+                    game_desc: ref.gameDesc.current.value,
+                    game_pic: ref.gamePic.current.value,
                     // game_creator: auth.playload.userId
                 }
             },
@@ -274,8 +272,7 @@ export default function GameDatagrid() {
                             <Box textAlign="right">
                                 <Button color="secondary" onClick={() => {
                                     handleModalCreate()
-                                }
-                                }>Ajouter un jeu</Button>
+                                }}>Ajouter un jeu</Button>
                             </Box>
                         </Grid>
                     </Grid>
