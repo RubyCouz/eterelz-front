@@ -14,5 +14,6 @@ export default function validForm(input, value, required) {
     } else if (!inputTest) {
         response = templateRegex[input].message
     }
+    console.log(response)
     return response
 }

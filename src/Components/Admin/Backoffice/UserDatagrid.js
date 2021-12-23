@@ -16,18 +16,19 @@ import {blue, red} from "@material-ui/core/colors"
 import CloseIcon from "@mui/icons-material/Close"
 import BlockIcon from "@mui/icons-material/Block"
 import Loading from "../../../pages/Loading"
-import {Backdrop, Box, LinearProgress, Modal, Slide, Snackbar} from "@material-ui/core"
+import {Backdrop, Box, LinearProgress, Modal, Snackbar} from "@material-ui/core"
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
 import AddUserForm from "./Form/AddUserForm"
 import formatDate from "../../../Tools/FormatDate"
 import styled from "@emotion/styled"
-import SnackbarError from "../../Snackbar/SnackbarError"
-import {makeStyles} from "@material-ui/core/styles"
+// import {makeStyles} from "@material-ui/core/styles"
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import Typography from "@material-ui/core/Typography";
 import AuthContext from '../../../context/auth-context'
 import {Alert} from "@material-ui/lab";
+// import validForm from "../../../Tools/ValidForms";
+import templateRegex from "../../../Data/template-regex";
 
 const style = {
     position: 'absolute',
@@ -132,18 +133,18 @@ function CustomNoRowsOverlay() {
 }
 
 // effet apparitions alert
-function SlideTransition(props) {
-    return <Slide {...props} direction="up"/>
-}
+// function SlideTransition(props) {
+//     return <Slide {...props} direction="up"/>
+// }
 
-const useStyle = makeStyles((theme) => ({
-    snackbar: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
-        },
-    },
-}))
+// const useStyle = makeStyles((theme) => ({
+//     snackbar: {
+//         width: '100%',
+//         '& > * + *': {
+//             marginTop: theme.spacing(2),
+//         },
+//     },
+// }))
 
 const initRows = (data) => {
     let rows = []
@@ -168,22 +169,107 @@ const initRows = (data) => {
     })
     return rows
 }
-
+const formValidate = (input, value) => {
+    if (value === '') {
+        return true
+    } else {
+        return templateRegex[input].regex.test(value.toLowerCase())
+    }
+}
 export default function UserDatagrid() {
     const auth = useContext(AuthContext)
-    const classes = useStyle()
-
+    // const classes = useStyle()
     const columns: GridColDef[] = [
-        {field: 'user_login', headerName: 'Pseudo', flex: 1, editable: true},
-        {field: 'user_email', headerName: 'Email', flex: 1, editable: true},
-        {field: 'user_discord', headerName: 'Discord', flex: 1, editable: true},
-        {field: 'user_role', headerName: 'Rôle', flex: 1, editable: true},
-        {field: 'user_address', headerName: 'Adresse', flex: 1, editable: true},
-        {field: 'user_zip', headerName: 'Code Postal', flex: 1, editable: true},
-        {field: 'user_city', headerName: 'Ville', flex: 1, editable: true},
-        {field: 'user_state', headerName: 'Etat', flex: 1, editable: true},
-        {field: 'createdAt', headerName: 'Membre depuis le', flex: 1},
-        {field: 'updatedAt', headerName: 'Dernière mise à jour', flex: 1},
+        {
+            field: 'user_login',
+            headerName: 'Pseudo',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('pseudo', params.props.value);
+                return { ...params.props, error: !isValid };
+            },
+        },
+        {
+            field: 'user_email',
+            headerName: 'Email',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('email', params.props.value);
+                return { ...params.props, error: !isValid };
+            },
+        },
+        {
+            field: 'user_discord',
+            headerName: 'Discord',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('discord', params.props.value);
+                return { ...params.props, error: !isValid };
+            },
+        },
+        {
+            field: 'user_role',
+            headerName: 'Rôle',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('role', params.props.value);
+                return { ...params.props, error: !isValid };
+            },
+        },
+        {
+            field: 'user_address',
+            headerName: 'Adresse',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('address', params.props.value);
+                return { ...params.props, error: !isValid };
+            },
+        },
+        {
+            field: 'user_zip',
+            headerName: 'Code Postal',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('zip', params.props.value);
+                return { ...params.props, error: !isValid };
+            },
+        },
+        {
+            field: 'user_city',
+            headerName: 'Ville',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('city', params.props.value);
+                return { ...params.props, error: !isValid };
+            },
+        },
+        {
+            field: 'user_state',
+            headerName: 'Etat',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('userState', params.props.value);
+                return { ...params.props, error: !isValid };
+            },
+        },
+        {
+            field: 'createdAt',
+            headerName: 'Membre depuis le',
+            flex: 1
+        },
+        {
+            field: 'updatedAt',
+            headerName: 'Dernière mise à jour',
+            flex: 1
+        },
         {
             field: 'user_isActive',
             headerName: 'Profil actif',
@@ -218,7 +304,6 @@ export default function UserDatagrid() {
     ]
     const [snackbar, setSnackbar] = React.useState(null);
     const handleCloseSnackbar = () => setSnackbar(null);
-
     const {data} = useQuery(LIST_USERS)
     const [updateUser] = useMutation(UPDATE_USER, {
         refetchQueries: [{query: LIST_USERS}],
@@ -237,16 +322,15 @@ export default function UserDatagrid() {
         severity: '',
         error: ''
     })
-    const [open, setOpen] = useState(false)
+    // const [open, setOpen] = useState(false)
     const [rows, setRows] = React.useState();
-    const [sBar, setSbar] = useState({
-        Transition: Slide,
-        vertical: 'bottom',
-        horizontal: 'center',
-    });
-    const {vertical, horizontal} = sBar
+    // const [sBar, setSbar] = useState({
+    //     Transition: Slide,
+    //     vertical: 'bottom',
+    //     horizontal: 'center',
+    // });
+    // const {vertical, horizontal} = sBar
     const email = useRef('')
-
     const updateProfil = useCallback(async (user) => {
         await updateUser({
             variables: {
@@ -266,27 +350,25 @@ export default function UserDatagrid() {
                         [params.field]: params.value,
                     }
                 })
-                setSnackbar({children: 'User successfully saved', severity: 'success'});
+                setSnackbar({children: 'Modification du profil enregistrée !!!', severity: 'success'});
                 setRows((prev) =>
                     prev.map((row) => (row.id === params.id ? {...row, ...response} : row)),
                 );
             } catch (error) {
-                setSnackbar({children: 'Error while saving user', severity: 'error'});
+                setSnackbar({children: 'Il y a eu un problème...', severity: 'error'});
                 // Restore the row in case of error
                 setRows((prev) => [...prev]);
             }
         },
         [updateProfil],
     );
-    let init
 
-    if (data !== undefined) {
-        init = initRows(data)
-    }
     useEffect(() => {
+        if (data !== undefined) {
+            const init = initRows(data)
             setRows(init)
-        console.log(init)
-    }, [init])
+        }
+    }, [data])
 
     const handleDeleteModal = async (user) => (
         setState({
@@ -311,20 +393,20 @@ export default function UserDatagrid() {
         })
     }
 
-    const handleClick = (Transition, newSbar) => {
-        setOpen(true)
-        setSbar({
-            Transition,
-            ...newSbar
-        })
-    }
+    // const handleClick = (Transition, newSbar) => {
+    //     setOpen(true)
+    //     setSbar({
+    //         Transition,
+    //         ...newSbar
+    //     })
+    // }
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false)
-    }
+    // const handleClose = (event, reason) => {
+    //     if (reason === 'clickaway') {
+    //         return;
+    //     }
+    //     setOpen(false)
+    // }
 
     // sélection icon actif ou non
     const IsActiveIcon = ({index, bool}) => {
@@ -360,7 +442,8 @@ export default function UserDatagrid() {
                                 severity: 'success',
                                 alert_message: 'Modification effectuée'
                             })
-                            handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                            // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+
                         },
                         onError: (({networkError}) => {
                             if (networkError) {
@@ -370,7 +453,7 @@ export default function UserDatagrid() {
                                         severity: 'error',
                                         alert_message: message
                                     })
-                                    handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                                    // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
                                     return null
                                 })
                             }
@@ -409,7 +492,7 @@ export default function UserDatagrid() {
                     severity: 'success',
                     alert_message: 'Invitation envoyée'
                 })
-                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
                 handleCloseModal()
             },
             onError: (({networkError}) => {
@@ -420,7 +503,7 @@ export default function UserDatagrid() {
                             severity: 'error',
                             alert_message: message
                         })
-                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
                         return null
                     })
                 }
@@ -451,7 +534,7 @@ export default function UserDatagrid() {
                             severity: 'error',
                             alert_message: message
                         })
-                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
                         return networkError
                     })
                 }
@@ -462,7 +545,18 @@ export default function UserDatagrid() {
         <>
             {data === undefined ?
                 <Loading/> :
-                <div style={{height: 500, width: '100%'}}>
+                <Box sx={{
+                    height: 500,
+                    width: '100%',
+                    '& .MuiDataGrid-cell--editing': {
+                        bgcolor: 'rgb(255,215,115, 0.19)',
+                        color: '#1a3e72',
+                    },
+                    '& .Mui-error': {
+                        bgcolor: 'rgb(126,10,15)',
+                        color: '#ff4343',
+                    },
+                }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={12} lg={12}>
                             <Box textAlign="right">
@@ -472,16 +566,16 @@ export default function UserDatagrid() {
                             </Box>
                         </Grid>
                     </Grid>
-                    <DataGrid
-                        rows={rows}
-                        columns={columns}
-                        components={{
-                            Toolbar: GridToolbar,
-                            LoadingOverlay: CustomLoadingOverlay,
-                            NoRowsOverlay: CustomNoRowsOverlay,
-                        }}
-                        onCellEditCommit={handleCellEditCommit}
-                    />
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            components={{
+                                Toolbar: GridToolbar,
+                                LoadingOverlay: CustomLoadingOverlay,
+                                NoRowsOverlay: CustomNoRowsOverlay,
+                            }}
+                            onCellEditCommit={handleCellEditCommit}
+                        />
                     {!!snackbar && (
                         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
@@ -559,18 +653,8 @@ export default function UserDatagrid() {
                             </Grid>
                         </Modal>
                     }
-                </div>
+                </Box>
             }
-            <SnackbarError
-                class={classes.snackbar}
-                anchorOrigin={{vertical, horizontal}}
-                open={open}
-                transitionComponent={sBar.Transition}
-                onClose={handleClose}
-                message={state.alert_message}
-                key={sBar.Transition.name}
-                severity={state.severity}
-            />
         </>
     )
 }
