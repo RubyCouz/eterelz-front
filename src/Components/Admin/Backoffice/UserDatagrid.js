@@ -1,5 +1,6 @@
 import React, {
-    useContext,
+    useCallback,
+    useContext, useEffect,
     useRef,
     useState
 } from 'react'
@@ -8,18 +9,16 @@ import {
     useQuery
 } from '@apollo/client'
 import {LIST_USERS, UPDATE_USER, CREATEDBYADMIN, DELETEUSER} from "../../../Queries/UserQueries"
-import {DataGrid, GridColDef, GridOverlay, GridRowsProp, GridToolbar} from "@mui/x-data-grid"
+import {DataGrid, GridColDef, GridOverlay, GridToolbar} from "@mui/x-data-grid"
 import IconButton from "@material-ui/core/IconButton"
 import CheckIcon from "@mui/icons-material/Check"
-import {blue, green, red} from "@material-ui/core/colors"
+import {blue, red} from "@material-ui/core/colors"
 import CloseIcon from "@mui/icons-material/Close"
-import EditIcon from "@material-ui/icons/Edit"
 import BlockIcon from "@mui/icons-material/Block"
 import Loading from "../../../pages/Loading"
-import {Backdrop, Box, LinearProgress, Modal, Slide} from "@material-ui/core"
+import {Backdrop, Box, LinearProgress, Modal, Slide, Snackbar} from "@material-ui/core"
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
-import UpdateUserForm from './Form/UpdateUserForm'
 import AddUserForm from "./Form/AddUserForm"
 import formatDate from "../../../Tools/FormatDate"
 import styled from "@emotion/styled"
@@ -28,6 +27,7 @@ import {makeStyles} from "@material-ui/core/styles"
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import Typography from "@material-ui/core/Typography";
 import AuthContext from '../../../context/auth-context'
+import {Alert} from "@material-ui/lab";
 
 const style = {
     position: 'absolute',
@@ -43,22 +43,34 @@ const style = {
 const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
     flexDirection: 'column',
     '& .ant-empty-img-1': {
-        fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626',
+        // fill: '#262626',
+        fill: '#aeb8c2',
+        // fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626',
     },
     '& .ant-empty-img-2': {
-        fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959',
+        // fill: '#595959',
+        fill: '#f5f5f7',
+        // fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959',
     },
     '& .ant-empty-img-3': {
-        fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343',
+        // fill: '#434343',
+        fill: '#dce0e6',
+        // fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343',
     },
     '& .ant-empty-img-4': {
-        fill: theme.palette.mode === 'light' ? '#fff' : '#1c1c1c',
+        // fill: '#1c1c1c',
+        fill: '#fff',
+        // fill: theme.palette.mode === 'light' ? '#fff' : '#1c1c1c',
     },
     '& .ant-empty-img-5': {
-        fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
-        fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
+        // fillOpacity: '0.08',
+        // fill: '#fff',
+        fillOpacity: '0.8',
+        fill: '#f5f5f5',
+        // fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
+        // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
-}))
+}));
 
 // barre de chargement de données
 function CustomLoadingOverlay() {
@@ -133,10 +145,80 @@ const useStyle = makeStyles((theme) => ({
     },
 }))
 
+const initRows = (data) => {
+    let rows = []
+    data.users.map((user, key) => {
+        const userData = {
+            id: user._id,
+            user_login: user.user_login,
+            user_email: user.user_email,
+            user_discord: user.user_discord,
+            user_role: user.user_role,
+            user_address: user.user_address,
+            user_zip: user.user_zip,
+            user_city: user.user_city,
+            user_state: user.user_state,
+            createdAt: formatDate(user.createdAt),
+            updatedAt: formatDate(user.updatedAt),
+            user_isActive: user.user_isActive,
+            Action: {user: user},
+        }
+        rows.push(userData)
+        return rows
+    })
+    return rows
+}
+
 export default function UserDatagrid() {
     const auth = useContext(AuthContext)
-    console.log(auth)
     const classes = useStyle()
+
+    const columns: GridColDef[] = [
+        {field: 'user_login', headerName: 'Pseudo', flex: 1, editable: true},
+        {field: 'user_email', headerName: 'Email', flex: 1, editable: true},
+        {field: 'user_discord', headerName: 'Discord', flex: 1, editable: true},
+        {field: 'user_role', headerName: 'Rôle', flex: 1, editable: true},
+        {field: 'user_address', headerName: 'Adresse', flex: 1, editable: true},
+        {field: 'user_zip', headerName: 'Code Postal', flex: 1, editable: true},
+        {field: 'user_city', headerName: 'Ville', flex: 1, editable: true},
+        {field: 'user_state', headerName: 'Etat', flex: 1, editable: true},
+        {field: 'createdAt', headerName: 'Membre depuis le', flex: 1},
+        {field: 'updatedAt', headerName: 'Dernière mise à jour', flex: 1},
+        {
+            field: 'user_isActive',
+            headerName: 'Profil actif',
+            flex: 1,
+            sortable: false,
+            disableClickEventBubbling: true,
+            renderCell: ((params) => {
+                return (
+                    <div className="d-flex justify-content-between align-items-center" style={{cursor: "pointer"}}>
+                        <IsActiveIcon index={params.row.id} bool={params.value}/>
+                    </div>
+                )
+            })
+        },
+        {
+            field: 'Action',
+            headerName: 'Action',
+            flex: 1,
+            sortable: false,
+            disableClickEventBubbling: true,
+            renderCell: ((params) => {
+                return (
+                    <div className="d-flex justify-content-between align-items-center" style={{cursor: "pointer"}}>
+                        <ActionMenu
+                            index={params.row.id}
+                            user={params.value.user}
+                        />
+                    </div>
+                )
+            })
+        },
+    ]
+    const [snackbar, setSnackbar] = React.useState(null);
+    const handleCloseSnackbar = () => setSnackbar(null);
+
     const {data} = useQuery(LIST_USERS)
     const [updateUser] = useMutation(UPDATE_USER, {
         refetchQueries: [{query: LIST_USERS}],
@@ -156,67 +238,55 @@ export default function UserDatagrid() {
         error: ''
     })
     const [open, setOpen] = useState(false)
+    const [rows, setRows] = React.useState();
     const [sBar, setSbar] = useState({
         Transition: Slide,
         vertical: 'bottom',
         horizontal: 'center',
     });
     const {vertical, horizontal} = sBar
-    const ref = {
-        login: useRef(''),
-        email: useRef(''),
-        address: useRef(''),
-        city: useRef(''),
-        role: useRef(''),
-        zip: useRef(''),
-        userState: useRef(''),
-        discord: useRef(''),
+    const email = useRef('')
+
+    const updateProfil = useCallback(async (user) => {
+        await updateUser({
+            variables: {
+                id: user.id,
+                update: user.update
+            }
+        })
+    }, [updateUser])
+
+    const handleCellEditCommit = React.useCallback(
+        async (params) => {
+            try {
+                // Make the HTTP request to save in the backend
+                const response = await updateProfil({
+                    id: params.id,
+                    update: {
+                        [params.field]: params.value,
+                    }
+                })
+                setSnackbar({children: 'User successfully saved', severity: 'success'});
+                setRows((prev) =>
+                    prev.map((row) => (row.id === params.id ? {...row, ...response} : row)),
+                );
+            } catch (error) {
+                setSnackbar({children: 'Error while saving user', severity: 'error'});
+                // Restore the row in case of error
+                setRows((prev) => [...prev]);
+            }
+        },
+        [updateProfil],
+    );
+    let init
+
+    if (data !== undefined) {
+        init = initRows(data)
     }
-    // construction dataGrid
-    const rows: GridRowsProp = []
-    const columns: GridColDef[] = [
-        {field: 'col1', headerName: 'Pseudo', flex: 1},
-        {field: 'col2', headerName: 'Email', flex: 1},
-        {field: 'col3', headerName: 'Discord', flex: 1},
-        {field: 'col4', headerName: 'Rôle', flex: 1},
-        {field: 'col5', headerName: 'Adresse', flex: 1},
-        {field: 'col6', headerName: 'Code Postal', flex: 1},
-        {field: 'col7', headerName: 'Ville', flex: 1},
-        {field: 'col8', headerName: 'Etat', flex: 1},
-        {field: 'col9', headerName: 'Membre depuis le', flex: 1},
-        {field: 'col10', headerName: 'Dernière mise à jour', flex: 1},
-        {
-            field: 'col11',
-            headerName: 'Profil actif',
-            flex: 1,
-            sortable: false,
-            disableClickEventBubbling: true,
-            renderCell: ((params) => {
-                return (
-                    <div className="d-flex justify-content-between align-items-center" style={{cursor: "pointer"}}>
-                        <IsActiveIcon index={params.row.id} bool={params.value}/>
-                    </div>
-                )
-            })
-        },
-        {
-            field: 'col12',
-            headerName: 'Action',
-            flex: 1,
-            sortable: false,
-            disableClickEventBubbling: true,
-            renderCell: ((params) => {
-                return (
-                    <div className="d-flex justify-content-between align-items-center" style={{cursor: "pointer"}}>
-                        <ActionMenu
-                            index={params.row.id}
-                            user={params.value.user}
-                        />
-                    </div>
-                )
-            })
-        },
-    ]
+    useEffect(() => {
+            setRows(init)
+        console.log(init)
+    }, [init])
 
     const handleDeleteModal = async (user) => (
         setState({
@@ -274,25 +344,8 @@ export default function UserDatagrid() {
     }
     // affichage menu action dans dataGrid
     const ActionMenu = ({index, user}) => {
-        const handleModal = async () => (
-            setState({
-                ...state,
-                user: user,
-                openModal: true,
-            })
-        )
+
         return <div>
-            <IconButton
-                color="secondary"
-                aria-label="add an alarm"
-                id={user._id}
-                onClick={() => {
-                    handleModal()
-                }}
-            >
-                <EditIcon style={{color: green[500]}}
-                />
-            </IconButton>
             <IconButton
                 onClick={() => {
                     updateUser({
@@ -342,35 +395,12 @@ export default function UserDatagrid() {
             }
         </div>
     }
-    // envoie de data dans le tableau rows et dans la modal
-    if (data !== undefined) {
-        let i = 1
-        data.users.map((user, key) => {
-            const userData = {
-                id: i,
-                col1: user.user_login,
-                col2: user.user_email,
-                col3: user.user_discord,
-                col4: user.user_role,
-                col5: user.user_address,
-                col6: user.user_zip,
-                col7: user.user_city,
-                col8: user.user_state,
-                col9: formatDate(user.createdAt),
-                col10: formatDate(user.updatedAt),
-                col11: user.user_isActive,
-                col12: {user: user},
-            }
-            rows.push(userData)
-            i++
-            return rows
-        })
-    }
+
     // création utilisateur
     const createUserProfil = () => {
         createdByAdmin({
             variables: {
-                email: ref.email.current.value,
+                email: email.current.value,
             },
             errorPolicy: 'all',
             onCompleted: data1 => {
@@ -397,49 +427,7 @@ export default function UserDatagrid() {
             })
         })
     }
-// mis à jour des infos utilisateur
-    const updateProfil = (user) => {
-        updateUser({
-            variables: {
-                id: user._id,
-                update: {
-                    user_login: ref.login.current.value,
-                    user_email: ref.email.current.value,
-                    user_discord: ref.discord.current.value,
-                    user_address: ref.address.current.value,
-                    user_zip: ref.zip.current.value,
-                    user_city: ref.city.current.value,
-                    user_role: ref.role.current.value,
-                    user_state: ref.userState.current.value
-                }
-            },
-            errorPolicy: 'all',
-            onCompleted: data => {
-                setState({
-                    ...state,
-                    severity: 'success',
-                    alert_message: 'Modification effectuée'
-                })
-                handleCloseModal()
-                // await handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
-            },
-            onError: (({networkError}) => {
-                if (networkError) {
-                    networkError.result.errors.map(({message, status}) => {
-                        setState({
-                            ...state,
-                            severity: 'error',
-                            alert_message: message
-                        })
-                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
-                        return networkError
-                    })
-                }
-            })
-        })
 
-        return user
-    }
     const deleteProfil = (user) => {
         deleteUser({
             variables: {
@@ -492,7 +480,13 @@ export default function UserDatagrid() {
                             LoadingOverlay: CustomLoadingOverlay,
                             NoRowsOverlay: CustomNoRowsOverlay,
                         }}
+                        onCellEditCommit={handleCellEditCommit}
                     />
+                    {!!snackbar && (
+                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                            <Alert {...snackbar} onClose={handleCloseSnackbar}/>
+                        </Snackbar>
+                    )}
                     {state.openModal &&
                     <Modal
                         open={state.openModal}
@@ -507,29 +501,16 @@ export default function UserDatagrid() {
                                 item
                                 xs={12} md={12} lg={12}
                             >
-                                {state.user ?
-                                    <UpdateUserForm
-                                        style={style}
-                                        input={ref}
-                                        state={state}
-                                        handleCloseModal={() => {
-                                            handleCloseModal()
-                                        }}
-                                        updateProfil={() => {
-                                            updateProfil(state.user)
-                                        }}
-                                    /> :
-                                    <AddUserForm
-                                        style={style}
-                                        refEmail={ref.email}
-                                        handleCloseModal={() => {
-                                            handleCloseModal()
-                                        }}
-                                        createUserProfil={() => {
-                                            createUserProfil()
-                                        }}
-                                    />
-                                }
+                                <AddUserForm
+                                    style={style}
+                                    refEmail={email}
+                                    handleCloseModal={() => {
+                                        handleCloseModal()
+                                    }}
+                                    createUserProfil={() => {
+                                        createUserProfil()
+                                    }}
+                                />
                             </Grid>
                         </Grid>
                     </Modal>
