@@ -8,27 +8,25 @@ import {
     useMutation,
     useQuery
 } from '@apollo/client'
-import {LIST_USERS, UPDATE_USER, CREATEDBYADMIN, DELETEUSER} from "../../../Queries/UserQueries"
-import {DataGrid, GridColDef, GridOverlay, GridToolbar} from "@mui/x-data-grid"
-import IconButton from "@material-ui/core/IconButton"
-import CheckIcon from "@mui/icons-material/Check"
-import {blue, red} from "@material-ui/core/colors"
-import CloseIcon from "@mui/icons-material/Close"
-import BlockIcon from "@mui/icons-material/Block"
-import Loading from "../../../pages/Loading"
-import {Backdrop, Box, LinearProgress, Modal, Snackbar} from "@material-ui/core"
-import Grid from "@material-ui/core/Grid"
-import Button from "@material-ui/core/Button"
-import AddUserForm from "./Form/AddUserForm"
-import formatDate from "../../../Tools/FormatDate"
-import styled from "@emotion/styled"
-// import {makeStyles} from "@material-ui/core/styles"
+import {LIST_USERS, UPDATE_USER, CREATEDBYADMIN, DELETEUSER} from '../../../Queries/UserQueries'
+import {DataGrid, GridColDef, GridOverlay, GridToolbar} from '@mui/x-data-grid'
+import IconButton from '@material-ui/core/IconButton'
+import CheckIcon from '@mui/icons-material/Check'
+import {blue, red} from '@material-ui/core/colors'
+import CloseIcon from '@mui/icons-material/Close'
+import BlockIcon from '@mui/icons-material/Block'
+import Loading from '../../../pages/Loading'
+import {Backdrop, Box, LinearProgress, Modal, Snackbar} from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import AddUserForm from './Form/AddUserForm'
+import formatDate from '../../../Tools/FormatDate'
+import styled from '@emotion/styled'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import Typography from "@material-ui/core/Typography";
+import Typography from '@material-ui/core/Typography'
 import AuthContext from '../../../context/auth-context'
-import {Alert} from "@material-ui/lab";
-// import validForm from "../../../Tools/ValidForms";
-import templateRegex from "../../../Data/template-regex";
+import {Alert} from '@material-ui/lab'
+import templateRegex from '../../../Data/template-regex'
 
 const style = {
     position: 'absolute',
@@ -71,8 +69,7 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         // fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
-}));
-
+}))
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
@@ -81,9 +78,8 @@ function CustomLoadingOverlay() {
                 <LinearProgress/>
             </div>
         </GridOverlay>
-    );
+    )
 }
-
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
@@ -129,23 +125,8 @@ function CustomNoRowsOverlay() {
             </svg>
             <Box sx={{mt: 1}}>No Rows</Box>
         </StyledGridOverlay>
-    );
+    )
 }
-
-// effet apparitions alert
-// function SlideTransition(props) {
-//     return <Slide {...props} direction="up"/>
-// }
-
-// const useStyle = makeStyles((theme) => ({
-//     snackbar: {
-//         width: '100%',
-//         '& > * + *': {
-//             marginTop: theme.spacing(2),
-//         },
-//     },
-// }))
-
 const initRows = (data) => {
     let rows = []
     data.users.map((user, key) => {
@@ -178,7 +159,6 @@ const formValidate = (input, value) => {
 }
 export default function UserDatagrid() {
     const auth = useContext(AuthContext)
-    // const classes = useStyle()
     const columns: GridColDef[] = [
         {
             field: 'user_login',
@@ -302,8 +282,14 @@ export default function UserDatagrid() {
             })
         },
     ]
-    const [snackbar, setSnackbar] = React.useState(null);
-    const handleCloseSnackbar = () => setSnackbar(null);
+    const [snackbar, setSnackbar] = React.useState(null)
+    const [state, setState] = useState({
+        deleteModal: false,
+        openModal: false,
+        user: '',
+
+    })
+    const [rows, setRows] = React.useState();
     const {data} = useQuery(LIST_USERS)
     const [updateUser] = useMutation(UPDATE_USER, {
         refetchQueries: [{query: LIST_USERS}],
@@ -314,22 +300,6 @@ export default function UserDatagrid() {
     const [deleteUser] = useMutation(DELETEUSER, {
         refetchQueries: [{query: LIST_USERS}]
     })
-    const [state, setState] = useState({
-        deleteModal: false,
-        openModal: false,
-        user: '',
-        alert_message: '',
-        severity: '',
-        error: ''
-    })
-    // const [open, setOpen] = useState(false)
-    const [rows, setRows] = React.useState();
-    // const [sBar, setSbar] = useState({
-    //     Transition: Slide,
-    //     vertical: 'bottom',
-    //     horizontal: 'center',
-    // });
-    // const {vertical, horizontal} = sBar
     const email = useRef('')
     const updateProfil = useCallback(async (user) => {
         await updateUser({
@@ -339,7 +309,6 @@ export default function UserDatagrid() {
             }
         })
     }, [updateUser])
-
     const handleCellEditCommit = React.useCallback(
         async (params) => {
             try {
@@ -361,15 +330,14 @@ export default function UserDatagrid() {
             }
         },
         [updateProfil],
-    );
-
+    )
     useEffect(() => {
         if (data !== undefined) {
             const init = initRows(data)
             setRows(init)
         }
     }, [data])
-
+    const handleCloseSnackbar = () => setSnackbar(null)
     const handleDeleteModal = async (user) => (
         setState({
             ...state,
@@ -377,7 +345,6 @@ export default function UserDatagrid() {
             deleteModal: true
         })
     )
-
     const handleModalCreate = async () => (
         setState({
             ...state,
@@ -392,22 +359,6 @@ export default function UserDatagrid() {
             deleteModal: false
         })
     }
-
-    // const handleClick = (Transition, newSbar) => {
-    //     setOpen(true)
-    //     setSbar({
-    //         Transition,
-    //         ...newSbar
-    //     })
-    // }
-
-    // const handleClose = (event, reason) => {
-    //     if (reason === 'clickaway') {
-    //         return;
-    //     }
-    //     setOpen(false)
-    // }
-
     // sélection icon actif ou non
     const IsActiveIcon = ({index, bool}) => {
         if (bool) {
@@ -426,7 +377,6 @@ export default function UserDatagrid() {
     }
     // affichage menu action dans dataGrid
     const ActionMenu = ({index, user}) => {
-
         return <div>
             <IconButton
                 onClick={() => {
@@ -483,34 +433,23 @@ export default function UserDatagrid() {
     const createUserProfil = () => {
         createdByAdmin({
             variables: {
-                email: email.current.value,
+                user_email: email.current.value,
             },
             errorPolicy: 'all',
             onCompleted: data1 => {
-                setState({
-                    ...state,
-                    severity: 'success',
-                    alert_message: 'Invitation envoyée'
-                })
-                // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                setSnackbar({children: 'Invitation envoyée !!!', severity: 'success'})
                 handleCloseModal()
             },
             onError: (({networkError}) => {
                 if (networkError) {
                     networkError.result.errors.map(({message, status}) => {
-                        setState({
-                            ...state,
-                            severity: 'error',
-                            alert_message: message
-                        })
-                        // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        setSnackbar({children: message, severity: 'error'})
                         return null
                     })
                 }
             })
         })
     }
-
     const deleteProfil = (user) => {
         deleteUser({
             variables: {
@@ -518,23 +457,13 @@ export default function UserDatagrid() {
             },
             errorPolicy: 'all',
             onCompleted: data => {
-                setState({
-                    ...state,
-                    severity: 'success',
-                    alert_message: 'Modification effectuée'
-                })
+                setSnackbar({children: 'Profil supprimé !!!', severity: 'success'})
                 handleCloseModal()
-                // await handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
             },
             onError: (({networkError}) => {
                 if (networkError) {
                     networkError.result.errors.map(({message, status}) => {
-                        setState({
-                            ...state,
-                            severity: 'error',
-                            alert_message: message
-                        })
-                        // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        setSnackbar({children: 'Profil supprimé !!!', severity: 'success'})
                         return networkError
                     })
                 }
@@ -585,7 +514,7 @@ export default function UserDatagrid() {
                     <Modal
                         open={state.openModal}
                         onClose={handleCloseModal}
-                        key={state.user !== null ? state.user._id : 'createUserModal'}
+                        key="createUserModal"
                         closeAfterTransition
                         BackdropComponent={Backdrop}
                         BackdropProps={{timeout: 500}}

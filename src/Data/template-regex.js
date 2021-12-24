@@ -90,6 +90,16 @@ const templateRegex = {
         message: 'Description non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
+    eventScore: {
+        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        message: 'Score non valide',
+        message_empty: 'Vous devez remplir ce champs'
+    },
+    eventWinner: {
+        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        message: 'Pseudo / Team non valide',
+        message_empty: 'Vous devez remplir ce champs'
+    },
     /**
      * Clan form
      */

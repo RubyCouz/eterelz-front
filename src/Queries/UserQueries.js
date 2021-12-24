@@ -74,8 +74,8 @@ export const UPDATE_USER = gql`
  * @type {DocumentNode}
  */
 export const CREATEDBYADMIN = gql`
-    mutation createdByAdmin($email: String!) {
-        createdByAdmin(email: $email) {
+    mutation createdByAdmin($user_email: String!) {
+        createdByAdmin(user_email: $user_email) {
             _id
             user_login
             user_email
