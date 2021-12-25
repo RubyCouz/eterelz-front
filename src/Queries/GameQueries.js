@@ -42,8 +42,19 @@ export const LISTGAMES = gql`
  * @type {DocumentNode}
  */
 export const UPDATEGAME = gql`
-mutation UpdateGame($id: ID!, $update: GameInput!) {
-    updateGame(_id: $id, GameInput: $update) {
-        _id
+    mutation UpdateGame($id: ID!, $update: GameUpdateInput!) {
+        updateGame(id: $id, gameUpdateInput: $update) {
+            _id
+        }
+    }`
+/**
+ * suppression d'un jeu
+ * @type {DocumentNode}
+ */
+export const DELETEGAME = gql`
+    mutation deleteGame($id: ID!) {
+        deleteGame(id: $id) {
+            _id
+        }
     }
-}`
+`

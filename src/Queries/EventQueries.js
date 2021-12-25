@@ -45,7 +45,7 @@ export const LISTEVENT = gql`
  */
 export const UPDATEEVENT = gql`
     mutation UpdateEvent($id: ID!, $update: UpdateEventInput) {
-        updateEvent(_id: $id, updateEventInput: $update) {
+        updateEvent(id: $id, updateEventInput: $update) {
             _id
         }
     }`

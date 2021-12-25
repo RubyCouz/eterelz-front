@@ -1,20 +1,20 @@
-import React, {useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import styled from '@emotion/styled'
-import {DataGrid, GridColDef, GridOverlay, GridRowsProp, GridToolbar} from '@mui/x-data-grid'
-import {Backdrop, Box, LinearProgress, Modal} from '@material-ui/core'
+import {DataGrid, GridColDef, GridOverlay, GridToolbar} from '@mui/x-data-grid'
+import {Backdrop, Box, LinearProgress, Modal, Snackbar} from '@material-ui/core'
 import Loading from "../../../pages/Loading";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import EditIcon from "@material-ui/icons/Edit";
-import {green, red} from "@material-ui/core/colors";
-import BlockIcon from "@mui/icons-material/Block";
-import {CREATEGAME, LISTGAMES, UPDATEGAME} from "../../../Queries/GameQueries";
+import {red} from "@material-ui/core/colors";
+import {CREATEGAME, DELETEGAME, LISTGAMES, UPDATEGAME} from "../../../Queries/GameQueries";
 import {useMutation, useQuery} from "@apollo/client";
 import formatDate from "../../../Tools/FormatDate";
 import AddGameForm from './Form/AddGameForm'
-import UpdateGameForm from './Form/UpdateGameForm'
-
+import templateRegex from "../../../Data/template-regex";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import {Alert} from "@material-ui/lab";
+import Typography from "@material-ui/core/Typography";
 
 const style = {
     position: 'absolute',
@@ -115,76 +115,77 @@ function CustomNoRowsOverlay() {
         </StyledGridOverlay>
     );
 }
+const initRows = (data) => {
 
-export default function GameDatagrid() {
-    const [state, setState] = useState({
-        openModal: false,
-        game: ''
-    })
-    const {data} = useQuery(LISTGAMES)
-    const [createGame] = useMutation(CREATEGAME, {
-        refetchQueries: [{query: LISTGAMES}]
-    })
-    const [updateGame] = useMutation(UPDATEGAME, {
-        refetchQueries: [{query: LISTGAMES}]
-    })
-    const ref = {
-        gameName: useRef(''),
-        gameDesc: useRef(''),
-        gamePic: useRef(''),
-    }
-    const handleModalCreate = async () => (
-        setState({
-            ...state,
-            game: null,
-            openModal: true
-        })
-    )
-    const handleClose = () => {
-        setState({
-            ...state, openModal: false
-        })
-    };
-    // affichage menu action dans dataGrid
-    const ActionMenu = ({index, game}) => {
-        if (game !== null) {
-            const handleModal = async () => (
-                setState({
-                    ...state,
-                    game: game,
-                    openModal: true
-                })
-            )
-            return <div>
-                <IconButton
-                    color="secondary"
-                    aria-label="add an alarm"
-                    id={game._id}
-                    onClick={() => {
-                        handleModal()
-                    }}
-                >
-                    <EditIcon style={{color: green[500]}}
-                    />
-                </IconButton>
-                <IconButton>
-                    <BlockIcon style={{color: red[500]}}/>
-                </IconButton>
-            </div>
-        } else {
-            return null
+    let rows = []
+    data.games.map((game, key) => {
+    console.log(game)
+        const gameData = {
+            id: game._id,
+            game_name: game.game_name,
+            game_desc: game.game_desc,
+            game_pic: game.game_pic,
+            game_creator: game.game_creator,
+            createdAt: formatDate(game.createdAt),
+            updatedAt: formatDate(game.updatedAt),
+            Action: {game: game},
         }
+        rows.push(gameData)
+        return rows
+    })
+    return rows
+}
+const formValidate = (input, value) => {
+    if (value === '') {
+        return true
+    } else {
+        return templateRegex[input].regex.test(value)
     }
-    const rows: GridRowsProp = []
+}
+export default function GameDatagrid() {
     const columns: GridColDef[] = [
-        {field: 'col1', headerName: 'Aperçu', flex: 1},
-        {field: 'col2', headerName: 'Nom', flex: 1},
-        {field: 'col3', headerName: 'Description', flex: 1},
-        {field: 'col4', headerName: 'Ajouté par', flex: 1},
-        {field: 'col5', headerName: 'Ajouté le', flex: 1},
-        {field: 'col6', headerName: 'Dernière mise à jour', flex: 1},
         {
-            field: 'col7',
+            field: 'game_name',
+            headerName: 'Titre',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('gameName', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'game_desc',
+            headerName: 'Description',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('gameDesc', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'game_pic',
+            headerName: 'Jaquette',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('gamePic', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'createdAt',
+            headerName: 'Créé le',
+            flex: 1
+        },
+        {
+            field: 'updatedAt',
+            headerName: 'Dernière mise à jour',
+            flex: 1
+        },
+        {
+            field: 'Action',
             headerName: 'Action',
             flex: 1,
             sortable: false,
@@ -201,70 +202,165 @@ export default function GameDatagrid() {
             })
         },
     ]
-    if (data !== undefined) {
-        console.log(data)
-        let i = 1
-        data.games.map((game, key) => {
-            const userData = {
-                id: i,
-                col1: game.game_name,
-                col2: game.game_desc,
-                col3: game.game_pic,
-                col4: game.game_creator.user_login,
-                col5: formatDate(game.createdAt),
-                col6: formatDate(game.updatedAt),
-                col7: {game: game}
+    const [snackbar, setSnackbar] = useState(null)
+    const [state, setState] = useState({
+        deleteModal: false,
+        openModal: false,
+        game: '',
+
+    })
+    const [rows, setRows] = useState();
+    const {data} = useQuery(LISTGAMES)
+    const [createGame] = useMutation(CREATEGAME, {
+        refetchQueries: [{query: LISTGAMES}]
+    })
+    const [updateGame] = useMutation(UPDATEGAME, {
+        refetchQueries: [{query: LISTGAMES}]
+    })
+    const [deleteGame] = useMutation(DELETEGAME, {
+        refetchQueries: [{query: LISTGAMES}]
+    })
+    const ref = {
+        gameName: useRef(''),
+        gameDesc: useRef(''),
+        gamePic: useRef(''),
+    }
+    const updateGameInfo = useCallback(async (game) => {
+        await updateGame({
+            variables: {
+                id: game.id,
+                update: game.update
             }
-            rows.push(userData)
-            i++
-            return rows
         })
+    }, [updateGame])
+    const handleCellEditCommit = useCallback(
+        async (params) => {
+            console.log(params)
+            try {
+                // Make the HTTP request to save in the backend
+                const response = await updateGameInfo({
+                    id: params.id,
+                    update: {
+                        [params.field]: params.value,
+                    }
+                })
+                setSnackbar({children: 'Modification du jeu enregistrée !!!', severity: 'success'});
+                setRows((prev) =>
+                    prev.map((row) => (row.id === params.id ? {...row, ...response} : row)),
+                );
+            } catch (error) {
+                setSnackbar({children: 'Il y a eu un problème...', severity: 'error'});
+                // Restore the row in case of error
+                setRows((prev) => [...prev]);
+            }
+        },
+        [updateGameInfo],
+    )
+    useEffect(() => {
+        if (data !== undefined) {
+            const init = initRows(data)
+            setRows(init)
+        }
+    }, [data])
+    const handleCloseSnackbar = () => setSnackbar(null)
+    const handleDeleteModal = async (game) => (
+        setState({
+            ...state,
+            game: game,
+            deleteModal: true
+        })
+    )
+    const handleModalCreate = async () => (
+        setState({
+            ...state,
+            game: null,
+            openModal: true
+        })
+    )
+    const handleCloseModal = () => {
+        setState({
+            ...state,
+            openModal: false,
+            deleteModal: false
+        })
+    }
+    // affichage menu action dans dataGrid
+    const ActionMenu = ({index, game}) => {
+        return <div>
+            <IconButton
+                color="secondary"
+                aria-label="Delete user"
+                id={'delete' + game._id}
+                onClick={() => {
+                    handleDeleteModal(game)
+                }}
+            >
+                <DeleteForeverIcon style={{color: red[500]}}
+                />
+            </IconButton>
+        </div>
     }
     const addGame = () => {
         createGame({
             variables: {
                 createGame: {
                     game_name: ref.gameName.current.value,
-                    game_desc: ref.gameDesc.current.value,
                     game_pic: ref.gamePic.current.value,
-                    // game_creator: auth.playload.userId
+                    game_desc: ref.gameDesc.current.value,
                 }
             },
             errorPolicy: 'all',
-            onCompleted: data => {
-                console.log(data)
-                handleClose()
+            onCompleted: data1 => {
+                setSnackbar({children: 'Invitation envoyée !!!', severity: 'success'})
+                handleCloseModal()
             },
-            onError: error => {
-                console.log(error)
-            }
+            onError: (({networkError}) => {
+                if (networkError) {
+                    networkError.result.errors.map(({message, status}) => {
+                        setSnackbar({children: message, severity: 'error'})
+                        return null
+                    })
+                }
+            })
+
         })
     }
-    const updateGameInfo = (game) => {
-        updateGame({
+    const deleteGameInfo = (game) => {
+        deleteGame({
             variables: {
-                id: game._id,
-                update: {
-                    game_name: ref.gameName.current.value,
-                    game_desc: ref.gameDesc.current.value,
-                    game_pic: ref.gamePic.current.value
-                }
-            }, errorPolicy: 'all',
-            onCompleted: data => {
-                console.log(data)
-                handleClose()
+                id:game._id
             },
-            onError: error => {
-                console.log(error)
-            }
+            errorPolicy: 'all',
+            onCompleted: data => {
+                setSnackbar({children: 'Jeu supprimé !!!', severity: 'success'})
+                handleCloseModal()
+            },
+            onError: (({networkError}) => {
+                if (networkError) {
+                    networkError.result.errors.map(({message, status}) => {
+                        setSnackbar({children: 'Jeu sup... Ah nan, y a eu un problème quelque part...', severity: 'error'})
+                        return networkError
+                    })
+                }
+            })
         })
-        return game
     }
     return (
         <>
             {data === undefined ?
                 <Loading/> :
-                <div style={{height: 500, width: '100%'}}>
+                <Box sx={{
+                    height: 500,
+                    width: '100%',
+                    '& .MuiDataGrid-cell--editing': {
+                        bgcolor: 'rgb(255,215,115, 0.19)',
+                        color: '#1a3e72',
+                    },
+                    '& .Mui-error': {
+                        bgcolor: 'rgb(126,10,15)',
+                        color: '#ff4343',
+                    },
+                }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={12} lg={12}>
                             <Box textAlign="right">
@@ -282,48 +378,88 @@ export default function GameDatagrid() {
                             LoadingOverlay: CustomLoadingOverlay,
                             NoRowsOverlay: CustomNoRowsOverlay,
                         }}
+                        onCellEditCommit={handleCellEditCommit}
                     />
-                    <Modal
-                        open={state.openModal}
-                        onClose={handleClose}
-                        // key={state.game !== null ? state.game._id : 'createUserModal'}
-                        closeAfterTransition
-                        BackdropComponent={Backdrop}
-                        BackdropProps={{timeout: 500}}
-                    >
-                        <Grid container>
-                            <Grid
-                                item
-                                xs={12} md={12} lg={12}
-                            >
-                                {state.game ?
-                                    <UpdateGameForm
-                                        style={style}
-                                        input={ref}
-                                        state={state}
-                                        handleClose={() => {
-                                            handleClose()
-                                        }}
-                                        updateGame={() => {
-                                            updateGameInfo(state.game)
-                                        }}
+                    {!!snackbar && (
+                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                            <Alert {...snackbar} onClose={handleCloseSnackbar}/>
+                        </Snackbar>
+                    )}
+                    {
+                        state.openModal &&
+                        <Modal
+                            open={state.openModal}
+                            onClose={handleCloseModal}
+                            key="createGameModal"
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{timeout: 500}}
+                        >
+                            <Grid container>
+                                <Grid
+                                    item
+                                    xs={12} md={12} lg={12}
+                                >
 
-                                    /> :
-                                    <AddGameForm
-                                        style={style}
-                                        input={ref}
-                                        handleClose={() => {
-                                            handleClose()
-                                        }}
-                                        addGame={() => {
-                                            addGame()
-                                        }}
-                                    />
-                                }
+                                        <AddGameForm
+                                            style={style}
+                                            input={ref}
+                                            handleClose={() => {
+                                                handleCloseModal()
+                                            }}
+                                            addGame={() => {
+                                                addGame()
+                                            }}
+                                        />
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Modal>
-                </div>
+                        </Modal>
+                    }
+                    {
+                        state.deleteModal &&
+                        <Modal
+                            open={state.deleteModal}
+                            onClose={handleCloseModal}
+                            key={state.game.game_id}
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{timeout: 500}}
+                        >
+                            <Grid container>
+                                <Grid
+                                    item
+                                    xs={12} md={12} lg={12}
+                                >
+                                    <Box sx={style}>
+                                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                                            Suppression de
+                                            l'utilisateur {state.game.game_name}
+                                        </Typography>
+                                        <Typography id="modal-modal-description" sx={{mt: 2}}>
+                                            Etes-vous sûr de vouloir supprimer ce jeu ?
+                                        </Typography>
+                                        <Grid container spacing={2}>
+                                            <Grid
+                                                item
+                                                xs={6} md={6} lg={6}
+                                            >
+                                                <Button onClick={handleCloseModal}>Retour</Button>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={6} md={6} lg={6}
+                                            >
+                                                <Button onClick={() => {
+                                                    deleteGameInfo(state.game)
+                                                }}>Valider</Button>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </Modal>
+                    }
+                </Box>
             }
         </>
     )

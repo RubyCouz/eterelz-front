@@ -122,28 +122,30 @@ function CustomNoRowsOverlay() {
 const initRows = (data) => {
     let rows = []
     data.events.map((event, key) => {
-        const userData = {
+        console.log(event)
+        const eventData = {
             id: event._id,
             event_name: event.event_name,
             event_date: event.event_date,
             event_desc: event.event_desc,
+            event_creator: event.event_creator.user_login,
             event_score: event.event_score,
             event_winner: event.event_winner,
-            event_creator: event.event_creator.userlogin,
             createdAt: formatDate(event.createdAt),
             updatedAt: formatDate(event.updatedAt),
             Action: {event: event},
         }
-        rows.push(userData)
+        rows.push(eventData)
         return rows
     })
     return rows
 }
 const formValidate = (input, value) => {
+    console.log(templateRegex[input].regex.test(value))
     if (value === '') {
         return true
     } else {
-        return templateRegex[input].regex.test(value.toLowerCase())
+        return templateRegex[input].regex.test(value)
     }
 }
 export default function EventDatagrid() {
@@ -161,6 +163,7 @@ export default function EventDatagrid() {
         {
             field: 'event_date',
             headerName: 'Date',
+            type: 'dateTime',
             flex: 1,
             editable: true,
             preProcessEditCellProps: (params) => {
@@ -179,6 +182,11 @@ export default function EventDatagrid() {
             },
         },
         {
+            field: 'event_creator',
+            headerName: 'Créé par',
+            flex: 1,
+        },
+        {
             field: 'event_score',
             headerName: 'Score',
             flex: 1,
@@ -189,7 +197,7 @@ export default function EventDatagrid() {
             },
         },
         {
-            field: 'event_Winner',
+            field: 'event_winner',
             headerName: 'Vainqueur',
             flex: 1,
             editable: true,
@@ -201,11 +209,13 @@ export default function EventDatagrid() {
         {
             field: 'createdAt',
             headerName: 'Créé le',
+            type: 'date',
             flex: 1
         },
         {
             field: 'updatedAt',
             headerName: 'Dernière mise à jour',
+            type: 'date',
             flex: 1
         },
         {
@@ -239,7 +249,7 @@ export default function EventDatagrid() {
         refetchQueries: [{query: LISTEVENT}]
     })
     const [updateEvent] = useMutation(UPDATEEVENT, {
-        refetchQueries: [{query: UPDATEEVENT}]
+        refetchQueries: [{query: LISTEVENT}]
     })
     const [deleteEvent] = useMutation(DELETEEVENT, {
         refetchQueries: [{query: LISTEVENT}]
@@ -257,7 +267,7 @@ export default function EventDatagrid() {
             }
         })
     }, [updateEvent])
-    const handleCellEditCommit = React.useCallback(
+    const handleCellEditCommit = useCallback(
         async (params) => {
             try {
                 // Make the HTTP request to save in the backend
@@ -453,7 +463,7 @@ export default function EventDatagrid() {
                         <Modal
                             open={state.deleteModal}
                             onClose={handleCloseModal}
-                            key={state.user.user_id}
+                            key={state.event.event_id}
                             closeAfterTransition
                             BackdropComponent={Backdrop}
                             BackdropProps={{timeout: 500}}

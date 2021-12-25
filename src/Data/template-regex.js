@@ -56,17 +56,17 @@ const templateRegex = {
      * form Game
      */
     gameName: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Titre du jeu non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     gameDesc: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Description non valide. Certains caractères ne sont pas autorisés',
         message_empty: 'Vous devez remplir ce champs'
     },
     gamePic: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Image non valide / Format non pris en charge',
         message_empty: 'Vous devez remplir ce champs'
     },
@@ -76,27 +76,27 @@ const templateRegex = {
      */
 
     eventName: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Nom invalide',
         message_empty: 'Vous devez remplir ce champs'
     },
     eventDate: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Date non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     eventDesc: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Description non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     eventScore: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Score non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     eventWinner: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Pseudo / Team non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
@@ -105,27 +105,27 @@ const templateRegex = {
      */
 
     clanName: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Nom de clan non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanDate: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Date non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanDesc: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Description non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanBanner: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Fichier non pris en charge',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanDiscord: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Nom de serveur discord discord non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
@@ -135,12 +135,12 @@ const templateRegex = {
         message_empty: 'Vous devez remplir ce champs'
     },
     clanRecrut: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Champ non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanActivity: {
-        regex: new RegExp('^[\\w\\s\\\\-\\_\\*\\+\\=àâäéèëêùûüìîïòôöçãñõ\\$\\!\\:\\,\\.\\/\\?µ\\#\\~]+$'),
+        regex: new RegExp('^[^<>]+$'),
         message: 'Champ non valide',
         message_empty: 'Vous devez remplir ce champs'
     },

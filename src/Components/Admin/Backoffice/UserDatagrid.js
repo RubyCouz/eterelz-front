@@ -70,6 +70,7 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
 }))
+
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
@@ -80,6 +81,7 @@ function CustomLoadingOverlay() {
         </GridOverlay>
     )
 }
+
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
@@ -127,6 +129,7 @@ function CustomNoRowsOverlay() {
         </StyledGridOverlay>
     )
 }
+
 const initRows = (data) => {
     let rows = []
     data.users.map((user, key) => {
@@ -167,7 +170,7 @@ export default function UserDatagrid() {
             editable: true,
             preProcessEditCellProps: (params) => {
                 const isValid = formValidate('pseudo', params.props.value);
-                return { ...params.props, error: !isValid };
+                return {...params.props, error: !isValid};
             },
         },
         {
@@ -177,7 +180,7 @@ export default function UserDatagrid() {
             editable: true,
             preProcessEditCellProps: (params) => {
                 const isValid = formValidate('email', params.props.value);
-                return { ...params.props, error: !isValid };
+                return {...params.props, error: !isValid};
             },
         },
         {
@@ -187,7 +190,7 @@ export default function UserDatagrid() {
             editable: true,
             preProcessEditCellProps: (params) => {
                 const isValid = formValidate('discord', params.props.value);
-                return { ...params.props, error: !isValid };
+                return {...params.props, error: !isValid};
             },
         },
         {
@@ -197,7 +200,7 @@ export default function UserDatagrid() {
             editable: true,
             preProcessEditCellProps: (params) => {
                 const isValid = formValidate('role', params.props.value);
-                return { ...params.props, error: !isValid };
+                return {...params.props, error: !isValid};
             },
         },
         {
@@ -207,7 +210,7 @@ export default function UserDatagrid() {
             editable: true,
             preProcessEditCellProps: (params) => {
                 const isValid = formValidate('address', params.props.value);
-                return { ...params.props, error: !isValid };
+                return {...params.props, error: !isValid};
             },
         },
         {
@@ -217,7 +220,7 @@ export default function UserDatagrid() {
             editable: true,
             preProcessEditCellProps: (params) => {
                 const isValid = formValidate('zip', params.props.value);
-                return { ...params.props, error: !isValid };
+                return {...params.props, error: !isValid};
             },
         },
         {
@@ -227,7 +230,7 @@ export default function UserDatagrid() {
             editable: true,
             preProcessEditCellProps: (params) => {
                 const isValid = formValidate('city', params.props.value);
-                return { ...params.props, error: !isValid };
+                return {...params.props, error: !isValid};
             },
         },
         {
@@ -237,7 +240,7 @@ export default function UserDatagrid() {
             editable: true,
             preProcessEditCellProps: (params) => {
                 const isValid = formValidate('userState', params.props.value);
-                return { ...params.props, error: !isValid };
+                return {...params.props, error: !isValid};
             },
         },
         {
@@ -282,14 +285,14 @@ export default function UserDatagrid() {
             })
         },
     ]
-    const [snackbar, setSnackbar] = React.useState(null)
+    const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
         deleteModal: false,
         openModal: false,
         user: '',
 
     })
-    const [rows, setRows] = React.useState();
+    const [rows, setRows] = useState();
     const {data} = useQuery(LIST_USERS)
     const [updateUser] = useMutation(UPDATE_USER, {
         refetchQueries: [{query: LIST_USERS}],
@@ -309,7 +312,7 @@ export default function UserDatagrid() {
             }
         })
     }, [updateUser])
-    const handleCellEditCommit = React.useCallback(
+    const handleCellEditCommit = useCallback(
         async (params) => {
             try {
                 // Make the HTTP request to save in the backend
@@ -463,7 +466,7 @@ export default function UserDatagrid() {
             onError: (({networkError}) => {
                 if (networkError) {
                     networkError.result.errors.map(({message, status}) => {
-                        setSnackbar({children: 'Profil supprimé !!!', severity: 'success'})
+                        setSnackbar({children: 'Profil sup... Oh wait...', severity: 'error'})
                         return networkError
                     })
                 }
@@ -495,16 +498,16 @@ export default function UserDatagrid() {
                             </Box>
                         </Grid>
                     </Grid>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            components={{
-                                Toolbar: GridToolbar,
-                                LoadingOverlay: CustomLoadingOverlay,
-                                NoRowsOverlay: CustomNoRowsOverlay,
-                            }}
-                            onCellEditCommit={handleCellEditCommit}
-                        />
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        components={{
+                            Toolbar: GridToolbar,
+                            LoadingOverlay: CustomLoadingOverlay,
+                            NoRowsOverlay: CustomNoRowsOverlay,
+                        }}
+                        onCellEditCommit={handleCellEditCommit}
+                    />
                     {!!snackbar && (
                         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
