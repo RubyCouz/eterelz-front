@@ -1,19 +1,22 @@
-import React, {useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import styled from '@emotion/styled'
-import {DataGrid, GridColDef, GridOverlay, GridRowsProp, GridToolbar} from '@mui/x-data-grid'
-import {Backdrop, Box, LinearProgress, Modal} from '@material-ui/core'
-import Loading from "../../../pages/Loading";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import AddClanForm from "./Form/AddClanForm";
-import UpdateClanForm from './Form/UpdateClanForm'
-import IconButton from "@material-ui/core/IconButton";
-import EditIcon from "@material-ui/icons/Edit";
-import {green, red} from "@material-ui/core/colors";
-import BlockIcon from "@mui/icons-material/Block";
-import {useMutation, useQuery} from "@apollo/client";
-import {LISTCLAN, CREATECLAN, UPDATECLAN} from "../../../Queries/ClanQueries";
-import formatDate from "../../../Tools/FormatDate";
+import {DataGrid, GridColDef, GridOverlay, GridToolbar} from '@mui/x-data-grid'
+import {Backdrop, Box, LinearProgress, Modal, Snackbar} from '@material-ui/core'
+import Loading from '../../../pages/Loading'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import AddClanForm from './Form/AddClanForm'
+import IconButton from '@material-ui/core/IconButton'
+import {red} from '@material-ui/core/colors'
+import {useMutation, useQuery} from '@apollo/client'
+import {LISTCLANS, CREATECLAN, UPDATECLAN, DELETECLAN} from '../../../Queries/ClanQueries'
+import formatDate from '../../../Tools/FormatDate'
+import templateRegex from '../../../Data/template-regex'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import {Alert} from '@material-ui/lab'
+import Typography from '@material-ui/core/Typography'
+import './ClanDatagrid.css'
+import Avatar from "@material-ui/core/Avatar";
 
 const style = {
     position: 'absolute',
@@ -26,7 +29,7 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
+const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
     flexDirection: 'column',
     '& .ant-empty-img-1': {
         // fill: '#262626',
@@ -35,12 +38,12 @@ const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
     },
     '& .ant-empty-img-2': {
         // fill: '#595959',
-        fill:'#f5f5f7',
+        fill: '#f5f5f7',
         // fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959',
     },
     '& .ant-empty-img-3': {
         // fill: '#434343',
-        fill: '#dce0e6' ,
+        fill: '#dce0e6',
         // fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343',
     },
     '& .ant-empty-img-4': {
@@ -57,16 +60,18 @@ const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
 }));
+
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
         <GridOverlay>
-            <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-                <LinearProgress />
+            <div style={{position: 'absolute', top: 0, width: '100%'}}>
+                <LinearProgress/>
             </div>
         </GridOverlay>
     );
 }
+
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
@@ -105,90 +110,139 @@ function CustomNoRowsOverlay() {
                         d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z"
                     />
                     <g className="ant-empty-img-4" transform="translate(149.65 15.383)">
-                        <ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" />
-                        <path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" />
+                        <ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815"/>
+                        <path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z"/>
                     </g>
                 </g>
             </svg>
-            <Box sx={{ mt: 1 }}>No Rows</Box>
+            <Box sx={{mt: 1}}>No Rows</Box>
         </StyledGridOverlay>
     );
 }
 
-export default function ClanDatagrid () {
-    const [state, setState] = useState({
-        openModal: false,
-        clan: ''
+const initRows = (data) => {
+    let rows = []
+    data.clans.map((clan, key) => {
+        const clanData = {
+            id: clan._id,
+            clan_name: clan.clan_name,
+            clan_desc: clan.clan_desc,
+            clan_banner: clan.clan_banner,
+            clan_discord: clan.clan_discord,
+            clan_population: clan.clan_population,
+            clan_recrut: clan.clan_recrut,
+            clan_activity: clan.clan_activity,
+            clan_creator: clan.clan_creator.user_login,
+            createdAt: formatDate(clan.createdAt),
+            updatedAt: formatDate(clan.updatedAt),
+            Action: {clan: clan},
+        }
+        rows.push(clanData)
+        return rows
     })
-    const ref = {
-        clanName: useRef(''),
-        clanDesc: useRef(''),
-        clanBanner: useRef(''),
-        clanDiscord: useRef(''),
-        clanPopulation: useRef(''),
-        clanRecrut: useRef(''),
-        clanActivity: useRef(''),
+    return rows
+}
+const formValidate = (input, value) => {
+    if (value === '') {
+        return true
+    } else {
+        return templateRegex[input].regex.test(value.toLowerCase())
     }
-    const {data} = useQuery(LISTCLAN)
-    const [createClan] = useMutation(CREATECLAN, {
-        refetchQueries: [{query: LISTCLAN}]
-    })
-    const [updateClan] = useMutation(UPDATECLAN, {
-        refetchQueries: [{query: LISTCLAN}]
-    })
-    const handleModalCreate = async () => (
-        setState({
-            ...state,
-            clan: null,
-            openModal: true
-        })
-    )
-    const handleClose = () => {
-        setState({
-            ...state, openModal: false
-        })
-    };
-    // affichage menu action dans dataGrid
-    const ActionMenu = ({index, clan}) => {
-        console.log(clan)
-        const handleModal = async () => (
-            setState({
-                ...state,
-                clan: clan,
-                openModal: true
-            })
-        )
-        return <div>
-            <IconButton
-                color="secondary"
-                aria-label="add an alarm"
-                id={clan._id}
-                onClick={() => {
-                    handleModal()
-                }}
-            >
-                <EditIcon style={{color: green[500]}}
-                />
-            </IconButton>
-            <IconButton>
-                <BlockIcon style={{color: red[500]}}/>
-            </IconButton>
-        </div>
-    }
-    const rows: GridRowsProp = []
+}
+
+export default function ClanDatagrid() {
     const columns: GridColDef[] = [
-        {field: 'col1', headerName: 'Bannière', flex: 1},
-        {field: 'col2', headerName: 'Nom du clan', flex: 1},
-        {field: 'col3', headerName: 'Description', flex: 1},
-        {field: 'col4', headerName: 'Discord', flex: 1},
-        {field: 'col5', headerName: 'Nombre de membres', flex: 1},
-        {field: 'col6', headerName: 'Recrutement', flex: 1},
-        {field: 'col7', headerName: 'En activité', flex: 1},
-        {field: 'col8', headerName: 'Créateur', flex: 1},
-        {field: 'col9', headerName: 'Dans la commu depuis le', flex: 1},
-        {field: 'col10', headerName: 'Dernière mise à jour', flex: 1},
         {
-            field: 'col11',
+            field: 'clan_banner',
+            headerName: 'Bannière',
+            flex: 1,
+            align: "center",
+            renderCell: ((params) => {
+                return (
+                    <div style={{cursor: "pointer"}}>
+                        <RenderPic params={params}/>
+                    </div>
+                )
+
+            })
+        },
+        {
+            field: 'clan_name',
+            headerName: 'Nom du clan / team',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('clanName', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'clan_desc',
+            headerName: 'Description',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('clanDesc', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'clan_discord',
+            headerName: 'Discord',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('clanDiscord', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'clan_population',
+            headerName: 'Nombre de membres',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('clanPopulation', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'clan_recrut',
+            headerName: 'Recrutement',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('clanRecrut', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'clan_activity',
+            headerName: 'Activité',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('clanActivity', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'clan_creator',
+            headerName: 'Créateur',
+            flex: 1,
+        },
+        {
+            field: 'createdAt',
+            headerName: 'Créé(e) depuis le',
+            flex: 1
+        },
+        {
+            field: 'updatedAt',
+            headerName: 'Dernière mise à jour',
+            flex: 1
+        },
+        {
+            field: 'Action',
             headerName: 'Action',
             flex: 1,
             sortable: false,
@@ -205,29 +259,118 @@ export default function ClanDatagrid () {
             })
         },
     ]
-    if (data !== undefined) {
-        let i = 1
-        data.clans.map((clan, key) => {
-            console.log(clan)
-            const userData = {
-                id: i,
-                col1: clan.clan_banner,
-                col2: clan.clan_name,
-                col3: clan.clan_desc,
-                col4: clan.clan_discord,
-                col5: clan.clan_population,
-                col6: clan.clan_recrut,
-                col7: clan.clan_activity,
-                col8: clan.clan_creator.user_login,
-                col9: formatDate(clan.createdAt),
-                col10: formatDate(clan.updatedAt),
-                col11: {clan: clan}
+    const [snackbar, setSnackbar] = useState(null)
+    const [state, setState] = useState({
+        deleteModal: false,
+        openModal: false,
+        user: '',
+
+    })
+    const ref = {
+        clanName: useRef(''),
+        clanDesc: useRef(''),
+        clanBanner: useRef(''),
+        clanDiscord: useRef(''),
+        clanPopulation: useRef(''),
+        clanRecrut: useRef(''),
+        clanActivity: useRef(''),
+    }
+    const [rows, setRows] = useState();
+    const {data} = useQuery(LISTCLANS)
+    const [createClan] = useMutation(CREATECLAN, {
+        refetchQueries: [{query: LISTCLANS}]
+    })
+    const [updateClan] = useMutation(UPDATECLAN, {
+        refetchQueries: [{query: LISTCLANS}]
+    })
+    const [deleteClan] = useMutation(DELETECLAN, {
+        refetchQueries: [{query: LISTCLANS}]
+    })
+    const updateClanInfo = useCallback(async (clan) => {
+        await updateClan({
+            variables: {
+                id: clan.id,
+                update: clan.update
             }
-            rows.push(userData)
-            i++
-            return rows
+        })
+    }, [updateClan])
+    const handleCellEditCommit = useCallback(
+        async (params) => {
+            try {
+                // Make the HTTP request to save in the backend
+                const response = await updateClanInfo({
+                    id: params.id,
+                    update: {
+                        [params.field]: params.value,
+                    }
+                })
+                setSnackbar({
+                    children: 'Modification des informations de la team / clan enregistrée !!!',
+                    severity: 'success'
+                });
+                setRows((prev) =>
+                    prev.map((row) => (row.id === params.id ? {...row, ...response} : row)),
+                );
+            } catch (error) {
+                setSnackbar({children: 'Il y a eu un problème...', severity: 'error'});
+                // Restore the row in case of error
+                setRows((prev) => [...prev]);
+            }
+        },
+        [updateClanInfo],
+    )
+    useEffect(() => {
+        if (data !== undefined) {
+            const init = initRows(data)
+            setRows(init)
+        }
+    }, [data])
+
+    const handleCloseSnackbar = () => setSnackbar(null)
+    const handleDeleteModal = async (clan) => (
+        setState({
+            ...state,
+            clan: clan,
+            deleteModal: true
+        })
+    )
+    const handleModalCreate = async () => (
+        setState({
+            ...state,
+            clan: null,
+            openModal: true
+        })
+    )
+    const handleCloseModal = () => {
+        setState({
+            ...state,
+            openModal: false,
+            deleteModal: false
         })
     }
+
+    const RenderPic = ({params}) => {
+        return (
+            <Avatar src={"http://localhost:8080/Upload/Game/" + params.value} alt={params.value}/>
+        )
+    }
+    // affichage menu action dans dataGrid
+    const ActionMenu = ({index, clan}) => {
+        return <div>
+            <IconButton
+                color="secondary"
+                aria-label="Delete clan"
+                id={'delete' + clan._id}
+                onClick={() => {
+                    handleDeleteModal(clan)
+                }}
+            >
+                <DeleteForeverIcon style={{color: red[500]}}
+                />
+            </IconButton>
+        </div>
+    }
+
     const addClan = () => {
         createClan({
             variables: {
@@ -237,60 +380,71 @@ export default function ClanDatagrid () {
                     clan_banner: ref.clanBanner.current.value,
                     clan_discord: ref.clanDiscord.current.value,
                     clan_population: ref.clanPopulation.current.value,
-                    clan_recrut:ref.clanRecrut.current.value,
+                    clan_recrut: ref.clanRecrut.current.value,
                     clan_activity: ref.clanActivity.current.value,
                 }
             },
             errorPolicy: 'all',
             onCompleted: data => {
-                console.log(data)
-                handleClose()
+                setSnackbar({children: 'Clan / Team créé(e) !!!', severity: 'success'})
+                handleCloseModal()
             },
-            onError: error => {
-                console.log(error)
-            }
+            onError: (({networkError}) => {
+                if (networkError) {
+                    networkError.result.errors.map(({message, status}) => {
+                        setSnackbar({children: message, severity: 'error'})
+                        return null
+                    })
+                }
+            })
         })
     }
-    const updateClanInfo = (clan) => {
-        updateClan({
+    const deleteClanInfo = (clan) => {
+        deleteClan({
             variables: {
-                id: clan._id,
-                update: {
-                    clan_name: ref.clanName.current.value,
-                    clan_desc: ref.clanDesc.current.value,
-                    clan_banner: ref.clanBanner.current.value,
-                    clan_discord: ref.clanDiscord.current.value,
-                    clan_population: ref.clanPopulation.current.value,
-                    clan_recrut:ref.clanRecrut.current.value,
-                    clan_activity: ref.clanActivity.current.value,
-                }
+                id: clan._id
             },
             errorPolicy: 'all',
             onCompleted: data => {
-                console.log(data)
-                handleClose()
+                setSnackbar({children: 'Clan / Team supprimé(e) !!!', severity: 'success'})
+                handleCloseModal()
             },
-            onError: error => {
-                console.log(error)
-            }
+            onError: (({networkError}) => {
+                if (networkError) {
+                    networkError.result.errors.map(({message, status}) => {
+                        setSnackbar({children: 'Clan / Team sup... Oh wait...', severity: 'error'})
+                        return networkError
+                    })
+                }
+            })
         })
-        return clan
     }
+
     return (
         <>
-            {/*{data === undefined ?*/}
-            {/*    <Loading/> :*/}
-            <div style={{height: 500, width: '100%'}}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={12} lg={12}>
-                        <Box textAlign="right">
-                            <Button color="secondary" onClick={() => {
-                                handleModalCreate()
-                            }}>Ajouter un clan</Button>
-                        </Box>
+            {data === undefined ?
+                <Loading/> :
+                <Box sx={{
+                    height: 500,
+                    width: '100%',
+                    '& .MuiDataGrid-cell--editing': {
+                        bgcolor: 'rgb(255,215,115, 0.19)',
+                        color: '#1a3e72',
+                    },
+                    '& .Mui-error': {
+                        bgcolor: 'rgb(126,10,15)',
+                        color: '#ff4343',
+                    },
+                }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={12} lg={12}>
+                            <Box textAlign="right">
+                                <Button color="secondary" onClick={() => {
+                                    handleModalCreate()
+                                }}>Ajouter un clan</Button>
+                            </Box>
+                        </Grid>
                     </Grid>
-                </Grid>
-                {data ?
                     <DataGrid
                         rows={rows}
                         columns={columns}
@@ -299,49 +453,86 @@ export default function ClanDatagrid () {
                             LoadingOverlay: CustomLoadingOverlay,
                             NoRowsOverlay: CustomNoRowsOverlay,
                         }}
-                    /> :
-                    <Loading/>
-                }
-                <Modal
-                    open={state.openModal}
-                    onClose={handleClose}
-                    key={state.clan !== null ? state.clan._id : 'createClanModal'}
-                    closeAfterTransition
-                    BackdropComponent={Backdrop}
-                    BackdropProps={{timeout: 500}}
-                >
-                    <Grid container>
-                        <Grid
-                            item
-                            xs={12} md={12} lg={12}
+                        onCellEditCommit={handleCellEditCommit}
+                    />
+                    {!!snackbar && (
+                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                            <Alert {...snackbar} onClose={handleCloseSnackbar}/>
+                        </Snackbar>
+                    )}
+                    {
+                        state.openModal &&
+                        <Modal
+                            open={state.openModal}
+                            onClose={handleCloseModal}
+                            key="createClanModal"
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{timeout: 500}}
                         >
-                            {state.clan ?
-                                <UpdateClanForm
-                                    style={style}
-                                    input={ref}
-                                    state={state}
-                                    handleClose={() => {
-                                        handleClose()
-                                    }}
-                                    updateClan={() => {
-                                        updateClanInfo(state.clan)
-                                    }}
-                                /> :
-                                <AddClanForm
-                                    style={style}
-                                    input={ref}
-                                    handleClose={() => {
-                                        handleClose()
-                                    }}
-                                    addClan={() => {
-                                        addClan()
-                                    }}
-                                />
-                            }
+                            <Grid container>
+                                <Grid
+                                    item
+                                    xs={12} md={12} lg={12}
+                                >
+                                    <AddClanForm
+                                        style={style}
+                                        input={ref}
+                                        handleClose={() => {
+                                            handleCloseModal()
+                                        }}
+                                        addClan={() => {
+                                            addClan()
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Modal>
+                    }
+                    {state.deleteModal &&
+                    <Modal
+                        open={state.deleteModal}
+                        onClose={handleCloseModal}
+                        key={state.clan.clan_id}
+                        closeAfterTransition
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{timeout: 500}}
+                    >
+                        <Grid container>
+                            <Grid
+                                item
+                                xs={12} md={12} lg={12}
+                            >
+                                <Box sx={style}>
+                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                        Suppression de
+                                        du clan / team {state.clan.clan_name ? state.clan.clan_name : state.clan._id}
+                                    </Typography>
+                                    <Typography id="modal-modal-description" sx={{mt: 2}}>
+                                        Etes-vous sûr de vouloir supprimer ce clan / team ?
+                                    </Typography>
+                                    <Grid container spacing={2}>
+                                        <Grid
+                                            item
+                                            xs={6} md={6} lg={6}
+                                        >
+                                            <Button onClick={handleCloseModal}>Retour</Button>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs={6} md={6} lg={6}
+                                        >
+                                            <Button onClick={() => {
+                                                deleteClanInfo(state.clan)
+                                            }}>Valider</Button>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Modal>
-            </div>
+                    </Modal>
+                    }
+                </Box>
             }
         </>
     )

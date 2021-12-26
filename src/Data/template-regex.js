@@ -70,11 +70,9 @@ const templateRegex = {
         message: 'Image non valide / Format non pris en charge',
         message_empty: 'Vous devez remplir ce champs'
     },
-
     /**
      * form Event
      */
-
     eventName: {
         regex: new RegExp('^[^<>]+$'),
         message: 'Nom invalide',
@@ -103,15 +101,9 @@ const templateRegex = {
     /**
      * Clan form
      */
-
     clanName: {
         regex: new RegExp('^[^<>]+$'),
         message: 'Nom de clan non valide',
-        message_empty: 'Vous devez remplir ce champs'
-    },
-    clanDate: {
-        regex: new RegExp('^[^<>]+$'),
-        message: 'Date non valide',
         message_empty: 'Vous devez remplir ce champs'
     },
     clanDesc: {
@@ -140,6 +132,11 @@ const templateRegex = {
         message_empty: 'Vous devez remplir ce champs'
     },
     clanActivity: {
+        regex: new RegExp('^[^<>]+$'),
+        message: 'Champ non valide',
+        message_empty: 'Vous devez remplir ce champs'
+    },
+    clanCreator: {
         regex: new RegExp('^[^<>]+$'),
         message: 'Champ non valide',
         message_empty: 'Vous devez remplir ce champs'

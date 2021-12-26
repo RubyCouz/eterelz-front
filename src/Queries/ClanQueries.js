@@ -28,24 +28,33 @@ fragment ClanQuery on Clan {
     createdAt, 
     updatedAt
 }`
-
 /**
  * liste des clans
  */
-export const LISTCLAN = gql`
+export const LISTCLANS = gql`
 ${CLANQUERY}
 query {
     clans {
         ...ClanQuery
     }
 }`
-
 /**
  * Modif clan
  */
 export const UPDATECLAN = gql`
 mutation UpdateClan($id: ID!, $update: UpdateClanInput) {
-    updateClan(_id: $id, UpdateClanInput: $update) {
+    updateClan(id: $id, updateClanInput: $update) {
         _id
     }
 }`
+/**
+ * suppression d'un clan
+ * @type {DocumentNode}
+ */
+export const DELETECLAN = gql`
+mutation deleteClan($id: ID!) {
+    deleteClan(id: $id) {
+        _id
+    }
+}
+`

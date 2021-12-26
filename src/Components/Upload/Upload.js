@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Dropzone from "../DropZone/DropZone";
 import "./Upload.css";
 import Progress from "../Progress/Progress";
@@ -13,8 +13,7 @@ export default function Upload(props) {
         setState({...state, files: files})
     }
 
-
-    React.useEffect( () => {
+    useEffect( () => {
         async function upload() {
             if (state.files.length !== 0 && props.uploading === false) {
                 props.setUploadingFile(state.files[0])
