@@ -50,7 +50,7 @@ export default function Upload(props) {
                     <div>
                         <Dropzone
                             files={state.files}
-                            game_pic={props.game_pic}
+                            inputRef={props.inputRef}
                             onFilesAdded={onFilesAdded}
                             disabled={props.uploading || props.successfullUploaded}
                         />

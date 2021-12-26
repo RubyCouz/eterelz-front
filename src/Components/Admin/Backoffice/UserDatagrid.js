@@ -28,6 +28,7 @@ import AuthContext from '../../../context/auth-context'
 import {Alert} from '@material-ui/lab'
 import templateRegex from '../../../Data/template-regex'
 import Avatar from "@material-ui/core/Avatar";
+import Upload from "../../Upload/Upload";
 
 const style = {
     position: 'absolute',
@@ -164,20 +165,26 @@ const formValidate = (input, value) => {
 }
 export default function UserDatagrid() {
     const auth = useContext(AuthContext)
-    const columns: GridColDef[] = [{
-        field: 'user_avatar',
-        headerName: 'Avatar',
-        flex: 1,
-        align: "center",
-        renderCell: ((params) => {
-            return (
-                <div style={{cursor: "pointer"}}>
-                    <RenderPic params={params}/>
-                </div>
-            )
+    const columns: GridColDef[] = [
+        {
+            field: 'user_avatar',
+            headerName: 'Avatar',
+            flex: 1,
+            align: "center",
+            renderCell: ((params) => {
+                return (
+                    <div style={{cursor: "pointer"}}>
+                        <RenderPic
+                            params={params}
+                            userId={params.id}
+                            picture={params.value}
+                            login={params.row.user_login}
+                        />
+                    </div>
+                )
 
-        })
-    },
+            })
+        },
         {
             field: 'user_login',
             headerName: 'Pseudo',
@@ -300,12 +307,18 @@ export default function UserDatagrid() {
             })
         },
     ]
+
+    const [uploading, setUploading] = React.useState(false)
+    const [successfulUploaded, setSuccessfulUploaded] = React.useState(false)
+    const [uploadProgress, setUploadProgress] = React.useState({})
+    const [uploadingFile, setUploadingFile] = React.useState()
     const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
+        picModal: false,
         deleteModal: false,
         openModal: false,
         user: '',
-
+        params: ''
     })
     const [rows, setRows] = useState();
     const {data} = useQuery(LIST_USERS)
@@ -319,6 +332,7 @@ export default function UserDatagrid() {
         refetchQueries: [{query: LIST_USERS}]
     })
     const email = useRef('')
+    const user_avatar = useRef('')
     const updateProfil = useCallback(async (user) => {
         await updateUser({
             variables: {
@@ -349,6 +363,80 @@ export default function UserDatagrid() {
         },
         [updateProfil],
     )
+    const updatePic = async (params) => {
+
+        setUploading(true)
+        setUploadProgress({})
+        const promises = []
+        promises.push(sendRequest(uploadingFile))
+        try {
+            await Promise.all(promises)
+            setUploading(false)
+            setSuccessfulUploaded(true)
+            // Make the HTTP request to save in the backend
+            const response = await updateProfil({
+                id: params.id,
+                update: {
+                    user_avatar: user_avatar,
+                }
+            })
+            setSnackbar({children: 'Modification du profil enregistrée !!!', severity: 'success'});
+            setRows((prev) =>
+                prev.map((row) => (row.id === params.id ? {...row, ...response} : row)),
+            );
+        } catch (error) {
+            setSuccessfulUploaded(false)
+            setUploading(false)
+            setSnackbar({children: 'Il y a eu un problème...', severity: 'error'});
+            // Restore the row in case of error
+            setRows((prev) => [...prev]);
+        }
+    }
+    /**
+     * envoie de la requête vers le serveur, gestion de chargement et des erreurs
+     * @param file
+     * @returns {Promise<unknown>}
+     */
+    const sendRequest = (file) => {
+        return new Promise((resolve, reject) => {
+            const req = new XMLHttpRequest()
+
+            req.upload.addEventListener('progress', event => {
+
+                if (event.lengthComputable) {
+                    const copy = {...uploadProgress}
+                    copy[file.name] = {
+                        state: 'pending',
+                        percentage: (event.loaded / event.total) * 100
+                    };
+                    setUploadProgress(copy)
+                }
+            })
+
+            req.upload.addEventListener('load', event => {
+                const copy = {...uploadProgress}
+                copy[file.name] = {state: 'done', percentage: 100}
+                setUploadProgress(copy)
+                resolve(req.response)
+            })
+
+            req.upload.addEventListener('error', event => {
+                const copy = {...uploadProgress}
+                copy[file.name] = {state: 'error', percentage: 0}
+                setUploadProgress(copy)
+                reject(req.response)
+            })
+
+            const formData = new FormData()
+            formData.append("file", file, file.name)
+
+            req.open('POST', 'http://localhost:8080/upload/profilePic')
+            console.log(file)
+            console.log(file.name)
+            console.log(formData)
+            req.send(formData)
+        });
+    }
     useEffect(() => {
         if (data !== undefined) {
             const init = initRows(data)
@@ -363,6 +451,13 @@ export default function UserDatagrid() {
             deleteModal: true
         })
     )
+    const handleModalPic = async (params) => {
+        setState({
+            ...state,
+            picModal: true,
+           params: params
+        })
+    }
     const handleModalCreate = async () => (
         setState({
             ...state,
@@ -374,12 +469,21 @@ export default function UserDatagrid() {
         setState({
             ...state,
             openModal: false,
-            deleteModal: false
+            deleteModal: false,
+            picModal: false,
+            login: '',
+            user: '',
         })
     }
     const RenderPic = ({params}) => {
         return (
-            <Avatar src={"http://localhost:8080/Upload/User/" + params.value} alt={params.value}/>
+            <Avatar
+                src={"http://localhost:8080/Upload/ProfilePic/" + params.value}
+                alt={params.value}
+                title={"avatar de " + params.row.user_login}
+                onClick={() => {
+                    handleModalPic(params)
+                }}/>
         )
     }
     // sélection icon actif ou non
@@ -604,6 +708,55 @@ export default function UserDatagrid() {
                                 </Grid>
                             </Grid>
                         </Modal>
+                    }
+                    {state.picModal &&
+                    <Modal
+                        open={state.picModal}
+                        onClose={handleCloseModal}
+                        key={state.params.id}
+                        closeAfterTransition
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{timeout: 500}}
+                    >
+                        <Grid container>
+                            <Grid
+                                item
+                                xs={12} md={12} lg={12}
+                            >
+                                <Box sx={style}>
+                                    <h1>Modification de l'avatar de {state.params.row.user_login}</h1>
+                                    <form action="" className="auth-form" encType="multipart/form-data">
+                                        <Upload
+                                            uploading={uploading}
+                                            setSuccessfullUploaded={setSuccessfulUploaded}
+                                            successfullUploaded={successfulUploaded}
+                                            setUploadProgress={setUploadProgress}
+                                            setUploading={setUploading}
+                                            uploadProgress={uploadProgress}
+                                            setUploadingFile={setUploadingFile}
+                                            inputRef={user_avatar}
+                                        />
+                                        <Grid container spacing={2}>
+                                            <Grid
+                                                item
+                                                xs={6} md={6} lg={6}
+                                            >
+                                                <Button onClick={handleCloseModal}>Retour</Button>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs={6} md={6} lg={6}
+                                            >
+                                                <Button onClick={() => {
+                                                    updatePic(state.params)
+                                                }}>Valider</Button>
+                                            </Grid>
+                                        </Grid>
+                                    </form>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Modal>
                     }
                 </Box>
             }

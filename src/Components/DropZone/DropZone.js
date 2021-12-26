@@ -8,7 +8,7 @@ export default function DropZone(props) {
 
     const openFileDialog = () => {
         if (props.disabled) return
-        props.game_pic.current.click()
+        props.inputRef.current.click()
     }
 
     const onFilesAdded = (evt) => {
@@ -61,7 +61,7 @@ export default function DropZone(props) {
             style={{ cursor: props.disabled ? "default" : "pointer" }}
         >
             <input
-                ref={props.game_pic}
+                ref={props.inputRef}
                 className="fileInput"
                 type="file"
                 onChange={onFilesAdded}
