@@ -351,7 +351,7 @@ export default function ClanDatagrid() {
 
     const RenderPic = ({params}) => {
         return (
-            <Avatar src={"http://localhost:8080/Upload/Game/" + params.value} alt={params.value}/>
+            <Avatar src={"http://localhost:8080/Upload/Clan/" + params.value} alt={params.value}/>
         )
     }
     // affichage menu action dans dataGrid

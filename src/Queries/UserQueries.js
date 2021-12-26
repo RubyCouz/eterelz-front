@@ -37,6 +37,7 @@ export const USER_QUERY = gql`
         user_login
         user_email
         user_role
+        user_avatar
         createdAt
         user_isActive
         user_discord

@@ -15,6 +15,7 @@ import templateRegex from "../../../Data/template-regex";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {Alert} from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
+import Avatar from "@material-ui/core/Avatar";
 
 const style = {
     position: 'absolute',
@@ -168,11 +169,14 @@ export default function GameDatagrid() {
             field: 'game_pic',
             headerName: 'Jaquette',
             flex: 1,
-            editable: true,
-            preProcessEditCellProps: (params) => {
-                const isValid = formValidate('gamePic', params.props.value);
-                return {...params.props, error: !isValid};
-            },
+            align: "center",
+            renderCell: ((params) => {
+                return (
+                    <div style={{cursor: "pointer"}}>
+                        <RenderPic params={params}/>
+                    </div>
+                )
+            }),
         },
         {
             field: 'createdAt',
@@ -283,6 +287,11 @@ export default function GameDatagrid() {
             openModal: false,
             deleteModal: false
         })
+    }
+    const RenderPic = ({params}) => {
+        return (
+            <Avatar src={"http://localhost:8080/Upload/Game/" + params.value} alt={params.value}/>
+        )
     }
     // affichage menu action dans dataGrid
     const ActionMenu = ({index, game}) => {

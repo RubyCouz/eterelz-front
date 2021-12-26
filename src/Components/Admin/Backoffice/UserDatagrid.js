@@ -27,6 +27,7 @@ import Typography from '@material-ui/core/Typography'
 import AuthContext from '../../../context/auth-context'
 import {Alert} from '@material-ui/lab'
 import templateRegex from '../../../Data/template-regex'
+import Avatar from "@material-ui/core/Avatar";
 
 const style = {
     position: 'absolute',
@@ -135,6 +136,7 @@ const initRows = (data) => {
     data.users.map((user, key) => {
         const userData = {
             id: user._id,
+            user_avatar: user.user_avatar,
             user_login: user.user_login,
             user_email: user.user_email,
             user_discord: user.user_discord,
@@ -162,7 +164,20 @@ const formValidate = (input, value) => {
 }
 export default function UserDatagrid() {
     const auth = useContext(AuthContext)
-    const columns: GridColDef[] = [
+    const columns: GridColDef[] = [{
+        field: 'user_avatar',
+        headerName: 'Avatar',
+        flex: 1,
+        align: "center",
+        renderCell: ((params) => {
+            return (
+                <div style={{cursor: "pointer"}}>
+                    <RenderPic params={params}/>
+                </div>
+            )
+
+        })
+    },
         {
             field: 'user_login',
             headerName: 'Pseudo',
@@ -361,6 +376,11 @@ export default function UserDatagrid() {
             openModal: false,
             deleteModal: false
         })
+    }
+    const RenderPic = ({params}) => {
+        return (
+            <Avatar src={"http://localhost:8080/Upload/User/" + params.value} alt={params.value}/>
+        )
     }
     // sélection icon actif ou non
     const IsActiveIcon = ({index, bool}) => {
