@@ -273,7 +273,6 @@ export default function Dashboard(callbackfn, thisArg) {
             const req = new XMLHttpRequest()
 
             req.upload.addEventListener('progress', event => {
-
                 if (event.lengthComputable) {
                     const copy = {...uploadProgress}
                     copy[file.name] = {
@@ -283,14 +282,12 @@ export default function Dashboard(callbackfn, thisArg) {
                     setUploadProgress(copy)
                 }
             })
-
             req.upload.addEventListener('load', event => {
                 const copy = {...uploadProgress}
                 copy[file.name] = {state: 'done', percentage: 100}
                 setUploadProgress(copy)
                 resolve(req.response)
             })
-
             req.upload.addEventListener('error', event => {
                 const copy = {...uploadProgress}
                 copy[file.name] = {state: 'error', percentage: 0}

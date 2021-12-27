@@ -10,6 +10,7 @@ export default function Upload(props) {
         files: [],
     })
      const onFilesAdded = (files) => {
+        console.log(files)
         setState({...state, files: files})
     }
 
