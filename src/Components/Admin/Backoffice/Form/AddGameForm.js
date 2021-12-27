@@ -65,17 +65,10 @@ export default function AddGameForm(props) {
                 </Grid>
                 <Grid item xs={12} md={12} lg={12}>
                     <FormControl fullWidth>
-                        <TextField
-                            id="outlined-basic"
-                            label="Image"
-                            variant="outlined"
-                            type="text"
-                            inputRef={props.input.gamePic}
-                            helperText={checkForm.gamePicMessage !== '' && checkForm.gamePicMessage}
-                            error={checkForm.gamePicMessage !== ''}
-                            name="gamePic"
-                            value={checkForm.gamePicValue ? checkForm.gamePicValue : ''}
-                            onChange={handleInputChange}
+                        <input
+                            className="fileInput"
+                            type="file"
+                            onChange={props.onfileChange}
                         />
                     </FormControl>
                 </Grid>

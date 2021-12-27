@@ -3,8 +3,6 @@ import templateRegex from '../Data/template-regex'
 
 export default function validForm(input, value, required) {
     let response = ''
-    console.log(input)
-    console.log(value)
     const inputTest = templateRegex[input].regex.test(value)
 
     if (value === '') {
@@ -14,6 +12,5 @@ export default function validForm(input, value, required) {
     } else if (!inputTest) {
         response = templateRegex[input].message
     }
-    console.log(response)
     return response
 }

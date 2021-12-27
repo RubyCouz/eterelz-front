@@ -370,7 +370,6 @@ export default function UserDatagrid() {
     const updatePic = async (params) => {
         const promises = []
         promises.push(sendRequest(state.selectedFile, params.id))
-        console.log(promises)
         try {
             await Promise.all(promises)
             // Make the HTTP request to save in the backend
