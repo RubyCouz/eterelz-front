@@ -28,7 +28,7 @@ import AuthContext from '../../../context/auth-context'
 import {Alert} from '@material-ui/lab'
 import templateRegex from '../../../Data/template-regex'
 import Avatar from "@material-ui/core/Avatar";
-import UpdateGamePicForm from "./Form/UpdateGamePicForm";
+import UpdatePicForm from "./Form/UpdatePicForm";
 
 const style = {
     position: 'absolute',
@@ -307,7 +307,6 @@ export default function UserDatagrid() {
             })
         },
     ]
-
     const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
         picModal: false,
@@ -379,7 +378,7 @@ export default function UserDatagrid() {
                     user_avatar: state.selectedFile.name,
                 }
             })
-            setSnackbar({children: 'Modification du profil enregistrée !!!', severity: 'success'});
+            setSnackbar({children: 'Modification du profil enregistrée !!!', severity: 'success'})
             setRows((prev) =>
                 prev.map((row) => (row.id === params.id ? {...row, ...response} : row)),
             );
@@ -415,12 +414,6 @@ export default function UserDatagrid() {
             req.send(formData)
         });
     }
-    useEffect(() => {
-        if (data !== undefined) {
-            const init = initRows(data)
-            setRows(init)
-        }
-    }, [data])
     const handleCloseSnackbar = () => setSnackbar(null)
     const handleDeleteModal = async (user) => (
         setState({
@@ -588,6 +581,12 @@ export default function UserDatagrid() {
             })
         })
     }
+    useEffect(() => {
+        if (data !== undefined) {
+            const init = initRows(data)
+            setRows(init)
+        }
+    }, [data])
     return (
         <>
             {data === undefined ?
@@ -716,7 +715,7 @@ export default function UserDatagrid() {
                             >
                                 <Box sx={style}>
                                     <h1>Modification de l'avatar de {state.params.row.user_login}</h1>
-                                    <UpdateGamePicForm
+                                    <UpdatePicForm
                                         handleCloseModal={handleCloseModal}
                                         onfileChange={onFileChange}
                                         updatePic={() => {

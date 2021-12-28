@@ -16,6 +16,8 @@ import templateRegex from '../../../Data/template-regex'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import {Alert} from '@material-ui/lab'
 import Typography from '@material-ui/core/Typography'
+import Avatar from "@material-ui/core/Avatar";
+import UpdatePicForm from "./Form/UpdatePicForm";
 
 const style = {
     position: 'absolute',
@@ -59,7 +61,6 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
 }));
-
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
@@ -70,7 +71,6 @@ function CustomLoadingOverlay() {
         </GridOverlay>
     );
 }
-
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
@@ -118,13 +118,12 @@ function CustomNoRowsOverlay() {
         </StyledGridOverlay>
     );
 }
-
 const initRows = (data) => {
     let rows = []
     data.events.map((event, key) => {
-        console.log(event)
         const eventData = {
             id: event._id,
+            event_pic: event.event_pic,
             event_name: event.event_name,
             event_date: event.event_date,
             event_desc: event.event_desc,
@@ -141,7 +140,6 @@ const initRows = (data) => {
     return rows
 }
 const formValidate = (input, value) => {
-    console.log(templateRegex[input].regex.test(value))
     if (value === '') {
         return true
     } else {
@@ -150,6 +148,25 @@ const formValidate = (input, value) => {
 }
 export default function EventDatagrid() {
     const columns: GridColDef[] = [
+        {
+            field: 'event_pic',
+            headerName: 'Affiche',
+            flex: 1,
+            align: 'center',
+            renderCell: ((params) => {
+                return (
+                    <div style={{cursor: "pointer"}}>
+                        <RenderPic
+                            params={params}
+                            eventId={params.id}
+                            picture={params.value}
+                            eventName={params.row.event_name}
+                        />
+                    </div>
+                )
+
+            })
+        },
         {
             field: 'event_name',
             headerName: 'Nom',
@@ -238,10 +255,13 @@ export default function EventDatagrid() {
     ]
     const [snackbar, setSnackbar] = React.useState(null)
     const [state, setState] = useState({
+        id: '',
+        picModal: false,
         deleteModal: false,
         openModal: false,
         event: '',
-
+        params: '',
+        selectedFile: null
     })
     const [rows, setRows] = React.useState();
     const {data} = useQuery(LISTEVENT)
@@ -255,6 +275,7 @@ export default function EventDatagrid() {
         refetchQueries: [{query: LISTEVENT}]
     })
     const ref = {
+        eventPic: useRef(''),
         eventName: useRef(''),
         eventDesc: useRef(''),
         eventDate: useRef('')
@@ -289,12 +310,53 @@ export default function EventDatagrid() {
         },
         [updateEventInfo],
     )
-    useEffect(() => {
-        if (data !== undefined) {
-            const init = initRows(data)
-            setRows(init)
+    const onFileChange = (event) => {
+        setState({
+            ...state,
+            selectedFile: event.target.files[0]
+        })
+    }
+    const updatePic = async (params) => {
+        const promises = []
+        promises.push(sendRequest(state.selectedFile, params.id))
+        try {
+            await Promise.all(promises)
+            const response = await updateEventInfo({
+                id: params.id,
+                update: {
+                    event_pic: state.selectedFile.name,
+                }
+            })
+            setSnackbar({children: 'Modification du profil enregistrée !!!', severity: 'success'})
+            setRows((prev) =>
+                prev.map((row) => (row.id === params.id ? {...row, ...response} : row)),
+            )
+            handleCloseModal()
+        } catch (error) {
+            setSnackbar({children: 'Il y a eu un problème...', severity: 'error'});
+            // Restore the row in case of error
+            setRows((prev) => [...prev]);
         }
-    }, [data])
+    }
+    const sendRequest = (file, id) => {
+        return new Promise((resolve, reject) => {
+            const req = new XMLHttpRequest()
+            req.upload.addEventListener('progress', event => {
+                console.log('in progress')
+            })
+            req.upload.addEventListener('load', event => {
+                console.log('complete')
+                resolve(req.response)
+            })
+            req.upload.addEventListener('error', event => {
+                console.log('error')
+            })
+            const formData = new FormData()
+            formData.append("file", file, file.name)
+            req.open('POST', 'http://localhost:8080/upload/event/' + id)
+            req.send(formData)
+        })
+    }
     const handleCloseSnackbar = () => setSnackbar(null)
     const handleModalCreate = async () => (
         setState({
@@ -303,11 +365,15 @@ export default function EventDatagrid() {
             openModal: true
         })
     )
-    const handleClose = () => {
+    const handleCloseModal = () => {
         setState({
-            ...state, openModal: false
+            ...state,
+            openModal: false,
+            deleteModal: false,
+            picModal: false,
+            event: '',
         })
-    };
+    }
     const handleDeleteModal = async (event) => (
         setState({
             ...state,
@@ -315,12 +381,36 @@ export default function EventDatagrid() {
             deleteModal: true
         })
     )
-    const handleCloseModal = () => {
+    const handleModalPic = async (params) => {
         setState({
             ...state,
-            openModal: false,
-            deleteModal: false
+            picModal: true,
+            params: params
         })
+    }
+    const RenderPic = ({params}) => {
+        if(params.value !== '' && params.value !== null) {
+            return (
+                <Avatar
+                    src={"http://localhost:8080/Upload/Event/" + params.value}
+                    alt={params.value}
+                    title={"Affiche de " + params.row.event_name}
+                    onClick={() => {
+                        handleModalPic(params)
+                    }}/>
+            )
+        } else {
+            return (
+                <Avatar
+                    src={"http://localhost:8080/Upload/Event/default.gif"}
+                    alt={params.value}
+                    title={"avatar de " + params.row.event_name}
+                    onClick={() => {
+                        handleModalPic(params)
+                    }}/>
+            )
+        }
+
     }
     // affichage menu action dans dataGrid
     const ActionMenu = ({index, event}) => {
@@ -343,17 +433,22 @@ export default function EventDatagrid() {
     }
 
     const addEvent = () => {
-        console.log(ref)
         createEvent({
             variables: {
                 createEvent: {
+                    event_pic: (state.selectedFile !== null ? state.selectedFile.name : ''),
                     event_name: ref.eventName.current.value,
                     event_date: ref.eventDate.current.value,
                     event_desc: ref.eventDesc.current.value,
                 }
             },
             errorPolicy: 'all',
-            onCompleted: data => {
+            onCompleted: data1 => {
+                console.log(data1.createEvent.event_pic)
+                if (data1.createEvent.event_pic !== '') {
+                    setState({...state, id: data1.createEvent._id
+                    })
+                }
                 setSnackbar({children: 'Evènement créé !!!', severity: 'success'})
                 handleCloseModal()
             },
@@ -388,6 +483,16 @@ export default function EventDatagrid() {
         })
     }
 
+    useEffect(() => {
+        if (data !== undefined) {
+            const init = initRows(data)
+            setRows(init)
+        }
+        if(state.id !== '' && state.selectedFile !== null) {
+            const promises = []
+            promises.push(sendRequest(state.selectedFile, state.id))
+        }
+    }, [data, state.id, state.selectedFile])
     return (
         <>
             {data === undefined ?
@@ -433,7 +538,7 @@ export default function EventDatagrid() {
                         state.openModal &&
                         <Modal
                             open={state.openModal}
-                            onClose={handleClose}
+                            onClose={handleCloseModal}
                             key="createEventModal"
                             closeAfterTransition
                             BackdropComponent={Backdrop}
@@ -447,8 +552,9 @@ export default function EventDatagrid() {
                                         <AddEventForm
                                             style={style}
                                             input={ref}
-                                            handleClose={() => {
-                                                handleClose()
+                                            onfileChange={onFileChange}
+                                            handleCloseModal={() => {
+                                                handleCloseModal()
                                             }}
                                             addEvent={() => {
                                                 addEvent()
@@ -502,8 +608,35 @@ export default function EventDatagrid() {
                             </Grid>
                         </Modal>
                     }
+                    {state.picModal &&
+                    <Modal
+                        open={state.picModal}
+                        onClose={handleCloseModal}
+                        key={state.params.id}
+                        closeAfterTransition
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{timeout: 500}}
+                    >
+                        <Grid container>
+                            <Grid
+                                item
+                                xs={12} md={12} lg={12}
+                            >
+                                <Box sx={style}>
+                                    <h1>Modification de l'affiche de {state.params.row.event_name}</h1>
+                                    <UpdatePicForm
+                                        handleCloseModal={handleCloseModal}
+                                        onfileChange={onFileChange}
+                                        updatePic={() => {
+                                            updatePic(state.params)
+                                        }}
+                                    />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Modal>
+                    }
                 </Box>
-
             }
         </>
     )

@@ -7,6 +7,7 @@ export const CREATEEVENT = gql`
     mutation CREATEEVENT($createEvent: EventInput!) {
         createEvent(eventInput: $createEvent) {
             _id
+            event_pic
         }
     }
 `
@@ -16,6 +17,7 @@ export const CREATEEVENT = gql`
 export const EVENTQUERY = gql`
     fragment EventQuery on Event {
         _id
+        event_pic,
         event_name,
         event_desc,
         event_date,

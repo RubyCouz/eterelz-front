@@ -89,6 +89,15 @@ export default function AddUserForm(props) {
                         />
                     </FormControl>
                 </Grid>
+                <Grid item xs={12} md={12} lg={12}>
+                    <FormControl fullWidth>
+                        <input
+                            className="fileInput"
+                            type="file"
+                            onChange={props.onfileChange}
+                        />
+                    </FormControl>
+                </Grid>
             </Grid>
             <Grid container spacing={2}
             >

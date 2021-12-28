@@ -7,6 +7,7 @@ export const CREATECLAN = gql`
 mutation CREATECLAN($createClan: ClanInput) {
     createClan(clanInput: $createClan) {
         _id
+        clan_banner
     }
 }`
 /**

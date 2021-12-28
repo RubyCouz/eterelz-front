@@ -17,6 +17,7 @@ import {Alert} from '@material-ui/lab'
 import Typography from '@material-ui/core/Typography'
 import './ClanDatagrid.css'
 import Avatar from "@material-ui/core/Avatar";
+import UpdatePicForm from "./Form/UpdatePicForm";
 
 const style = {
     position: 'absolute',
@@ -59,7 +60,7 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         // fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
-}));
+}))
 
 // barre de chargement de données
 function CustomLoadingOverlay() {
@@ -160,7 +161,12 @@ export default function ClanDatagrid() {
             renderCell: ((params) => {
                 return (
                     <div style={{cursor: "pointer"}}>
-                        <RenderPic params={params}/>
+                        <RenderPic
+                            params={params}
+                            clanId={params.id}
+                            picture={params.value}
+                            clanName={params.row.clan_name}
+                        />
                     </div>
                 )
 
@@ -261,15 +267,18 @@ export default function ClanDatagrid() {
     ]
     const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
+        id: '',
+        picModal: false,
         deleteModal: false,
         openModal: false,
-        user: '',
-
+        event: '',
+        params: '',
+        selectedFile: null
     })
     const ref = {
+        clanPic: useRef(''),
         clanName: useRef(''),
         clanDesc: useRef(''),
-        clanBanner: useRef(''),
         clanDiscord: useRef(''),
         clanPopulation: useRef(''),
         clanRecrut: useRef(''),
@@ -319,13 +328,55 @@ export default function ClanDatagrid() {
         },
         [updateClanInfo],
     )
-    useEffect(() => {
-        if (data !== undefined) {
-            const init = initRows(data)
-            setRows(init)
+    const onFileChange = (event) => {
+        setState({
+            ...state,
+            selectedFile: event.target.files[0]
+        })
+    }
+    const updatePic = async (params) => {
+        const promises = []
+        promises.push(sendRequest(state.selectedFile, params.id))
+        try {
+            await Promise.all(promises)
+            const response = await updateClanInfo({
+                id: params.id,
+                update: {
+                    clan_banner: state.selectedFile.name,
+                }
+            })
+            setSnackbar({children: 'Modification du clan enregistrée !!!', severity: 'success'})
+            setRows((prev) =>
+                prev.map((row) => (row.id === params.id ? {...row, ...response} : row)),
+            )
+            handleCloseModal()
+        } catch (error) {
+            setSnackbar({children: 'Il y a eu un problème...', severity: 'error'});
+            // Restore the row in case of error
+            setRows((prev) => [...prev]);
         }
-    }, [data])
-
+    }
+    const sendRequest = (file, id) => {
+        return new Promise((resolve, reject) => {
+            const req = new XMLHttpRequest()
+            req.upload.addEventListener('progress', event => {
+                console.log('in progress')
+            })
+            req.upload.addEventListener('load', event => {
+                console.log('complete')
+                resolve(req.response)
+            })
+            req.upload.addEventListener('error', event => {
+                console.log('error')
+            })
+            const formData = new FormData()
+            console.log(file)
+            console.log(id)
+            formData.append("file", file, file.name)
+            req.open('POST', 'http://localhost:8080/upload/clan/' + id)
+            req.send(formData)
+        })
+    }
     const handleCloseSnackbar = () => setSnackbar(null)
     const handleDeleteModal = async (clan) => (
         setState({
@@ -341,18 +392,46 @@ export default function ClanDatagrid() {
             openModal: true
         })
     )
+    const handleModalPic = async (params) => {
+        setState({
+            ...state,
+            picModal: true,
+            params: params
+        })
+    }
     const handleCloseModal = () => {
         setState({
             ...state,
             openModal: false,
-            deleteModal: false
+            deleteModal: false,
+            picModal: false,
+            event: '',
         })
     }
 
     const RenderPic = ({params}) => {
-        return (
-            <Avatar src={"http://localhost:8080/Upload/Clan/" + params.value} alt={params.value}/>
-        )
+        if(params.value !== '' && params.value !== null) {
+            console.log(params.value)
+            return (
+                <Avatar
+                    src={"http://localhost:8080/Upload/Clan/" + params.value}
+                    alt={params.value}
+                    title={"Bannière de " + params.row.clanName}
+                    onClick={() => {
+                        handleModalPic(params)
+                    }}/>
+            )
+        } else {
+            return (
+                <Avatar
+                    src={"http://localhost:8080/Upload/Clan/default.gif"}
+                    alt={params.value}
+                    title={"Bannière de " + params.row.clanName}
+                    onClick={() => {
+                        handleModalPic(params)
+                    }}/>
+            )
+        }
     }
     // affichage menu action dans dataGrid
     const ActionMenu = ({index, clan}) => {
@@ -377,7 +456,7 @@ export default function ClanDatagrid() {
                 createClan: {
                     clan_name: ref.clanName.current.value,
                     clan_desc: ref.clanDesc.current.value,
-                    clan_banner: ref.clanBanner.current.value,
+                    clan_banner: (state.selectedFile !== null ? state.selectedFile.name : ''),
                     clan_discord: ref.clanDiscord.current.value,
                     clan_population: ref.clanPopulation.current.value,
                     clan_recrut: ref.clanRecrut.current.value,
@@ -385,7 +464,11 @@ export default function ClanDatagrid() {
                 }
             },
             errorPolicy: 'all',
-            onCompleted: data => {
+            onCompleted: data1 => {
+                if (data1.createClan.clan_banner !== '') {
+                    setState({...state, id: data1.createClan._id
+                    })
+                }
                 setSnackbar({children: 'Clan / Team créé(e) !!!', severity: 'success'})
                 handleCloseModal()
             },
@@ -420,6 +503,16 @@ export default function ClanDatagrid() {
         })
     }
 
+    useEffect(() => {
+        if (data !== undefined) {
+            const init = initRows(data)
+            setRows(init)
+        }
+        if(state.id !== '' && state.selectedFile !== null) {
+            const promises = []
+            promises.push(sendRequest(state.selectedFile, state.id))
+        }
+    }, [data, state.id, state.selectedFile])
     return (
         <>
             {data === undefined ?
@@ -478,6 +571,7 @@ export default function ClanDatagrid() {
                                     <AddClanForm
                                         style={style}
                                         input={ref}
+                                        onfileChange={onFileChange}
                                         handleClose={() => {
                                             handleCloseModal()
                                         }}
@@ -527,6 +621,34 @@ export default function ClanDatagrid() {
                                             }}>Valider</Button>
                                         </Grid>
                                     </Grid>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Modal>
+                    }
+                    {state.picModal &&
+                    <Modal
+                        open={state.picModal}
+                        onClose={handleCloseModal}
+                        key={state.params.id}
+                        closeAfterTransition
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{timeout: 500}}
+                    >
+                        <Grid container>
+                            <Grid
+                                item
+                                xs={12} md={12} lg={12}
+                            >
+                                <Box sx={style}>
+                                    <h1>Modification de l'affiche de {state.params.row.event_name}</h1>
+                                    <UpdatePicForm
+                                        handleCloseModal={handleCloseModal}
+                                        onfileChange={onFileChange}
+                                        updatePic={() => {
+                                            updatePic(state.params)
+                                        }}
+                                    />
                                 </Box>
                             </Grid>
                         </Grid>

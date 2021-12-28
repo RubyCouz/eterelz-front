@@ -75,22 +75,6 @@ export default function AddUserForm(props) {
                     <FormControl fullWidth>
                         <TextField
                             id="outlined-basic"
-                            label="Bannière"
-                            variant="outlined"
-                            type="text"
-                            inputRef={props.input.clanBanner}
-                            helperText={checkForm.clanBannerMessage !== '' && checkForm.clanBannerMessage}
-                            error={checkForm.clanBannerMessage !== ''}
-                            name="clanBanner"
-                            value={checkForm.clanBannerValue ? checkForm.clanBannerValue : ''}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={12} lg={12}>
-                    <FormControl fullWidth>
-                        <TextField
-                            id="outlined-basic"
                             label="Discord"
                             variant="outlined"
                             type="text"
@@ -148,6 +132,15 @@ export default function AddUserForm(props) {
                             name="clanRecrut"
                             value={checkForm.clanRecrutValue ? checkForm.clanRecrutValue : ''}
                             onChange={handleInputChange}
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={12} lg={12}>
+                    <FormControl fullWidth>
+                        <input
+                            className="fileInput"
+                            type="file"
+                            onChange={props.onfileChange}
                         />
                     </FormControl>
                 </Grid>

@@ -16,7 +16,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {Alert} from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
-import UpdateGamePicForm from "./Form/UpdateGamePicForm";
+import UpdatePicForm from "./Form/UpdatePicForm";
 
 const style = {
     position: 'absolute',
@@ -60,7 +60,6 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
 }));
-
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
@@ -71,7 +70,6 @@ function CustomLoadingOverlay() {
         </GridOverlay>
     );
 }
-
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
@@ -119,7 +117,6 @@ function CustomNoRowsOverlay() {
         </StyledGridOverlay>
     );
 }
-
 const initRows = (data) => {
     let rows = []
     data.games.map((game, key) => {
@@ -247,7 +244,6 @@ export default function GameDatagrid() {
             params: params
         })
     }
-
     const handleCloseSnackbar = () => setSnackbar(null)
     const handleDeleteModal = async (game) => (
         setState({
@@ -305,7 +301,6 @@ export default function GameDatagrid() {
             </IconButton>
         </div>
     }
-
     const updateGameInfo = useCallback(async (game) => {
         await updateGame({
             variables: {
@@ -385,7 +380,6 @@ export default function GameDatagrid() {
         });
     }
     const addGame = () => {
-        console.log(state.selectedFile)
         createGame({
             variables: {
                 createGame: {
@@ -402,7 +396,6 @@ export default function GameDatagrid() {
                 }
                 setSnackbar({children: 'Nouveau jeu ajouté dans la base', severity: 'success'})
                 handleCloseModal()
-                return data1
             },
             onError: (({networkError}) => {
                 if (networkError) {
@@ -443,13 +436,12 @@ export default function GameDatagrid() {
             const init = initRows(data)
             setRows(init)
         }
-    }, [data])
-    useEffect(() => {
         if(state.id !== '' && state.selectedFile !== null) {
             const promises = []
             promises.push(sendRequest(state.selectedFile, state.id))
         }
-    })
+    }, [data, state.id, state.selectedFile])
+
     return (
         <>
             {data === undefined ?
@@ -505,7 +497,6 @@ export default function GameDatagrid() {
                                     item
                                     xs={12} md={12} lg={12}
                                 >
-
                                     <AddGameForm
                                         style={style}
                                         input={ref}
@@ -581,7 +572,7 @@ export default function GameDatagrid() {
                             >
                                 <Box sx={style}>
                                     <h1>Modification de la jaquette de {state.params.row.game_name}</h1>
-                                    <UpdateGamePicForm
+                                    <UpdatePicForm
                                         handleCloseModal={handleCloseModal}
                                         onfileChange={onFileChange}
                                         updatePic={() => {
