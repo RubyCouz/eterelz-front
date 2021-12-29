@@ -20,7 +20,9 @@ export const EVENTQUERY = gql`
         event_pic,
         event_name,
         event_desc,
-        event_date,
+        event_start,
+        event_end, 
+        event_allDay,
         event_creator {
             user_login
         },

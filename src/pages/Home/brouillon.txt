@@ -58,3 +58,28 @@ recrutement         |                           |
 info eterlez        |  paragraphe               | diverses redirections
                     |                           |
 ---------------------------------------------------------------------------------------
+
+
+
+
+const events = [
+    {
+        title: 'un titre',
+        allDay: true,
+        start: new Date(2021, 11, 12),
+        end: new Date(2021, 11, 12)
+    },
+    {
+        title: 'un autre titre',
+        allDay: true,
+        start: new Date(2021, 11, 15),
+        end: new Date(2021, 11, 17)
+    },
+    {
+        title: 'encore un titre',
+        allDay: true,
+        start: new Date(2021, 11, 29),
+        end: new Date(2021, 11, 31)
+    },
+]
+

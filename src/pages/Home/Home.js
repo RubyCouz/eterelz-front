@@ -3,11 +3,11 @@ import Box from "@mui/material/Box"
 import Navbar from '../../Components/Navbar/Navbar'
 import HomeCarousel from '../../Components/HomeCarousel/HomeCarousel'
 import SponsoCarousel from '../../Components/SponsoCarousel/SponsoCarousel'
-import Card from '../../Components/Card/Card'
+// import Card from '../../Components/Card/Card'
 import './Home.css'
 import Grid from "@mui/material/Grid"
 import Button from "@material-ui/core/Button"
-
+import EventCalendar from '../../Components/EventCalendar/EventCalendar'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -54,64 +54,8 @@ export default function Home(props) {
                         <Grid item xs={6} sm={6} md={6}>
                             <h2>EVENT</h2>
                             <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 3, sm: 8, md: 12}}>
-                                <Grid item xs={6} sm={12} md={6}>
-                                    <Card
-                                        title="Event Name"
-                                        firstContent=" Lorem ipsum dolor sit Accusantium ipsa laboriosam natus numquam
-                rerum? Aut, beatae dolorem ea in itaque minus modi quae quam qui quisquam rem suscipit tempora vel?"
-                                        secondContent=""
-                                        firstAction="Action 1"
-                                        firstLink=""
-                                        secondAction="Action 2"
-                                        secondLink=""
-                                        thirdAction="Action 3"
-                                        thirdLink=""
-                                        bgUrl="./img/background/lan.jpg"
-                                        opacity="1"
-                                    />
-                                    <Card
-                                        title="Event Name"
-                                        firstContent=" Lorem ipsum ?"
-                                        secondContent=""
-                                        firstAction="Action 1"
-                                        firstLink=""
-                                        secondAction="Action 2"
-                                        secondLink=""
-                                        thirdAction="Action 3"
-                                        thirdLink=""
-                                        bgUrl="./img/background/evennementiel.jpg"
-                                        opacity="1"
-                                    />
-                                </Grid>
-                                <Grid item xs={6} sm={12} md={6}>
-                                    <Card
-                                        title="Event Name"
-                                        firstContent=" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ipsa laboriosam natus numquam
-                rerum? Aut,"
-                                        secondContent=""
-                                        firstAction="Action 1"
-                                        firstLink=""
-                                        secondAction="Action 2"
-                                        secondLink=""
-                                        thirdAction="Action 3"
-                                        thirdLink=""
-                                        bgUrl="./img/background/esport.jpg"
-                                        opacity="1"
-                                    />
-                                    <Card
-                                        title="Event Name"
-                                        firstContent=" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ipsa laboriosam natus numquam
-                rerum? Aut, beatae dolorem ea in itaque minus modi quae quam qui quisquam rem suscipit tempora vel?"
-                                        secondContent=""
-                                        firstAction="Action 1"
-                                        firstLink=""
-                                        secondAction="Action 2"
-                                        secondLink=""
-                                        thirdAction="Action 3"
-                                        thirdLink=""
-                                        bgUrl="./img/background/recrutement.jpg"
-                                        opacity="1"
-                                    />
+                                <Grid item xs={12} sm={12} md={12}>
+                                    <EventCalendar/>
                                 </Grid>
                             </Grid>
                         </Grid>

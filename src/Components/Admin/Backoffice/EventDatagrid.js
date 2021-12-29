@@ -125,7 +125,9 @@ const initRows = (data) => {
             id: event._id,
             event_pic: event.event_pic,
             event_name: event.event_name,
-            event_date: event.event_date,
+            event_start: event.event_start,
+            event_end: event.event_end,
+            event_allDay: event.event_allDay,
             event_desc: event.event_desc,
             event_creator: event.event_creator.user_login,
             event_score: event.event_score,
@@ -178,15 +180,37 @@ export default function EventDatagrid() {
             },
         },
         {
-            field: 'event_date',
-            headerName: 'Date',
+            field: 'event_start',
+            headerName: 'Début',
             type: 'dateTime',
             flex: 1,
             editable: true,
             preProcessEditCellProps: (params) => {
-                const isValid = formValidate('eventDate', params.props.value);
+                const isValid = formValidate('eventStart', params.props.value);
                 return {...params.props, error: !isValid};
             },
+        },
+        {
+            field: 'event_end',
+            headerName: 'Fin',
+            type: 'dateTime',
+            flex: 1,
+            editable: true,
+            preProcessEditCellProps: (params) => {
+                const isValid = formValidate('eventEnd', params.props.value);
+                return {...params.props, error: !isValid};
+            },
+        },
+        {
+            field: 'event_allDay',
+            headerName: 'Toute la journée',
+            type: 'boolean',
+            flex: 1,
+            // editable: true,
+            // preProcessEditCellProps: (params) => {
+            //     const isValid = formValidate('eventDate', params.props.value);
+            //     return {...params.props, error: !isValid};
+            // },
         },
         {
             field: 'event_desc',
@@ -253,7 +277,7 @@ export default function EventDatagrid() {
             })
         },
     ]
-    const [snackbar, setSnackbar] = React.useState(null)
+    const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
         id: '',
         picModal: false,
@@ -264,6 +288,10 @@ export default function EventDatagrid() {
         selectedFile: null
     })
     const [rows, setRows] = React.useState();
+    const [allDay, setAllDay] = useState(false)
+    const handleSwitchChange = (event) => {
+        setAllDay(event.target.checked)
+    }
     const {data} = useQuery(LISTEVENT)
     const [createEvent] = useMutation(CREATEEVENT, {
         refetchQueries: [{query: LISTEVENT}]
@@ -278,7 +306,9 @@ export default function EventDatagrid() {
         eventPic: useRef(''),
         eventName: useRef(''),
         eventDesc: useRef(''),
-        eventDate: useRef('')
+        eventStart: useRef(''),
+        eventEnd: useRef(''),
+        eventAllDay: useRef(allDay)
     }
     const updateEventInfo = useCallback(async (event) => {
         await updateEvent({
@@ -432,13 +462,20 @@ export default function EventDatagrid() {
         </div>
     }
 
-    const addEvent = () => {
-        createEvent({
+    const addEvent = async () => {
+        console.log(ref.eventName.current.value)
+        console.log(ref.eventStart.current.value)
+        console.log(ref.eventEnd.current.value)
+        console.log(allDay)
+        console.log(ref.eventDesc.current.value)
+        await createEvent({
             variables: {
                 createEvent: {
                     event_pic: (state.selectedFile !== null ? state.selectedFile.name : ''),
                     event_name: ref.eventName.current.value,
-                    event_date: ref.eventDate.current.value,
+                    event_start: ref.eventStart.current.value,
+                    event_end: ref.eventEnd.current.value,
+                    event_allDay: allDay,
                     event_desc: ref.eventDesc.current.value,
                 }
             },
@@ -510,25 +547,25 @@ export default function EventDatagrid() {
                     },
                 }}
                 >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} md={12} lg={12}>
-                                <Box textAlign="right">
-                                    <Button color="secondary" onClick={() => {
-                                        handleModalCreate()
-                                    }}>Ajouter un évènement</Button>
-                                </Box>
-                            </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={12} lg={12}>
+                            <Box textAlign="right">
+                                <Button color="secondary" onClick={() => {
+                                    handleModalCreate()
+                                }}>Ajouter un évènement</Button>
+                            </Box>
                         </Grid>
-                            <DataGrid
-                                rows={rows}
-                                columns={columns}
-                                components={{
-                                    Toolbar: GridToolbar,
-                                    LoadingOverlay: CustomLoadingOverlay,
-                                    NoRowsOverlay: CustomNoRowsOverlay,
-                                }}
-                                onCellEditCommit={handleCellEditCommit}
-                            />
+                    </Grid>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        components={{
+                            Toolbar: GridToolbar,
+                            LoadingOverlay: CustomLoadingOverlay,
+                            NoRowsOverlay: CustomNoRowsOverlay,
+                        }}
+                        onCellEditCommit={handleCellEditCommit}
+                    />
                     {!!snackbar && (
                         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
@@ -549,17 +586,19 @@ export default function EventDatagrid() {
                                     item
                                     xs={12} md={12} lg={12}
                                 >
-                                        <AddEventForm
-                                            style={style}
-                                            input={ref}
-                                            onfileChange={onFileChange}
-                                            handleCloseModal={() => {
-                                                handleCloseModal()
-                                            }}
-                                            addEvent={() => {
-                                                addEvent()
-                                            }}
-                                        />
+                                    <AddEventForm
+                                        style={style}
+                                        input={ref}
+                                        allDay={allDay}
+                                        handleSwitchChange={handleSwitchChange}
+                                        onfileChange={onFileChange}
+                                        handleCloseModal={() => {
+                                            handleCloseModal()
+                                        }}
+                                        addEvent={() => {
+                                            addEvent()
+                                        }}
+                                    />
                                 </Grid>
                             </Grid>
                         </Modal>

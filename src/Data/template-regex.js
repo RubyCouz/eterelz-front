@@ -78,7 +78,12 @@ const templateRegex = {
         message: 'Nom invalide',
         message_empty: 'Vous devez remplir ce champs'
     },
-    eventDate: {
+    eventStart: {
+        regex: new RegExp('^[^<>]+$'),
+        message: 'Date non valide',
+        message_empty: 'Vous devez remplir ce champs'
+    },
+    eventEnd: {
         regex: new RegExp('^[^<>]+$'),
         message: 'Date non valide',
         message_empty: 'Vous devez remplir ce champs'
