@@ -31,12 +31,35 @@ export const EVENTQUERY = gql`
         event_score,
         event_winner
     }`
-
+export const HOMEEVENTQUERY = gql`
+    fragment EventQuery on Event {
+        _id
+#        event_pic,
+        event_name,
+        event_desc,
+        event_start,
+        event_end,
+        event_allDay,
+#        event_creator {
+#            user_login
+#        },
+#        createdAt,
+#        updatedAt,
+#        event_score,
+#        event_winner
+    }`
 /**
  * Liste des events
  */
 export const LISTEVENT = gql`
     ${EVENTQUERY}
+    query {
+        events {
+            ...EventQuery
+        }
+    }`
+export const HOMEEVENT = gql`
+    ${HOMEEVENTQUERY}
     query {
         events {
             ...EventQuery

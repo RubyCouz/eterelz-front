@@ -44,15 +44,18 @@ export default function Home(props) {
                 <div className="colour-block">
                     <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 3, sm: 8, md: 12}}>
                         <Grid item xs={3} sm={3} md={3}>
-                            <h2>PORTAIL</h2>
-                            <Button>Se référencer</Button>
+                            <Grid container>
+                                <Grid item xs={12} sm={12} md={12}>
+                                    <h2>PORTAIL</h2>
+                                    <Button>Se référencer</Button>
+                                </Grid>
+                                <Grid item xs={12} sm={12} md={12}>
+                                    <h2>TEAM EXPERIENCE</h2>
+                                    <Button>POSTULER</Button>
+                                </Grid>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={3} sm={3} md={3}>
-                            <h2>TEAM EXPERIENCE</h2>
-                            <Button>POSTULER</Button>
-                        </Grid>
-                        <Grid item xs={6} sm={6} md={6}>
-                            <h2>EVENT</h2>
+                        <Grid item xs={9} sm={9} md={9}>
                             <Grid container spacing={{xs: 1, md: 12}} columns={{xs: 3, sm: 8, md: 12}}>
                                 <Grid item xs={12} sm={12} md={12}>
                                     <EventCalendar/>

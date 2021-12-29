@@ -1,11 +1,11 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Calendar, dateFnsLocalizer} from 'react-big-calendar'
 import format from 'date-fns/format'
 import parse from 'date-fns/parse'
 import startOfWeek from 'date-fns/startOfWeek'
 import getDay from 'date-fns/getDay'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import {LISTEVENT} from '../../Queries/EventQueries'
+import {HOMEEVENT} from '../../Queries/EventQueries'
 import {useQuery} from '@apollo/client'
 
 const locales = {
@@ -19,29 +19,42 @@ const localizer = dateFnsLocalizer({
     locales
 })
 
-// const events = (data) => {
-//     let allEvents = []
-//     data.events.map((event, key) => {
-//         const eventDate = {
-//             title: event.event_name,
-//             allDay: event.event_allDay,
-//             start: event.event_start,
-//             end: event.event_end
-//         }
-//     })
-// }
+const initEvents = (data) => {
+    let allEvents = []
+    data.events.map((event, key) => {
+        const eventDate = {
+            title: event.event_name,
+            allDay: event.event_allDay,
+            start: new Date(event.event_start),
+            end: new Date(event.event_end)
+        }
+        allEvents.push(eventDate)
+        return allEvents
+    })
+    return allEvents
+}
 
 export default function EventCalendar() {
-    const {data} = useQuery(LISTEVENT)
+    const [events, setEvents] = useState()
+    const {data} = useQuery(HOMEEVENT)
     console.log(data)
+    useEffect(() => {
+        if(data !== undefined) {
+            const init = initEvents(data)
+            setEvents(init)
+        }
+    },
+        [data])
     return (
         <div>
             <Calendar
                 localizer={localizer}
-                // events={events}
+                events={events}
                 startAccessor="start"
-                enAccessor="end"
+                endAccessor="end"
                 style={{height: 500, margin: "50px"}}
+                popup={true}
+                showMultiDayTimes={true}
             />
         </div>
     )
