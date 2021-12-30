@@ -2,7 +2,6 @@ import React from 'react'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
 import {makeStyles} from '@mui/styles'
 import {useDocTitle} from '../Hook/useDocTitle'
-import {useDocTitle} from '../../Hook/useDocTitle'
 
 const useStyles = makeStyles((theme) => ({
     root: {

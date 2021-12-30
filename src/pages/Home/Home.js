@@ -23,7 +23,6 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import Zoom from '@mui/material/Zoom'
 import {useDocTitle} from '../../Hook/useDocTitle'
 // import Stats from '../../Components/Stats/Stats'
-
 function ScrollTop(props) {
     const {children, window} = props;
     // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -66,7 +65,6 @@ export default function Home(props) {
         setExpanded(isExpanded ? panel : false);
     };
     return (
-
         <div className="bg">
             <Box sx={{flexGrow: 1}}>
                 <Navbar/>
