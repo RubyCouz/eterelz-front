@@ -3,22 +3,19 @@ import React, {
     useState,
 } from 'react'
 
-import {
-    TextField,
-    Typography,
-    TableRow,
-    TableCell,
-    CircularProgress,
-    Chip,
-    Switch,
-} from '@material-ui/core'
-
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import TableRow from '@mui/material/TableRow'
+import TableCell from '@mui/material/TableCell'
+import CircularProgress from '@mui/material/CircularProgress'
+import Chip from '@mui/material/Chip'
+import Switch from '@mui/material/Switch'
 import {
     gql,
     useMutation
 } from '@apollo/client'
 
-import CreateIcon from '@material-ui/icons/Create'
+import CreateIcon from '@mui/icons-material/Create'
 
 export default function TableRowEdit(props) {
 

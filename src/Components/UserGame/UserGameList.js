@@ -1,6 +1,6 @@
 import React from 'react'
 import UserGameItem from './UserGameItem/UserGameItem'
-import {Grid} from "@material-ui/core"
+import Grid from '@mui/material/Grid'
 
 export default function UserGameList(props) {
     return (

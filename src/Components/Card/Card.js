@@ -6,17 +6,11 @@ import IconButton from '@mui/material/IconButton'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
 import ReactPlayer from 'react-player'
-
-import {makeStyles} from "@material-ui/core/styles";
-
-
+import { makeStyles } from '@mui/styles'
 import './Card.css'
-
-
-
 
 const reactPlayerStyle = {
     margin: 0,

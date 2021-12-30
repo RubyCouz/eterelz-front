@@ -1,13 +1,8 @@
 import React, {useState} from 'react'
 import {BrowserRouter} from 'react-router-dom'
 import {ApolloProvider} from '@apollo/client'
-import {
-    ThemeProvider,
-    createTheme,
-} from '@material-ui/core/styles'
-import {
-    CssBaseline,
-} from '@material-ui/core'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 import './Index.css'
 import AuthContext from '../context/auth-context'
 import {graphqlConfig} from '../context/apollo-context'
@@ -17,17 +12,13 @@ import LoadingPage from '../pages/Loading'
 import useAuth from '../Hook/useAuth'
 
 export default function Index() {
-
     const [auth, login, logout, loading] = useAuth()
-
     const [avatar, setAvatar] = useState({id: null})
-
     const theme = createTheme({
         palette: {
-            type: 'dark',
+            mode: 'dark',
         },
     });
-
     return (
         <BrowserRouter>
             <AuthContext.Provider

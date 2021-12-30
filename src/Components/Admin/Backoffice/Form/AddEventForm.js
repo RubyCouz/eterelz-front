@@ -1,11 +1,15 @@
 import React, {useState} from 'react'
-import Grid from "@material-ui/core/Grid";
-import {Box, FormControl, FormControlLabel, Switch, TextField} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import validForm from "../../../../Tools/ValidForms";
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import {Stack} from "@mui/material";
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
+import Button from '@mui/material/Button'
+import validForm from '../../../../Tools/ValidForms'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import Stack from '@mui/material/Stack'
 import {DesktopDateTimePicker} from "@mui/lab";
 import styled from "@emotion/styled";
 

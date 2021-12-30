@@ -1,17 +1,15 @@
 import React from 'react'
 
-import {
-    IconButton,
-    AppBar,
-    MenuItem,
-    Toolbar, Menu,
-} from '@material-ui/core'
-import {AccountCircle} from '@material-ui/icons'
-import {makeStyles} from '@material-ui/core/styles'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import MenuItem from '@mui/material/MenuItem'
+import Menu from '@mui/material/Menu'
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import { makeStyles } from '@mui/styles'
 import Box from "@mui/material/Box"
 import {NavLink} from "react-router-dom"
-import MoreIcon from "@material-ui/icons/MoreVert"
-
+import MoreIcon from "@mui/icons-material/MoreVert"
 import './Navbar.css'
 
 const useStyles = makeStyles((theme) => ({

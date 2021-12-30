@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import './DropZone.css'
 
 export default function DropZone(props) {

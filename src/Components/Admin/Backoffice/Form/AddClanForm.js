@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
-import Grid from "@material-ui/core/Grid";
-import {Box, FormControl, TextField} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import validForm from "../../../../Tools/ValidForms";
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import FormControl from '@mui/material/FormControl'
+import Button from '@mui/material/Button'
+import validForm from '../../../../Tools/ValidForms'
 
 export default function AddUserForm(props) {
     const [checkForm, setCheckForm] = useState({

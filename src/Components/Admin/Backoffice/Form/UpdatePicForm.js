@@ -1,7 +1,8 @@
 import React from 'react'
-import {Box, FormControl} from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
 
 export default function UpdatePicForm(props) {
 

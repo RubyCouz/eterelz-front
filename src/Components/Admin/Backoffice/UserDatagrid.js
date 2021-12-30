@@ -10,25 +10,29 @@ import {
 } from '@apollo/client'
 import {LIST_USERS, UPDATE_USER, CREATEDBYADMIN, DELETEUSER} from '../../../Queries/UserQueries'
 import {DataGrid, GridColDef, GridOverlay, GridToolbar} from '@mui/x-data-grid'
-import IconButton from '@material-ui/core/IconButton'
+import IconButton from '@mui/material/IconButton'
 import CheckIcon from '@mui/icons-material/Check'
-import {blue, red} from '@material-ui/core/colors'
+import {blue, red} from '@mui/material/colors'
 import CloseIcon from '@mui/icons-material/Close'
 import BlockIcon from '@mui/icons-material/Block'
 import Loading from '../../../pages/Loading'
-import {Backdrop, Box, LinearProgress, Modal, Snackbar} from '@material-ui/core'
-import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
+import Backdrop from '@mui/material/Backdrop'
+import Box from '@mui/material/Box'
+import LinearProgress from '@mui/material/LinearProgress'
+import Modal from '@mui/material/Modal'
+import Snackbar from '@mui/material/Snackbar'
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
 import AddUserForm from './Form/AddUserForm'
 import formatDate from '../../../Tools/FormatDate'
 import styled from '@emotion/styled'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import Typography from '@material-ui/core/Typography'
+import Typography from '@mui/material/Typography'
 import AuthContext from '../../../context/auth-context'
-import {Alert} from '@material-ui/lab'
+import Alert from '@mui/material/Alert'
 import templateRegex from '../../../Data/template-regex'
-import Avatar from "@material-ui/core/Avatar";
-import UpdatePicForm from "./Form/UpdatePicForm";
+import Avatar from '@mui/material/Avatar'
+import UpdatePicForm from './Form/UpdatePicForm'
 
 const style = {
     position: 'absolute',
@@ -354,7 +358,7 @@ export default function UserDatagrid() {
             } catch (error) {
                 setSnackbar({children: 'Il y a eu un problème...', severity: 'error'});
                 // Restore the row in case of error
-                setRows((prev) => [...prev]);
+                setRows((prev) => [...prev])
             }
         },
         [updateProfil],

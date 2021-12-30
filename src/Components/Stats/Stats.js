@@ -1,6 +1,6 @@
 import React from 'react'
 import StatsCard from '../Card/Card'
-import Grid from "@material-ui/core/Grid";
+import Grid from '@mui/material/Grid'
 
 export default function Stats() {
 

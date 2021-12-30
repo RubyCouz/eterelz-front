@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Dropzone from "../DropZone/DropZone";
 import "./Upload.css";
 import Progress from "../Progress/Progress";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 export default function Upload(props) {
 

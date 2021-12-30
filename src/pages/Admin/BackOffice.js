@@ -9,7 +9,7 @@ import UserDatagrid from '../../Components/Admin/Backoffice/UserDatagrid'
 import GameDatagrid from '../../Components/Admin/Backoffice/GameDatagrid'
 import EventDatagrid from '../../Components/Admin/Backoffice/EventDatagrid'
 import ClanDatagrid from '../../Components/Admin/Backoffice/ClanDatagrid'
-import Grid from "@material-ui/core/Grid";
+import Grid from '@mui/material/Grid'
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;

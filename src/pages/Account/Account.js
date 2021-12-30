@@ -8,12 +8,10 @@ import {
   useQuery
 } from '@apollo/client'
 import AuthContext from '../../context/auth-context'
-import {
-  Tabs,
-  Tab,
-  Grid,
-  Box,  
-} from '@material-ui/core'
+import Box from '@mui/material/Box'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import Grid from '@mui/material/Grid'
 
 import AuthNavbar from '../../Components/Navbar/AuthNavbar'
 

@@ -1,26 +1,26 @@
 import React, {useContext, useRef, useState} from 'react'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
-import {makeStyles, useTheme} from "@material-ui/core/styles"
+import {makeStyles, useTheme} from '@mui/styles'
 import AuthContext from '../context/auth-context'
 import PropTypes from 'prop-types'
 import SwipeableViews from 'react-swipeable-views'
-import AppBar from '@material-ui/core/AppBar'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
+import AppBar from '@mui/material/AppBar'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
 import UserGameList from '../Components/UserGame/UserGameList'
 import {
     gql,
     useQuery,
     useMutation
 } from '@apollo/client'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 import Upload from '../Components/Upload/Upload'
 import ModalGame from '../Components/ModalGame/ModalGame'
-import Grid from '@material-ui/core/Grid'
-import {Container} from "@material-ui/core";
+import Grid from '@mui/material/Grid'
+import Container from '@mui/material/Container'
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;

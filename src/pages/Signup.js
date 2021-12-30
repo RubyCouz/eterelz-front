@@ -1,22 +1,18 @@
 import * as React from 'react'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Grid from '@material-ui/core/Grid'
+import Grid from '@mui/material/Grid'
 import {useRef, useState} from 'react'
-import {makeStyles} from '@material-ui/core/styles'
-import SnackbarError from "../Components/Snackbar/SnackbarError";
-import {Slide} from "@material-ui/core";
-import validForm from "../Tools/ValidForms";
-import {gql, useMutation} from "@apollo/client";
-import {useHistory} from "react-router-dom";
-
-function SlideTransition(props) {
-    return <Slide {...props} direction="up"/>;
-}
+import {makeStyles} from '@mui/styles'
+import validForm from '../Tools/ValidForms'
+import {gql, useMutation} from '@apollo/client'
+import {useHistory} from 'react-router-dom'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
 const useStyles = makeStyles({
     root: {
@@ -66,13 +62,7 @@ export default function Signup() {
         alert_message: '',
         severity: '',
     })
-    // état de l'alerte
-    const [open, setOpen] = useState(false)
-    const [sBar, setSbar] = useState({
-        Transition: Slide,
-        vertical: 'bottom',
-        horizontal: 'center',
-    })
+
     const [checkForm, setCheckForm] = useState({
         pseudoValue: '',
         pseudoMessage: '',
@@ -83,7 +73,7 @@ export default function Signup() {
         confirmPasswordValue: '',
         confirmPasswordMessage: ''
     })
-    const {vertical, horizontal} = sBar
+    const [snackbar, setSnackbar] = useState(null)
 
     const [createUser, {error}] = useMutation(
         CREATEUSER, {
@@ -94,24 +84,14 @@ export default function Signup() {
             },
             errorPolicy: 'all',
             onCompleted: data => {
-                console.log(data)
-                setState({
-                    ...state,
-                    severity: 'success',
-                    alert_message: 'Inscription effectuée'
-                })
-                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                setSnackbar({children: 'Inscription effectuée !!!', severity: 'success'});
+
                 return history.push('/verifyAccount')
             },
             onError: (({networkError}) => {
                 if (networkError) {
                     error.networkError.result.errors.map(({message, status}) => {
-                        setState({
-                            ...state,
-                            severity: 'error',
-                            alert_message: message
-                        })
-                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        setSnackbar({children: message, severity: 'error'});
                         return error
                     })
                 }
@@ -119,6 +99,7 @@ export default function Signup() {
         }
     )
 
+    const handleCloseSnackbar = () => setSnackbar(null)
     const handleInputChange = async (event) => {
         const value = event.target.value;
         const input = event.target.name;
@@ -130,21 +111,6 @@ export default function Signup() {
         })
     }
 
-    const handleClick = (Transition, newSbar) => {
-        setOpen(true)
-        setSbar({
-            Transition,
-            ...newSbar
-        })
-    }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false)
-    }
-
     const signup = async () => {
         if (password.current.value !== confirmPassword.current.value) {
             console.log('mdp !=')
@@ -153,7 +119,6 @@ export default function Signup() {
                 severity: 'error',
                 alert_message: 'Les mots de passe doivent être identique'
             })
-            handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
         } else if (checkForm.passwordValue === '' ||
             checkForm.emailValue === '' ||
             checkForm.pseudoValue === '' ||
@@ -165,7 +130,6 @@ export default function Signup() {
                 severity: 'error',
                 alert_message: 'Vous devez remplir entièrement ce formulaire pour le valider'
             })
-            handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
         } else if (checkForm.pseudoMessage !== '' ||
             checkForm.emailMessage !== '' ||
             checkForm.passwordMessage !== '' ||
@@ -177,7 +141,6 @@ export default function Signup() {
                     severity: 'error',
                     alert_message: checkForm.emailMessage
                 })
-                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
             }
             if (checkForm.passwordMessage !== '') {
                 setState({
@@ -185,7 +148,6 @@ export default function Signup() {
                     severity: 'error',
                     alert_message: checkForm.passwordMessage
                 })
-                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
             }
             if (checkForm.pseudoMessage !== '') {
                 setState({
@@ -193,7 +155,6 @@ export default function Signup() {
                     severity: 'error',
                     alert_message: checkForm.pseudoMessage
                 })
-                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
             }
             if (checkForm.confirmPasswordMessage !== '') {
                 setState({
@@ -201,9 +162,8 @@ export default function Signup() {
                     severity: 'error',
                     alert_message: checkForm.confirmPasswordMessage
                 })
-                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
             }
-
+            setSnackbar({children: state.alert_message, severity: state.severity})
         } else {
             try {
                 await createUser()
@@ -221,9 +181,7 @@ export default function Signup() {
                 justifyContent="center"
                 alignItems="center"
             >
-                <Grid item xs>
-
-                </Grid>
+                <Grid item xs/>
                 <Grid item xs={4}>
                     <Card sx={{
                         minWidth: 275,
@@ -356,20 +314,13 @@ export default function Signup() {
                             </Typography>
                         </CardContent>
                     </Card>
-                    <SnackbarError
-                        class={classes.snackbar}
-                        anchorOrigin={{vertical, horizontal}}
-                        open={open}
-                        transitionComponent={sBar.Transition}
-                        onClose={handleClose}
-                        message={state.alert_message}
-                        key={sBar.Transition.name}
-                        severity={state.severity}
-                    />
+                    {!!snackbar && (
+                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                            <Alert {...snackbar} onClose={handleCloseSnackbar}/>
+                        </Snackbar>
+                    )}
                 </Grid>
-                <Grid item xs>
-
-                </Grid>
+                <Grid item xs/>
             </Grid>
         </Box>
     )

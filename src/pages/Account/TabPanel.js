@@ -1,13 +1,9 @@
 import React from "react"
-
-import {
-  Box,
-  Table,
-  TableBody,
-  TableContainer,
-  Paper,
-} from '@material-ui/core'
-
+import Box from '@mui/material/Box'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableContainer from '@mui/material/TableContainer'
+import Paper from '@mui/material/Paper'
 import TableRowEdit from '../../Components/TableRowEdit/TableRowEdit'
   
 export default function TabPanel(props) {

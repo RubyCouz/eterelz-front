@@ -1,26 +1,17 @@
 import React, {useContext, useRef, useState} from 'react'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 import {useParams} from 'react-router-dom'
 import {gql, useMutation} from '@apollo/client'
-import Grid from '@material-ui/core/Grid'
+import Grid from '@mui/material/Grid'
 import ExpiredToken from '../Components/Errors/TokenErrors/ExpiredToken'
 import {useHistory} from 'react-router-dom'
 import AuthContext from '../context/auth-context'
 import './VerifyAccount.css'
 import Box from '@mui/material/Box'
-import {Slide, TextField} from '@material-ui/core'
-import SnackbarError from '../Components/Snackbar/SnackbarError'
-import {makeStyles} from "@material-ui/core/styles";
+import TextField from '@mui/material/TextField'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
-function SlideTransition(props) {
-    return <Slide {...props} direction="up"/>;
-}
-
-const useStyle = makeStyles({
-    snackbar: {
-        width: '100%',
-    },
-})
 
 const CONFIRMUSER = gql`
     mutation CONFIRMUSER($token: String!, $pass: String!) {
@@ -35,7 +26,6 @@ export default function VerifyAccount() {
 
     const context = useContext(AuthContext)
     const history = useHistory()
-    const classes = useStyle()
     const char1 = useRef('')
     const char2 = useRef('')
     const char3 = useRef('')
@@ -43,7 +33,6 @@ export default function VerifyAccount() {
     const char5 = useRef('')
     const char6 = useRef('')
     const charArray = []
-
 // récupération du token passé dans l'url
     const url = useParams()
     const token = url.token
@@ -53,18 +42,9 @@ export default function VerifyAccount() {
     }
     let pass
 
-    const [state, setState] = useState({
-        alert_message: '',
-        severity: '',
-        statusCode: ''
-    })
-    const [open, setOpen] = useState(false)
-    const [sBar, setSbar] = useState({
-        Transition: Slide,
-        vertical: 'bottom',
-        horizontal: 'center',
-    })
-    const {vertical, horizontal} = sBar
+    const [statusCode, setStatusCode] = useState('')
+    const [snackbar, setSnackbar] = useState(null)
+    const handleCloseSnackbar = () => setSnackbar(null)
     /**
      * récupération de chaque caractère du code et stockage
      * dans un tableau au changement de valeur d'un des input
@@ -146,16 +126,9 @@ export default function VerifyAccount() {
             errorPolicy: 'all',
             onError: (({networkError}) => {
                 if (networkError) {
-                    console.log(networkError.result.errors)
                     networkError.result.errors.map(({message, statusCode}) => {
-                        console.log(statusCode)
-                        setState({
-                            ...state,
-                            severity: 'error',
-                            alert_message: message,
-                            statusCode: statusCode
-                        })
-                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        setStatusCode(statusCode)
+                        setSnackbar({children: message, severity: 'error'})
                         return error
                     })
                 }
@@ -166,21 +139,6 @@ export default function VerifyAccount() {
             }
         },
     )
-
-    const handleClick = (Transition, newSbar) => {
-        setOpen(true)
-        setSbar({
-            Transition,
-            ...newSbar
-        })
-    }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false)
-    }
 
     return (
         <Grid
@@ -196,7 +154,7 @@ export default function VerifyAccount() {
                             Votre inscription a bien été prise en compte. Suivez les indications dans le mail qui vous
                             sera envoyé pour valider votre inscription.
                         </p> :
-                        state.statusCode === 600 ?
+                        statusCode === 600 ?
                             <ExpiredToken/> :
                             <div>
                                 <p>
@@ -326,16 +284,11 @@ export default function VerifyAccount() {
                     }
 
                 </div>
-                <SnackbarError
-                    class={classes.snackbar}
-                    anchorOrigin={{vertical, horizontal}}
-                    open={open}
-                    transitionComponent={sBar.Transition}
-                    onClose={handleClose}
-                    message={state.alert_message}
-                    key={sBar.Transition.name}
-                    severity={state.severity}
-                />
+                {!!snackbar && (
+                    <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                        <Alert {...snackbar} onClose={handleCloseSnackbar}/>
+                    </Snackbar>
+                )}
             </Grid>
         </Grid>
     )

@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
-import Grid from "@material-ui/core/Grid";
-import {Box, FormControl, TextField} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 import validForm from "../../../../Tools/ValidForms";
 
 export default function AddGameForm(props) {

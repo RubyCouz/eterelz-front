@@ -1,18 +1,14 @@
 import React, {useContext, useRef, useState} from 'react'
 import {Card, CardActions, CardContent, Box, Typography, TextField, Button, Grid} from '@mui/material'
 import AuthContext from '../context/auth-context'
-import {makeStyles} from '@material-ui/core/styles'
+import {makeStyles} from '@mui/styles'
 import 'animate.css'
 import clsx from 'clsx'
-import { useLazyQuery} from '@apollo/client'
-import {Slide} from "@material-ui/core";
-import SnackbarError from '../Components/Snackbar/SnackbarError'
-import validForm from "../Tools/ValidForms";
+import {useLazyQuery} from '@apollo/client'
+import validForm from '../Tools/ValidForms'
 import {LOGIN} from '../Queries/UserQueries'
-function SlideTransition(props) {
-    return <Slide {...props} direction="up"/>;
-}
-
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -75,46 +71,24 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#8618AD !important',
     }
 }))
-
 export default function Auth() {
     let classes = useStyles()
     const email = useRef('')
     const password = useRef('')
-
     const [panel1, setPanel1] = useState(false)
     const [panel2, setPanel2] = useState(true)
     const [state, setState] = useState({
         alert_message: '',
         severity: '',
     })
-    const [open, setOpen] = useState(false)
-    const [sBar, setSbar] = useState({
-        Transition: Slide,
-        vertical: 'bottom',
-        horizontal: 'center',
-    });
-    const {vertical, horizontal} = sBar
-
     const [checkForm, setCheckForm] = useState({
         emailValue: '',
         passwordValue: '',
         emailMessage: '',
         passwordMessage: ''
     })
-    const handleClick = (Transition, newSbar) => {
-        setOpen(true)
-        setSbar({
-            Transition,
-            ...newSbar
-        })
-    }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false)
-    }
+    const [snackbar, setSnackbar] = useState(null)
+    const handleCloseSnackbar = () => setSnackbar(null)
 
     const context = useContext(AuthContext)
     const [login, {error}] = useLazyQuery(
@@ -126,18 +100,13 @@ export default function Auth() {
             },
             errorPolicy: 'all',
             onCompleted: data => {
-                console.log(data)
+                setSnackbar({children: 'Connexion ok !!!', severity: 'success'});
                 context.login()
             },
             onError: (({networkError}) => {
                 if (networkError) {
                     networkError.result.errors.map(({message, status}) => {
-                        setState({
-                            ...state,
-                            severity: 'error',
-                            alert_message: message
-                        })
-                        handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+                        setSnackbar({children: message, severity: 'error'});
                         return error
                     })
                 }
@@ -177,7 +146,6 @@ export default function Auth() {
                     alert_message: checkForm.passwordMessage
                 })
             }
-            handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
         } else {
             try {
                 await login()
@@ -186,12 +154,12 @@ export default function Auth() {
                     severity: 'success',
                     alert_message: 'Connexion ok'
                 })
-                handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
+
             } catch (e) {
                 console.log(e)
             }
         }
-
+        setSnackbar({children: state.alert_message, severity: state.severity});
     }
 
     return (
@@ -330,16 +298,11 @@ export default function Auth() {
                             <a href="/signup">Pas de compte Eterelz ? Cliquez ici !</a>
                         </CardActions>
                     </Card>
-                    <SnackbarError
-                    class={classes.snackbar}
-                    anchorOrigin={{vertical, horizontal}}
-                    open={open}
-                    transitionComponent={sBar.Transition}
-                    onClose={handleClose}
-                    message={state.alert_message}
-                    key={sBar.Transition.name}
-                    severity={state.severity}
-                    />
+                    {!!snackbar && (
+                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                            <Alert {...snackbar} onClose={handleCloseSnackbar}/>
+                        </Snackbar>
+                    )}
                 </Grid>
                 <Grid item xs>
                 </Grid>

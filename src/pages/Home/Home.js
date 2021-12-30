@@ -21,13 +21,10 @@ import Footer from '../../Components/Footer/Footer'
 
 export default function Home(props) {
 
-
     const [expanded, setExpanded] = React.useState(false);
-
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
-
     return (
         <div className="bg">
             <Box sx={{flexGrow: 1}}>
