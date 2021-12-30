@@ -35,7 +35,7 @@ const initEvents = (data) => {
 }
 
 export default function EventCalendar() {
-    const [events, setEvents] = useState()
+    const [events, setEvents] = useState([])
     const {data} = useQuery(HOMEEVENT)
     console.log(data)
     useEffect(() => {

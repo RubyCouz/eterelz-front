@@ -281,6 +281,8 @@ export default function EventDatagrid() {
             })
         },
     ]
+    const [horizontal] = useState('center')
+    const [vertical] = useState('bottom')
     const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
         id: '',
@@ -465,13 +467,7 @@ export default function EventDatagrid() {
             </IconButton>
         </div>
     }
-
     const addEvent = async () => {
-        console.log(ref.eventName.current.value)
-        console.log(ref.eventStart.current.value)
-        console.log(ref.eventEnd.current.value)
-        console.log(allDay)
-        console.log(ref.eventDesc.current.value)
         await createEvent({
             variables: {
                 createEvent: {
@@ -523,7 +519,6 @@ export default function EventDatagrid() {
             })
         })
     }
-
     useEffect(() => {
         if (data !== undefined) {
             const init = initRows(data)
@@ -571,7 +566,11 @@ export default function EventDatagrid() {
                         onCellEditCommit={handleCellEditCommit}
                     />
                     {!!snackbar && (
-                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                        <Snackbar
+                            open anchorOrigin={{ vertical, horizontal }}
+                            onClose={handleCloseSnackbar}
+                            autoHideDuration={6000}
+                        >
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
                         </Snackbar>
                     )}

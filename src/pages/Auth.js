@@ -9,6 +9,7 @@ import validForm from '../Tools/ValidForms'
 import {LOGIN} from '../Queries/UserQueries'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -75,12 +76,10 @@ export default function Auth() {
     let classes = useStyles()
     const email = useRef('')
     const password = useRef('')
+    const [horizontal] = useState('center')
+    const [vertical] = useState('bottom')
     const [panel1, setPanel1] = useState(false)
     const [panel2, setPanel2] = useState(true)
-    const [state, setState] = useState({
-        alert_message: '',
-        severity: '',
-    })
     const [checkForm, setCheckForm] = useState({
         emailValue: '',
         passwordValue: '',
@@ -89,7 +88,6 @@ export default function Auth() {
     })
     const [snackbar, setSnackbar] = useState(null)
     const handleCloseSnackbar = () => setSnackbar(null)
-
     const context = useContext(AuthContext)
     const [login, {error}] = useLazyQuery(
         LOGIN,
@@ -122,7 +120,8 @@ export default function Auth() {
     const handleInputChange = async (event) => {
         const input = event.target.name
         const value = event.target.value
-        const response = await validForm(input, value)
+        const required = event.target.required
+        const response = await validForm(input, value, required)
         setCheckForm({
             ...checkForm,
             [input + 'Value']: value,
@@ -130,36 +129,39 @@ export default function Auth() {
         })
     }
 
-    const connectUser = async () => {
-        if(checkForm.emailMessage !== '' || checkForm.passwordMessage !== '') {
-            if(checkForm.emailMessage !== '') {
-                setState({
-                    ...state,
-                    severity: 'error',
-                    alert_message: checkForm.emailMessage
+    const connectUser = async (event) => {
+        if (checkForm.passwordValue === '' || checkForm.emailValue === '') {
+            if (checkForm.emailValue === '') {
+                event.preventDefault()
+                setSnackbar({
+                    children: 'Pas d\'email, pas de connexion. Pas de connexion... Pas de connexion',
+                    severity: 'error'
                 })
             }
-            if(checkForm.passwordMessage !== '') {
-                setState({
-                    ...state,
-                    severity: 'error',
-                    alert_message: checkForm.passwordMessage
+            if (checkForm.passwordValue === '') {
+                event.preventDefault()
+                setSnackbar({
+                    children: 'Pas de mot de passe, pas de connexion. Pas de connexion... Pas de connexion',
+                    severity: 'error'
                 })
             }
-        } else {
+            if (checkForm.emailMessage !== '' || checkForm.passwordMessage !== '') {
+                if (checkForm.emailMessage !== '') {
+                    event.preventDefault()
+                    setSnackbar({children: checkForm.emailMessage, severity: 'error'})
+                }
+                if (checkForm.passwordMessage !== '') {
+                    event.preventDefault()
+                    setSnackbar({children: checkForm.passwordMessage, severity: 'error'})
+                }
+            }
+        }  else {
             try {
                 await login()
-                setState({
-                    ...state,
-                    severity: 'success',
-                    alert_message: 'Connexion ok'
-                })
-
             } catch (e) {
                 console.log(e)
             }
         }
-        setSnackbar({children: state.alert_message, severity: state.severity});
     }
 
     return (
@@ -257,7 +259,7 @@ export default function Auth() {
                                                     fullWidth={true}
                                                     variant="outlined"
                                                     onChange={handleInputChange}
-                                                    value={state.log_user_password}
+                                                    value={checkForm.passwordValue}
                                                     error={checkForm.passwordMessage === '' ? false : checkForm.passwordMessage}
                                                     required
                                                 />
@@ -299,7 +301,10 @@ export default function Auth() {
                         </CardActions>
                     </Card>
                     {!!snackbar && (
-                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                        <Snackbar
+                            open anchorOrigin={{ vertical, horizontal }}
+                            onClose={handleCloseSnackbar}
+                            autoHideDuration={6000}>
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
                         </Snackbar>
                     )}

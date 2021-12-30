@@ -214,6 +214,8 @@ export default function GameDatagrid() {
             })
         },
     ]
+    const [horizontal] = useState('center')
+    const [vertical] = useState('bottom')
     const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
         id: '',
@@ -482,7 +484,11 @@ export default function GameDatagrid() {
                         onCellEditCommit={handleCellEditCommit}
                     />
                     {!!snackbar && (
-                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                        <Snackbar
+                            open anchorOrigin={{ vertical, horizontal }}
+                            onClose={handleCloseSnackbar}
+                            autoHideDuration={6000}
+                        >
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
                         </Snackbar>
                     )}

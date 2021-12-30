@@ -1,12 +1,12 @@
-import React, {useContext} from 'react'
-import { makeStyles } from '@mui/styles'
+import React, {useContext, useEffect, useState} from 'react'
+import {makeStyles} from '@mui/styles'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
 import Badge from '@mui/material/Badge'
 import Menu from '@mui/material/Menu'
-import MenuIcon from '@mui/material/Menu'
+import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search'
 import MailIcon from '@mui/icons-material/Mail'
 import NotificationsIcon from '@mui/icons-material/Notifications'
@@ -29,6 +29,9 @@ import GroupIcon from '@mui/icons-material/Group'
 import ListIcon from '@mui/icons-material/List'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import EventNoteTwoToneIcon from '@mui/icons-material/EventNoteTwoTone'
+import Avatar from '@mui/material/Avatar'
+import {USERBYID} from '../../Queries/UserQueries'
+import {useQuery} from "@apollo/client";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -107,8 +110,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AuthNavbar(props) {
     const auth = useContext(AuthContext)
+    const id = auth.playload.userId
     const classes = useStyles()
-
+    const {data} = useQuery(
+        USERBYID,
+        {
+            variables: {id}
+        }
+    )
+    const [user, setUser] = useState('')
+    useEffect(() => {
+        if (data !== undefined) {
+            setUser(data)
+        }
+    }, [data])
     const [state, setState] = React.useState({
         left: false
     })
@@ -139,7 +154,6 @@ export default function AuthNavbar(props) {
                     component={NavLink}
                     to="/dashboard"
                     onClick={toggleDrawer(anchor, false)}
-                    className={classes.listItem}
                 >
                     <ListItemIcon><DashboardRoundedIcon/></ListItemIcon>
                     <ListItemText primary="Dashboard"/>
@@ -190,20 +204,20 @@ export default function AuthNavbar(props) {
                 </ListItem>
                 {
                     (auth.token && auth.playload.userRole === 'admin') &&
-                        <div>
-                            <Divider/>
-                            <ListItem
-                                button
-                                key="backOffice"
-                                component={NavLink}
-                                to="/backOffice"
-                                onClick={toggleDrawer(anchor, false)}
-                                className={classes.listItem}
-                            >
-                                <ListItemIcon><ListIcon/></ListItemIcon>
-                                <ListItemText primary="BackOffice"/>
-                            </ListItem>
-                        </div>
+                    <div>
+                        <Divider/>
+                        <ListItem
+                            button
+                            key="backOffice"
+                            component={NavLink}
+                            to="/backOffice"
+                            onClick={toggleDrawer(anchor, false)}
+                            className={classes.listItem}
+                        >
+                            <ListItemIcon><ListIcon/></ListItemIcon>
+                            <ListItemText primary="BackOffice"/>
+                        </ListItem>
+                    </div>
                 }
                 <Divider/>
                 <ListItem
@@ -281,7 +295,7 @@ export default function AuthNavbar(props) {
                     <Toolbar>
                         {['left'].map((anchor) => (
                             <React.Fragment key={anchor}>
-                                <IconButton 
+                                <IconButton
                                     edge="start"
                                     className={classes.menuButton}
                                     color="inherit"
@@ -290,7 +304,6 @@ export default function AuthNavbar(props) {
                                 >
                                     <MenuIcon/>
                                 </IconButton>
-
                                 <SwipeableDrawer
                                     anchor={anchor}
                                     open={state[anchor]}
@@ -333,6 +346,13 @@ export default function AuthNavbar(props) {
                                     <NotificationsIcon/>
                                 </Badge>
                             </IconButton>
+                            {user &&
+                            <IconButton aria-label="show 17 new notifications" color="inherit">
+                                <Avatar
+                                    alt={"profilPic de " + data.user.user_login}
+                                    src={"http://localhost:8080/Upload/ProfilePic/" + data.user.user_avatar}/>
+                            </IconButton>
+                            }
                         </div>
                         <div className={classes.sectionMobile}>
                             <IconButton

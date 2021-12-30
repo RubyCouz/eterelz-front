@@ -1,5 +1,4 @@
 import React from 'react'
-
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
@@ -7,9 +6,9 @@ import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import { makeStyles } from '@mui/styles'
-import Box from "@mui/material/Box"
-import {NavLink} from "react-router-dom"
-import MoreIcon from "@mui/icons-material/MoreVert"
+import Box from '@mui/material/Box'
+import {NavLink} from 'react-router-dom'
+import MoreIcon from '@mui/icons-material/MoreVert'
 import './Navbar.css'
 
 const useStyles = makeStyles((theme) => ({
@@ -32,23 +31,16 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function Home(props) {
-
     const classes = useStyles();
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
     }
-
     const handleMobileMenuClose = () => {
         setMobileMoreAnchorEl(null);
     }
-
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
-
     const menuId = 'primary-search-account-menu';
-
-
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
         <Menu
@@ -80,14 +72,11 @@ export default function Home(props) {
             </MenuItem>
         </Menu>
     )
-
     return (
-        <div>
             <Box sx={{flexGrow: 1}}>
                 <AppBar
                     className={classes.navbar}
-                    position="static"
-                    // color="primary"
+                    position="fixed"
                 >
                     <Toolbar>
                         <NavLink to="/">
@@ -135,7 +124,6 @@ export default function Home(props) {
                 </AppBar>
                 {renderMobileMenu}
             </Box>
-        </div>
     )
 
 }

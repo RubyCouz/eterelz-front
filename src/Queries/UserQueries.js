@@ -83,10 +83,34 @@ export const CREATEDBYADMIN = gql`
         }
     }
 `
-
+/**
+ * suppression d'un utilisateur
+ * @type {DocumentNode}
+ */
 export const DELETEUSER = gql`
 mutation deleteUser($id: ID!) {
     deleteUser(id: $id) {
         _id
     }
 }`
+/**
+ * confirmation utilisateur
+ * @type {DocumentNode}
+ */
+export const CONFIRMUSER = gql`
+    mutation CONFIRMUSER($token: String!, $pass: String!) {
+        confirmUser(token: $token, pass: $pass) {
+            token
+        }
+    }
+`
+
+export const USERBYID = gql`
+query USER( $id: ID!){
+    user(_id: $id ){
+      _id
+      user_avatar
+      user_login
+    }
+  }
+`

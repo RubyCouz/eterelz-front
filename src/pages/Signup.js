@@ -9,10 +9,11 @@ import Grid from '@mui/material/Grid'
 import {useRef, useState} from 'react'
 import {makeStyles} from '@mui/styles'
 import validForm from '../Tools/ValidForms'
-import {gql, useMutation} from '@apollo/client'
+import {useMutation} from '@apollo/client'
 import {useHistory} from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
+import {CREATEUSER} from '../Queries/UserQueries'
 
 const useStyles = makeStyles({
     root: {
@@ -38,18 +39,6 @@ const useStyles = makeStyles({
     }
 })
 
-const CREATEUSER = gql`
-    mutation CREATEUSER($user_login: String!, $email: String!, $password: String!) {
-        createUser(
-            userInput: {
-                user_login: $user_login, user_email: $email, user_password: $password
-            }) {
-            _id
-            user_email
-        }
-    }
-`
-
 export default function Signup() {
     let classes = useStyles()
     const history = useHistory()
@@ -57,11 +46,8 @@ export default function Signup() {
     const email = useRef('')
     const password = useRef('')
     const confirmPassword = useRef('')
-
-    const [state, setState] = useState({
-        alert_message: '',
-        severity: '',
-    })
+    const [horizontal] = useState('center')
+    const [vertical] = useState('bottom')
 
     const [checkForm, setCheckForm] = useState({
         pseudoValue: '',
@@ -85,7 +71,6 @@ export default function Signup() {
             errorPolicy: 'all',
             onCompleted: data => {
                 setSnackbar({children: 'Inscription effectuée !!!', severity: 'success'});
-
                 return history.push('/verifyAccount')
             },
             onError: (({networkError}) => {
@@ -98,72 +83,67 @@ export default function Signup() {
             })
         }
     )
-
     const handleCloseSnackbar = () => setSnackbar(null)
     const handleInputChange = async (event) => {
         const value = event.target.value;
         const input = event.target.name;
-        const response = await validForm(input, value)
+        const required = event.target.required
+        const response = await validForm(input, value, required)
         setCheckForm({
             ...checkForm,
             [input + 'Value']: value,
             [input + 'Message']: response
         })
     }
-
-    const signup = async () => {
+    const signup = async (event) => {
         if (password.current.value !== confirmPassword.current.value) {
-            console.log('mdp !=')
-            setState({
-                ...state,
-                severity: 'error',
-                alert_message: 'Les mots de passe doivent être identique'
+            event.preventDefault()
+            setSnackbar({
+                children: 'Les mots de passe sont différent',
+                severity: 'error'
             })
         } else if (checkForm.passwordValue === '' ||
             checkForm.emailValue === '' ||
             checkForm.pseudoValue === '' ||
             checkForm.confirmPasswordValue === ''
         ) {
-            console.log('champs vide')
-            setState({
-                ...state,
-                severity: 'error',
-                alert_message: 'Vous devez remplir entièrement ce formulaire pour le valider'
+            event.preventDefault()
+            setSnackbar({
+                children: 'Il manque des informations pour compléter l\'inscription',
+                severity: 'error'
             })
         } else if (checkForm.pseudoMessage !== '' ||
             checkForm.emailMessage !== '' ||
             checkForm.passwordMessage !== '' ||
             checkForm.confirmPasswordMessage !== '') {
-            console.log('données ivalide')
             if (checkForm.emailMessage !== '') {
-                setState({
-                    ...state,
-                    severity: 'error',
-                    alert_message: checkForm.emailMessage
+                event.preventDefault()
+                setSnackbar({
+                    children: checkForm.emailMessage,
+                    severity: 'error'
                 })
             }
             if (checkForm.passwordMessage !== '') {
-                setState({
-                    ...state,
-                    severity: 'error',
-                    alert_message: checkForm.passwordMessage
+                event.preventDefault()
+                setSnackbar({
+                    children: 'Pas de mot de passe, pas d\'inscription. Pas d\'inscription... Pas d\'inscription',
+                    severity: 'error'
                 })
             }
             if (checkForm.pseudoMessage !== '') {
-                setState({
-                    ...state,
-                    severity: 'error',
-                    alert_message: checkForm.pseudoMessage
+                event.preventDefault()
+                setSnackbar({
+                    children: 'il faut un pseudo pour s\'inscrire ici !!!',
+                    severity: 'error'
                 })
             }
             if (checkForm.confirmPasswordMessage !== '') {
-                setState({
-                    ...state,
-                    severity: 'error',
-                    alert_message: checkForm.confirmPasswordMessage
+                event.preventDefault()
+                setSnackbar({
+                    children: 'Et le mot de passe, alors ???',
+                    severity: 'error'
                 })
             }
-            setSnackbar({children: state.alert_message, severity: state.severity})
         } else {
             try {
                 await createUser()
@@ -173,7 +153,6 @@ export default function Signup() {
             }
         }
     }
-
     return (
         <Box sx={{flexGrow: 1}}>
             <Grid
@@ -252,7 +231,7 @@ export default function Signup() {
                                                 label="Mot de passe"
                                                 name="password"
                                                 inputRef={password}
-                                                type="text"
+                                                type="password"
                                                 helperText={checkForm.passwordMessage !== '' && checkForm.passwordMessage}
                                                 variant="outlined"
                                                 onChange={handleInputChange}
@@ -275,7 +254,7 @@ export default function Signup() {
                                                 label="Vérification de mot de passe"
                                                 name="confirmPassword"
                                                 inputRef={confirmPassword}
-                                                type="text"
+                                                type="password"
                                                 variant="outlined"
                                                 helperText={checkForm.confirmPasswordMessage !== '' && checkForm.confirmPasswordMessage}
                                                 onChange={handleInputChange}
@@ -315,7 +294,9 @@ export default function Signup() {
                         </CardContent>
                     </Card>
                     {!!snackbar && (
-                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                        <Snackbar open anchorOrigin={{ vertical, horizontal }}
+                                  onClose={handleCloseSnackbar}
+                                  autoHideDuration={6000}>
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
                         </Snackbar>
                     )}

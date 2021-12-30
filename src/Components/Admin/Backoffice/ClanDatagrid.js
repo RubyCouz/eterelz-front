@@ -64,7 +64,6 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
 }))
-
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
@@ -75,7 +74,6 @@ function CustomLoadingOverlay() {
         </GridOverlay>
     );
 }
-
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
@@ -123,7 +121,6 @@ function CustomNoRowsOverlay() {
         </StyledGridOverlay>
     );
 }
-
 const initRows = (data) => {
     let rows = []
     data.clans.map((clan, key) => {
@@ -267,7 +264,9 @@ export default function ClanDatagrid() {
                 )
             })
         },
-    ]
+        ]
+    const [horizontal] = useState('center')
+    const [vertical] = useState('bottom')
     const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
         id: '',
@@ -373,8 +372,6 @@ export default function ClanDatagrid() {
                 console.log('error')
             })
             const formData = new FormData()
-            console.log(file)
-            console.log(id)
             formData.append("file", file, file.name)
             req.open('POST', 'http://localhost:8080/upload/clan/' + id)
             req.send(formData)
@@ -411,9 +408,8 @@ export default function ClanDatagrid() {
             event: '',
         })
     }
-
     const RenderPic = ({params}) => {
-        if(params.value !== '' && params.value !== null) {
+        if (params.value !== '' && params.value !== null) {
             console.log(params.value)
             return (
                 <Avatar
@@ -452,7 +448,6 @@ export default function ClanDatagrid() {
             </IconButton>
         </div>
     }
-
     const addClan = () => {
         createClan({
             variables: {
@@ -469,7 +464,8 @@ export default function ClanDatagrid() {
             errorPolicy: 'all',
             onCompleted: data1 => {
                 if (data1.createClan.clan_banner !== '') {
-                    setState({...state, id: data1.createClan._id
+                    setState({
+                        ...state, id: data1.createClan._id
                     })
                 }
                 setSnackbar({children: 'Clan / Team créé(e) !!!', severity: 'success'})
@@ -505,13 +501,12 @@ export default function ClanDatagrid() {
             })
         })
     }
-
     useEffect(() => {
         if (data !== undefined) {
             const init = initRows(data)
             setRows(init)
         }
-        if(state.id !== '' && state.selectedFile !== null) {
+        if (state.id !== '' && state.selectedFile !== null) {
             const promises = []
             promises.push(sendRequest(state.selectedFile, state.id))
         }
@@ -552,7 +547,12 @@ export default function ClanDatagrid() {
                         onCellEditCommit={handleCellEditCommit}
                     />
                     {!!snackbar && (
-                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                        <Snackbar
+                            open
+                            onClose={handleCloseSnackbar}
+                            autoHideDuration={6000}
+                            anchorOrigin={{vertical, horizontal}}
+                        >
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
                         </Snackbar>
                     )}

@@ -76,7 +76,6 @@ const StyledGridOverlay = styled(GridOverlay)(({theme}) => ({
         // fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
     },
 }))
-
 // barre de chargement de données
 function CustomLoadingOverlay() {
     return (
@@ -87,7 +86,6 @@ function CustomLoadingOverlay() {
         </GridOverlay>
     )
 }
-
 // overlay si pas de données
 function CustomNoRowsOverlay() {
     return (
@@ -135,7 +133,6 @@ function CustomNoRowsOverlay() {
         </StyledGridOverlay>
     )
 }
-
 const initRows = (data) => {
     let rows = []
     data.users.map((user, key) => {
@@ -311,6 +308,8 @@ export default function UserDatagrid() {
             })
         },
     ]
+    const [horizontal] = useState('center')
+    const [vertical] = useState('bottom')
     const [snackbar, setSnackbar] = useState(null)
     const [state, setState] = useState({
         picModal: false,
@@ -627,7 +626,11 @@ export default function UserDatagrid() {
                         onCellEditCommit={handleCellEditCommit}
                     />
                     {!!snackbar && (
-                        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                        <Snackbar
+                            open anchorOrigin={{ vertical, horizontal }}
+                            onClose={handleCloseSnackbar}
+                            autoHideDuration={6000}
+                        >
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>
                         </Snackbar>
                     )}

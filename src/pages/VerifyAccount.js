@@ -1,7 +1,7 @@
 import React, {useContext, useRef, useState} from 'react'
 import Button from '@mui/material/Button'
 import {useParams} from 'react-router-dom'
-import {gql, useMutation} from '@apollo/client'
+import {useMutation} from '@apollo/client'
 import Grid from '@mui/material/Grid'
 import ExpiredToken from '../Components/Errors/TokenErrors/ExpiredToken'
 import {useHistory} from 'react-router-dom'
@@ -11,16 +11,7 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
-
-
-const CONFIRMUSER = gql`
-    mutation CONFIRMUSER($token: String!, $pass: String!) {
-        confirmUser(token: $token, pass: $pass) {
-            token
-        }
-    }
-`
-
+import {CONFIRMUSER} from '../Queries/UserQueries'
 
 export default function VerifyAccount() {
 
@@ -36,12 +27,10 @@ export default function VerifyAccount() {
 // récupération du token passé dans l'url
     const url = useParams()
     const token = url.token
-    console.log(token)
-    if (token === undefined) {
-        console.log('ok')
-    }
-    let pass
 
+    let pass
+    const [horizontal] = useState('center')
+    const [vertical] = useState('bottom')
     const [statusCode, setStatusCode] = useState('')
     const [snackbar, setSnackbar] = useState(null)
     const handleCloseSnackbar = () => setSnackbar(null)
@@ -133,8 +122,8 @@ export default function VerifyAccount() {
                     })
                 }
             }),
-            onCompleted: data => {
-                context.login()
+            onCompleted: async (data) => {
+                await context.login()
                 return history.push('/dashboard')
             }
         },
@@ -285,7 +274,10 @@ export default function VerifyAccount() {
 
                 </div>
                 {!!snackbar && (
-                    <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+                    <Snackbar open
+                              onClose={handleCloseSnackbar}
+                              anchorOrigin={{ vertical, horizontal }}
+                              autoHideDuration={6000}>
                         <Alert {...snackbar} onClose={handleCloseSnackbar}/>
                     </Snackbar>
                 )}

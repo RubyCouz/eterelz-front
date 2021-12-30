@@ -1,5 +1,4 @@
-import { Box } from "@material-ui/core";
-import React from "react";
+import Box from '@mui/material/Box';import React from "react";
 import ReactPlayer from "react-player";
 import { useParams } from "react-router-dom";
 import AuthNavbar from "../Components/Navbar/AuthNavbar";

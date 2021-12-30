@@ -33,7 +33,6 @@ const USER = gql`
       user_city
       user_gender
       user_state
-      user_isDark
       createdAt
       updatedAt
     }
