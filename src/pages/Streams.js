@@ -3,6 +3,7 @@ import AuthNavbar from "../Components/Navbar/AuthNavbar";
 import { gql, useQuery } from "@apollo/client";
 import "./Streams.css"
 import { Link } from "react-router-dom";
+import {useDocTitle} from '../Hook/useDocTitle'
 
 //Requête Apollo qui liste le contenu de la table streams
 const LIST_STREAMS = gql`
@@ -16,6 +17,7 @@ const LIST_STREAMS = gql`
 `;
 
 export default function Streams() {
+  useDocTitle('EterelZ Streams')
   const { loading, error, data } = useQuery(LIST_STREAMS);
   const [dataTwitch, setDataTwitch] = useState([]);
   //Hook qui permet declencher une fonction asynchrone lorsque l'état du composant change

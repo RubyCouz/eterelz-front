@@ -12,6 +12,7 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
+import {useDocTitle} from '../Hook/useDocTitle'
 // import UserGameList from '../Components/UserGame/UserGameList'
 // import {
 //     gql,
@@ -142,6 +143,8 @@ const useStyles = makeStyles({
 // `
 
 export default function Dashboard(callbackfn, thisArg) {
+    useDocTitle('EterelZ Dashboard')
+
     // const theme = useTheme();
 const auth = useContext(AuthContext)
     console.log(auth.playload.userId)

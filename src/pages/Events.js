@@ -393,6 +393,7 @@
 import React from 'react'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
 import {makeStyles} from '@mui/styles'
+import {useDocTitle} from '../Hook/useDocTitle'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -402,6 +403,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Tournaments() {
 
+    useDocTitle('EterelZ Events')
     let classes = useStyles()
 
     return (

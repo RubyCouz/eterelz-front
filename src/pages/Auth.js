@@ -9,6 +9,7 @@ import validForm from '../Tools/ValidForms'
 import {LOGIN} from '../Queries/UserQueries'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
+import {useDocTitle} from '../Hook/useDocTitle'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -73,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 export default function Auth() {
+    useDocTitle('EterelZ Connexion')
     let classes = useStyles()
     const email = useRef('')
     const password = useRef('')

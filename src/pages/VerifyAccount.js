@@ -12,8 +12,10 @@ import TextField from '@mui/material/TextField'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import {CONFIRMUSER} from '../Queries/UserQueries'
+import {useDocTitle} from '../Hook/useDocTitle'
 
 export default function VerifyAccount() {
+    useDocTitle('EterelZ Verify Account')
 
     const context = useContext(AuthContext)
     const history = useHistory()

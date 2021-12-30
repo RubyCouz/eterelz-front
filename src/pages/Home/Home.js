@@ -16,12 +16,12 @@ import WidgetDiscord from '../../Components/WidgetDiscord/WidgetDiscord'
 import HomeStream from '../../Components/HomeStream/HomeStream'
 import HomeMatches from '../../Components/HomeMatches/HomeMatches'
 import Footer from '../../Components/Footer/Footer'
-import Toolbar from '@mui/material/Toolbar';
-import useScrollTrigger from '@mui/material/useScrollTrigger';
-import Fab from '@mui/material/Fab';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Zoom from '@mui/material/Zoom';
-
+import Toolbar from '@mui/material/Toolbar'
+import useScrollTrigger from '@mui/material/useScrollTrigger'
+import Fab from '@mui/material/Fab'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import Zoom from '@mui/material/Zoom'
+import {useDocTitle} from '../../Hook/useDocTitle'
 // import Stats from '../../Components/Stats/Stats'
 
 function ScrollTop(props) {
@@ -60,12 +60,13 @@ function ScrollTop(props) {
 }
 
 export default function Home(props) {
-
+    useDocTitle('EterelZ HomePage')
     const [expanded, setExpanded] = React.useState(false);
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
     return (
+
         <div className="bg">
             <Box sx={{flexGrow: 1}}>
                 <Navbar/>

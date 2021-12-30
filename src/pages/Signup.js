@@ -14,6 +14,7 @@ import {useHistory} from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import {CREATEUSER} from '../Queries/UserQueries'
+import {useDocTitle} from '../Hook/useDocTitle'
 
 const useStyles = makeStyles({
     root: {
@@ -40,6 +41,7 @@ const useStyles = makeStyles({
 })
 
 export default function Signup() {
+    useDocTitle('EterelZ Inscription')
     let classes = useStyles()
     const history = useHistory()
     const pseudo = useRef('')
