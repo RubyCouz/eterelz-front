@@ -1,11 +1,11 @@
 // import React, {useContext, useRef, useState} from 'react'
-import React, {useContext} from 'react'
+import React from 'react'
 import AuthNavbar from '../Components/Navbar/AuthNavbar'
 // import {makeStyles, useTheme} from '@mui/styles'
 import {makeStyles} from '@mui/styles'
 // import AuthContext from '../context/auth-context'
 import PropTypes from 'prop-types'
-import AuthContext from '../context/auth-context'
+// import AuthContext from '../context/auth-context'
 // import SwipeableViews from 'react-swipeable-views'
 import AppBar from '@mui/material/AppBar'
 import Tabs from '@mui/material/Tabs'
@@ -146,7 +146,7 @@ export default function Dashboard(callbackfn, thisArg) {
     useDocTitle('EterelZ Dashboard')
 
     // const theme = useTheme();
-const auth = useContext(AuthContext)
+// const auth = useContext(AuthContext)
     let classes = useStyles()
     // let gameArray = []
     // const context = useContext(AuthContext)
