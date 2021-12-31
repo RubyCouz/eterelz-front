@@ -1,5 +1,4 @@
 import React from 'react'
-import AuthNavbar from '../Components/Navbar/AuthNavbar'
 import {makeStyles} from '@mui/styles'
 import {useDocTitle} from '../Hook/useDocTitle'
 
@@ -16,7 +15,6 @@ export default function Dashboard() {
 
     return (
         <div className={classes.root}>
-            <AuthNavbar/>
             <h1>Vos clans</h1>
         </div>
     )

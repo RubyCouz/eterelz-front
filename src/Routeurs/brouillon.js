@@ -2,26 +2,21 @@ import React, {useContext} from 'react'
 import AuthContext from '../context/auth-context'
 import PublicRouteur from './Public'
 import PrivateRouteur from './Private'
-import AdminRouteur from './Admin'
-
 export default function Routeur() {
 
-    const auth = useContext(AuthContext)
+    const authContext = useContext(AuthContext)
     let isActive
-    let role
-    if (auth.playload !== null) {
-        isActive = auth.playload.is_active
-        role = auth.playload.userRole
+    if(authContext.playload !== null) {
+        isActive = authContext.playload.is_active
     }
-    const token = auth.token
+    const token = authContext.token
+
     return (
         <>
             {
                 token ?
                     isActive ?
-                        role === 'admin' ?
-                            <AdminRouteur/> :
-                            <PrivateRouteur/>
+                        <PrivateRouteur/>
                         :
                         <PublicRouteur/>
                     :

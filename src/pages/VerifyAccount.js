@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom'
 import {useMutation} from '@apollo/client'
 import Grid from '@mui/material/Grid'
 import ExpiredToken from '../Components/Errors/TokenErrors/ExpiredToken'
-import {useHistory} from 'react-router-dom'
+// import {useHistory} from 'react-router-dom'
 import AuthContext from '../context/auth-context'
 import './VerifyAccount.css'
 import Box from '@mui/material/Box'
@@ -18,7 +18,7 @@ export default function VerifyAccount() {
     useDocTitle('EterelZ Verify Account')
 
     const context = useContext(AuthContext)
-    const history = useHistory()
+    // const history = useHistory()
     const char1 = useRef('')
     const char2 = useRef('')
     const char3 = useRef('')
@@ -126,7 +126,7 @@ export default function VerifyAccount() {
             }),
             onCompleted: async (data) => {
                 await context.login()
-                return history.push('/dashboard')
+                // return history.push('/dashboard')
             }
         },
     )

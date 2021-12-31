@@ -1,6 +1,6 @@
 import React from 'react'
-import Navbar from '../Components/Navbar/Navbar'
-import Footer from '../Components/Footer/Footer'
+import AuthNavbar from '../../Components/Navbar/AuthNavbar'
+import Footer from '../../Components/Footer/Footer'
 import {Outlet} from "react-router-dom";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
@@ -49,7 +49,7 @@ export default function Index(props) {
     return (
         <>
             <Box sx={{flexGrow: 1, height: '50px'}}>
-                <Navbar/>
+                <AuthNavbar/>
                 <Toolbar id="back-to-top-anchor"/>
             </Box>
             <Outlet/>

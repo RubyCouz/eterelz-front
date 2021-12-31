@@ -10,3 +10,9 @@ a {
 h1{
     text-align: center;
 }
+.black-block {
+    /*background: #121212;*/
+    width: 100%;
+    padding: 7% 5% 2% 5%;
+    color: #8618ad;
+}

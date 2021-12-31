@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
@@ -26,7 +27,8 @@ const useStyles = makeStyles((theme) => ({
     },
     navbar: {
         backgroundColor: 'rgb(0,168,212)',
-        background: 'linear-gradient(90deg, rgba(0,168,212,1) 0%, rgba(134,24,173,1) 53%)'
+        background: 'linear-gradient(90deg, rgba(0,168,212,1) 0%, rgba(134,24,173,1) 53%)',
+        height: '60px'
     }
 }))
 
@@ -68,7 +70,7 @@ export default function Home(props) {
                 >
                     <AccountCircle/>
                 </IconButton>
-                <a href="../Auth">CONNEXION</a>
+                <Link to="/auth">CONNEXION</Link>
             </MenuItem>
         </Menu>
     )
@@ -102,10 +104,7 @@ export default function Home(props) {
                                 aria-haspopup="true"
                                 color="inherit"
                             >
-                                <a href="../Auth" title="Connexion">
-                                    <AccountCircle/>
-                                </a>
-
+                                <Link to="/auth"><AccountCircle/></Link>
                             </IconButton>
                         </Box>
                         <Box sx={{display: {xs: 'flex', md: 'none'}}}>

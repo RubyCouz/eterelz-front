@@ -124,7 +124,7 @@ export default function AuthNavbar(props) {
             setUser(data)
         }
     }, [data])
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         left: false
     })
     const toggleDrawer = (anchor, open) => (event) => {
@@ -162,7 +162,7 @@ export default function AuthNavbar(props) {
                     button
                     key="tournaments"
                     component={NavLink}
-                    to="/tournaments"
+                    to="tournaments"
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
@@ -173,7 +173,7 @@ export default function AuthNavbar(props) {
                     button
                     key="events"
                     component={NavLink}
-                    to="/events"
+                    to="events"
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
@@ -184,7 +184,7 @@ export default function AuthNavbar(props) {
                     button
                     key="clan"
                     component={NavLink}
-                    to="/clan"
+                    to="clans"
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
@@ -195,7 +195,7 @@ export default function AuthNavbar(props) {
                     button
                     key="streams"
                     component={NavLink}
-                    to="/streams"
+                    to="streams"
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
@@ -208,9 +208,9 @@ export default function AuthNavbar(props) {
                         <Divider/>
                         <ListItem
                             button
-                            key="backOffice"
+                            key="backoffice"
                             component={NavLink}
-                            to="/backOffice"
+                            to="/admin/"
                             onClick={toggleDrawer(anchor, false)}
                             className={classes.listItem}
                         >
@@ -224,7 +224,7 @@ export default function AuthNavbar(props) {
                     button
                     key="profil"
                     component={NavLink}
-                    to="/account"
+                    to="account"
                     onClick={toggleDrawer(anchor, false)}
                     className={classes.listItem}
                 >
@@ -237,7 +237,7 @@ export default function AuthNavbar(props) {
                     onClick={auth.logout}
                     className={classes.listItem}
                     component={NavLink}
-                    to="/home"
+                    to="/"
                 >
                     <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
                     <ListItemText primary="Déconnexion"/>

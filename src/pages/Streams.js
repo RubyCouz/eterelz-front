@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import AuthNavbar from "../Components/Navbar/AuthNavbar";
 import { gql, useQuery } from "@apollo/client";
 import "./Streams.css"
 import { Link } from "react-router-dom";
@@ -79,7 +78,6 @@ export default function Streams() {
   if (!data) return <div>Aucune données</div>;
   return (
     <>
-      <AuthNavbar />
       <h1>Listes des Streams</h1>
       {/* Container de la card */}
       <div className="container-grid">

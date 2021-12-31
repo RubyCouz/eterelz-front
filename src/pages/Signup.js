@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {Link} from 'react-router-dom'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
@@ -10,7 +11,7 @@ import {useRef, useState} from 'react'
 import {makeStyles} from '@mui/styles'
 import validForm from '../Tools/ValidForms'
 import {useMutation} from '@apollo/client'
-import {useHistory} from 'react-router-dom'
+// import {useHistory} from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import {CREATEUSER} from '../Queries/UserQueries'
@@ -43,7 +44,7 @@ const useStyles = makeStyles({
 export default function Signup() {
     useDocTitle('EterelZ Inscription')
     let classes = useStyles()
-    const history = useHistory()
+    // const history = useHistory()
     const pseudo = useRef('')
     const email = useRef('')
     const password = useRef('')
@@ -73,7 +74,7 @@ export default function Signup() {
             errorPolicy: 'all',
             onCompleted: data => {
                 setSnackbar({children: 'Inscription effectuée !!!', severity: 'success'});
-                return history.push('/verifyAccount')
+                // return history.push('/verifyAccount')
             },
             onError: (({networkError}) => {
                 if (networkError) {
@@ -273,8 +274,11 @@ export default function Signup() {
                                         <Grid item xs={6} md={6} lg={6}>
                                             <Button value="Annuler"
                                                     variant="outlined"
+
                                             >
-                                                <a href="/auth" title="retour à la connexion">Retour</a>
+                                                <Link to="/">
+                                                    Retour
+                                                </Link>
                                             </Button>
                                         </Grid>
                                         <Grid item xs={6} md={6} lg={6}>

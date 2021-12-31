@@ -1,6 +1,5 @@
 import React from 'react'
 import Box from "@mui/material/Box"
-import Navbar from '../../Components/Navbar/Navbar'
 import HomeCarousel from '../../Components/HomeCarousel/HomeCarousel'
 import SponsoCarousel from '../../Components/SponsoCarousel/SponsoCarousel'
 import './Home.css'
@@ -15,48 +14,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import WidgetDiscord from '../../Components/WidgetDiscord/WidgetDiscord'
 import HomeStream from '../../Components/HomeStream/HomeStream'
 import HomeMatches from '../../Components/HomeMatches/HomeMatches'
-import Footer from '../../Components/Footer/Footer'
-import Toolbar from '@mui/material/Toolbar'
-import useScrollTrigger from '@mui/material/useScrollTrigger'
-import Fab from '@mui/material/Fab'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import Zoom from '@mui/material/Zoom'
 import {useDocTitle} from '../../Hook/useDocTitle'
 // import Stats from '../../Components/Stats/Stats'
-function ScrollTop(props) {
-    const {children, window} = props;
-    // Note that you normally won't need to set the window ref as useScrollTrigger
-    // will default to window.
-    // This is only being set here because the demo is in an iframe.
-    const trigger = useScrollTrigger({
-        target: window ? window() : undefined,
-        disableHysteresis: true,
-        threshold: 100,
-    });
-    const handleClick = (event) => {
-        const anchor = (event.target.ownerDocument || document).querySelector(
-            '#back-to-top-anchor',
-        );
-
-        if (anchor) {
-            anchor.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-            });
-        }
-    };
-    return (
-        <Zoom in={trigger}>
-            <Box
-                onClick={handleClick}
-                role="presentation"
-                sx={{position: 'fixed', bottom: 16, left: 16}}
-            >
-                {children}
-            </Box>
-        </Zoom>
-    );
-}
 
 export default function Home(props) {
     useDocTitle('EterelZ HomePage')
@@ -66,10 +25,7 @@ export default function Home(props) {
     };
     return (
         <div className="bg">
-            <Box sx={{flexGrow: 1}}>
-                <Navbar/>
-                <Toolbar id="back-to-top-anchor"/>
-            </Box>
+
             <Box sx={{flexGrow: 1}}>
                 <HomeCarousel/>
             </Box>
@@ -228,15 +184,9 @@ export default function Home(props) {
                     </Grid>
                 </div>
                 <div className="skew-cc"/>
-                <div className="black-block footer">
-                    <Footer/>
-                </div>
+
             </Box>
-            <ScrollTop {...props}>
-                <Fab color="secondary" size="small" aria-label="scroll back to top">
-                    <KeyboardArrowUpIcon/>
-                </Fab>
-            </ScrollTop>
+
         </div>
 
     )

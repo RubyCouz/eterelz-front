@@ -13,7 +13,6 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Grid from '@mui/material/Grid'
 
-import AuthNavbar from '../../Components/Navbar/AuthNavbar'
 
 import TabPanel from './TabPanel'
 import AvatarContext from '../../context/avatar-context'
@@ -129,7 +128,6 @@ export default function Account() {
 
   return(
       <>
-        <AuthNavbar/>
         <Box>
           <Grid
               container

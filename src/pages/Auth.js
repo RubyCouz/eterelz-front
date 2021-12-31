@@ -1,4 +1,5 @@
 import React, {useContext, useRef, useState} from 'react'
+import {Link} from 'react-router-dom'
 import {Card, CardActions, CardContent, Box, Typography, TextField, Button, Grid} from '@mui/material'
 import AuthContext from '../context/auth-context'
 import {makeStyles} from '@mui/styles'
@@ -157,7 +158,7 @@ export default function Auth() {
                     setSnackbar({children: checkForm.passwordMessage, severity: 'error'})
                 }
             }
-        }  else {
+        } else {
             try {
                 await login()
             } catch (e) {
@@ -218,10 +219,11 @@ export default function Auth() {
                                             >
                                                 <Grid item xs={6} md={6} lg={6} alignItems="left">
                                                     <Box textAlign="left" className={classes.buttonsAction}>
-                                                        <Button value="Retour"
-                                                                variant="outlined"
+                                                        <Button
+                                                            value="Retour"
+                                                            variant="outlined"
                                                         >
-                                                            <a href="/home" title="retour à l'accueil">Retour</a>
+                                                            <Link to="/">Retour</Link>
                                                         </Button>
                                                     </Box>
                                                 </Grid>
@@ -238,7 +240,6 @@ export default function Auth() {
                                                                 Suivant
                                                             </Button>
                                                         }
-
                                                     </Box>
                                                 </Grid>
                                             </Grid>
@@ -277,7 +278,7 @@ export default function Auth() {
                                                         variant="outlined"
                                                         onClick={handlePanel}
                                                     >
-                                                        Retour
+                                                        <Link to="/"> Retour</Link>
                                                     </Button>
                                                 </Grid>
                                                 <Grid item xs={6} md={6} lg={6} alignItems="left">
@@ -299,12 +300,12 @@ export default function Auth() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <a href="/signup">Pas de compte Eterelz ? Cliquez ici !</a>
+                            <Link to="/signup">Pas de compte Eterelz ? Cliquez ici !</Link>
                         </CardActions>
                     </Card>
                     {!!snackbar && (
                         <Snackbar
-                            open anchorOrigin={{ vertical, horizontal }}
+                            open anchorOrigin={{vertical, horizontal}}
                             onClose={handleCloseSnackbar}
                             autoHideDuration={6000}>
                             <Alert {...snackbar} onClose={handleCloseSnackbar}/>

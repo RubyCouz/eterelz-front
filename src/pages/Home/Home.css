@@ -2,9 +2,6 @@ body {
     margin: 0;
 }
 
-.bg {
-
-}
 
 .colour-block {
     /*background: #8618ad !important;*/
@@ -98,6 +95,3 @@ body {
     padding-top: 9% !important;
 }
 
-.footer {
-    padding-top: 7% !important;
-}

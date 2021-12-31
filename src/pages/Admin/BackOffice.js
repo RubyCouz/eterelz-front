@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import AuthNavbar from '../../Components/Navbar/AuthNavbar'
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -52,7 +51,6 @@ export default function BackOffice() {
 
     return (
         <>
-            <AuthNavbar/>
             <Box
                 sx={{bgcolor: 'background.paper', display: 'flex', height: 600}}
             >

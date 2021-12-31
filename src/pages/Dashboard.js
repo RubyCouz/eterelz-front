@@ -1,6 +1,5 @@
 // import React, {useContext, useRef, useState} from 'react'
 import React from 'react'
-import AuthNavbar from '../Components/Navbar/AuthNavbar'
 // import {makeStyles, useTheme} from '@mui/styles'
 import {makeStyles} from '@mui/styles'
 // import AuthContext from '../context/auth-context'
@@ -325,7 +324,6 @@ export default function Dashboard(callbackfn, thisArg) {
 
     return (
         <div className={classes.root}>
-            <AuthNavbar/>
             <AppBar position="static" color="default">
                 <Tabs
                     value={value}
