@@ -12,7 +12,7 @@ const BackOfficePage = lazy(() => import('../pages/Admin/BackOffice'))
 const NoFoundPage = lazy(() => import('../pages/NoFound'))
 
 export default function Private() {
-
+    console.log(process.env.PUBLIC_URL)
     const authContext = useContext(AuthContext)
     const role = authContext.playload ? authContext.playload.userRole : null
     

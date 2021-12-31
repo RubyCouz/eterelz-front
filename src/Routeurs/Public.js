@@ -7,41 +7,40 @@ const SignupPage = lazy(() => import('../pages/Signup'))
 const NoFoundPage = lazy(() => import('../pages/NoFound'))
 const ConfirmAccountPage = lazy(() => import('../pages/VerifyAccount'))
 export default function Public() {
-    console.log(process.env.PUBLIC_URL)
-    return (
+        return (
         <BrowserRouter>
             <Switch>
-                <Redirect from={process.env.PUBLIC_URL + '/'} to={process.env.PUBLIC_URL + "/home"} exact/>
-                <Route path={process.env.PUBLIC_URL + '/home'} component={HomePage}/>
-                <Redirect from={process.env.PUBLIC_URL + '/account'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-                <Redirect from={process.env.PUBLIC_URL + '/tournaments'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-                <Redirect from={process.env.PUBLIC_URL + '/dashboard'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-                <Redirect from={process.env.PUBLIC_URL + '/events'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-                <Redirect from={process.env.PUBLIC_URL + '/clan'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-                <Redirect from={process.env.PUBLIC_URL + '/streams'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-                <Redirect from={process.env.PUBLIC_URL + '/backOffice'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-                <Route path={process.env.PUBLIC_URL + '/auth'} component={AuthPage}/>
-                <Route path={process.env.PUBLIC_URL + '/signup'} component={SignupPage}/>
-                <Route path={process.env.PUBLIC_URL + '/verifyAccount/:token'} component={ConfirmAccountPage}/>
-                <Route path={process.env.PUBLIC_URL + '/verifyAccount/'} component={ConfirmAccountPage}/>
-                <Route path={process.env.PUBLIC_URL + '/404'} component={NoFoundPage}/>
+                <Redirect from={'/'} to={"/home"} exact/>
+                <Route path={'/home'} component={HomePage}/>
+                <Redirect from={'/account'} to={"/auth"} exact/>
+                <Redirect from={'/tournaments'} to={"/auth"} exact/>
+                <Redirect from={'/dashboard'} to={"/auth"} exact/>
+                <Redirect from={'/events'} to={"/auth"} exact/>
+                <Redirect from={'/clan'} to={"/auth"} exact/>
+                <Redirect from={'/streams'} to={"/auth"} exact/>
+                <Redirect from={'/backOffice'} to={"/auth"} exact/>
+                <Route path={'/auth'} component={AuthPage}/>
+                <Route path={'/signup'} component={SignupPage}/>
+                <Route path={'/verifyAccount/:token'} component={ConfirmAccountPage}/>
+                <Route path={'/verifyAccount/'} component={ConfirmAccountPage}/>
+                <Route path={'/404'} component={NoFoundPage}/>
             </Switch>
         </BrowserRouter>
         // <Switch>
-        //         <Redirect from={process.env.PUBLIC_URL + '/'} to={process.env.PUBLIC_URL + "/home"} exact/>
-        //         <Route path={process.env.PUBLIC_URL + '/home'} component={HomePage}/>
-        //         <Redirect from={process.env.PUBLIC_URL + '/account'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-        //         <Redirect from={process.env.PUBLIC_URL + '/tournaments'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-        //         <Redirect from={process.env.PUBLIC_URL + '/dashboard'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-        //         <Redirect from={process.env.PUBLIC_URL + '/events'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-        //         <Redirect from={process.env.PUBLIC_URL + '/clan'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-        //         <Redirect from={process.env.PUBLIC_URL + '/streams'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-        //         <Redirect from={process.env.PUBLIC_URL + '/backOffice'} to={process.env.PUBLIC_URL + "/auth"} exact/>
-        //         <Route path={process.env.PUBLIC_URL + '/auth'} component={AuthPage}/>
-        //         <Route path={process.env.PUBLIC_URL + '/signup'} component={SignupPage}/>
-        //         <Route path={process.env.PUBLIC_URL + '/verifyAccount/:token'} component={ConfirmAccountPage}/>
-        //         <Route path={process.env.PUBLIC_URL + '/verifyAccount/'} component={ConfirmAccountPage}/>
-        //         <Route path={process.env.PUBLIC_URL + '/404'} component={NoFoundPage}/>
+        //         <Redirect from={'/'} to={"/home"} exact/>
+        //         <Route path={'/home'} component={HomePage}/>
+        //         <Redirect from={'/account'} to={"/auth"} exact/>
+        //         <Redirect from={'/tournaments'} to={"/auth"} exact/>
+        //         <Redirect from={'/dashboard'} to={"/auth"} exact/>
+        //         <Redirect from={'/events'} to={"/auth"} exact/>
+        //         <Redirect from={'/clan'} to={"/auth"} exact/>
+        //         <Redirect from={'/streams'} to={"/auth"} exact/>
+        //         <Redirect from={'/backOffice'} to={"/auth"} exact/>
+        //         <Route path={'/auth'} component={AuthPage}/>
+        //         <Route path={'/signup'} component={SignupPage}/>
+        //         <Route path={'/verifyAccount/:token'} component={ConfirmAccountPage}/>
+        //         <Route path={'/verifyAccount/'} component={ConfirmAccountPage}/>
+        //         <Route path={'/404'} component={NoFoundPage}/>
         // </Switch>
     )
 }

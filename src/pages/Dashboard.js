@@ -147,7 +147,6 @@ export default function Dashboard(callbackfn, thisArg) {
 
     // const theme = useTheme();
 const auth = useContext(AuthContext)
-    console.log(auth.playload.userId)
     let classes = useStyles()
     // let gameArray = []
     // const context = useContext(AuthContext)
