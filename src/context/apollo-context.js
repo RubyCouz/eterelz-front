@@ -8,7 +8,4 @@ export const graphqlConfig = new ApolloClient({
     // uri: 'https://api.rubycouz.xyz/api',
     credentials: 'include',
     cache: new InMemoryCache(),
-    fetchOptions: {
-        mode: 'no-cors',
-    },
 })
