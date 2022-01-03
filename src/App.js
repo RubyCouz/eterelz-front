@@ -38,7 +38,6 @@ export default function App() {
             mode: 'dark',
         },
     });
-console.log(auth)
     return (
         <AuthContext.Provider
             value={{
