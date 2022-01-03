@@ -11,7 +11,7 @@ import {useRef, useState} from 'react'
 import {makeStyles} from '@mui/styles'
 import validForm from '../Tools/ValidForms'
 import {useMutation} from '@apollo/client'
-// import {useHistory} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import {CREATEUSER} from '../Queries/UserQueries'
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 export default function Signup() {
     useDocTitle('EterelZ Inscription')
     let classes = useStyles()
-    // const history = useHistory()
+    const navigate = useNavigate()
     const pseudo = useRef('')
     const email = useRef('')
     const password = useRef('')
@@ -74,7 +74,7 @@ export default function Signup() {
             errorPolicy: 'all',
             onCompleted: data => {
                 setSnackbar({children: 'Inscription effectuée !!!', severity: 'success'});
-                // return history.push('/verifyAccount')
+                return navigate('/verifyAccount')
             },
             onError: (({networkError}) => {
                 if (networkError) {

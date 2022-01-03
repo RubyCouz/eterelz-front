@@ -6,10 +6,7 @@ export default function NoFound() {
     useDocTitle('EterelZ 404 not found')
     return (
         <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-           <iframe width="560" height="315"
-                   src="https://www.youtube.com/embed/fklt_p0RiRA?controls=0&autoplay=1" title="YouTube video player"
-                   frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                   allowFullScreen/>
+            <img src="/img/eterelz/error/error_404.jpg" alt="error_404" title="Error 404 page not found"/>
         </Box>
     )
 }
