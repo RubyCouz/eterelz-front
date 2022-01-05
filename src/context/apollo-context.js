@@ -3,14 +3,12 @@ import {
     InMemoryCache
 } from '@apollo/client'
 
-
-
 export const graphqlConfig = new ApolloClient({
-    // uri: 'https://rubycouz.cc/api',
-    uri: 'http://localhost:5000/api',
+    uri: 'https://rubycouz.cc/api',
+    // uri: 'https://api.rubycouz.xyz/api',
     credentials: 'include',
     cache: new InMemoryCache(),
-    headers: {
-        'Access-Control-Allow-Origin': '*'
-    }
+    fetchOptions: {
+        mode: 'no-cors',
+    },
 })

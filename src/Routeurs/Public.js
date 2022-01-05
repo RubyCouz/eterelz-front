@@ -30,13 +30,7 @@ export default function Public() {
             </Route>
             <Route path="member" element={<RequiredAuth/>}/>
             <Route path="admin" element={<RequiredAuth/>}/>
-            <Route path="admin/dashboard" element={<RequiredAuth/>}/>
-            <Route path="admin/streams" element={<RequiredAuth/>}/>
-            <Route path="admin/clans" element={<RequiredAuth/>}/>
-            <Route path="admin/tournaments" element={<RequiredAuth/>}/>
-            <Route path="admin/events" element={<RequiredAuth/>}/>
-            <Route path="admin/account" element={<RequiredAuth/>}/>
-            <Route path="admin/streams_user" element={<RequiredAuth/>}/>
+
         </Routes>
     )
 }
