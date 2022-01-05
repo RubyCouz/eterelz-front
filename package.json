@@ -1,7 +1,7 @@
 {
   "name": "front",
   "version": "0.1.0",
-  "homepage": "http://localhost:3000/react-routing-config",
+  "homepage": "http://localhost:3000/",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.20",
