@@ -5,7 +5,7 @@ import {
 
 export const graphqlConfig = new ApolloClient({
     uri: 'https://rubycouz.cc/api',
-    // uri: 'https://api.rubycouz.xyz/api',
+    // uri: 'https://localhost:5000/api',
     credentials: 'include',
     cache: new InMemoryCache(),
     fetchOptions: {

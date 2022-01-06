@@ -1,4 +1,5 @@
 import React from 'react'
+import Countup from 'react-countup'
 import Box from "@mui/material/Box"
 import HomeCarousel from '../../Components/HomeCarousel/HomeCarousel'
 import SponsoCarousel from '../../Components/SponsoCarousel/SponsoCarousel'
@@ -139,7 +140,62 @@ export default function Home(props) {
                     </Grid>
                 </div>
                 <div className="skew-cc"/>
-                <div className="black-block">
+                <Box className="black-block" sx={{ textAlign: 'center'}}>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={12} md={12} lg={12}>
+                            <h2>La commu EterelZ, c'est :</h2>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <p className="counter">
+                                <Countup
+                                end={1523}
+                            duration={10}
+                            /> Joueurs
+                            </p>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <p className="counter">
+                                <Countup
+                                end={65}
+                            duration={10}
+                            /> Clans
+                            </p>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <p className="counter">
+                                <Countup
+                                end={163}
+                            duration={10}
+                            /> Evénements
+                            </p>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <p className="counter">
+                                <Countup
+                                    end={365}
+                                    duration={10}
+                                /> Tournois
+                            </p>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <p className="counter">
+                            <Countup
+                                end={365}
+                                duration={10}
+                            /> Créateurs de contenus
+                        </p>
+                        </Grid>
+                        <Grid item xs={4} sm={4} md={4}>
+                            <p className="counter">
+                            <Countup
+                                end={267}
+                                duration={10}
+                            /> Coachs
+                        </p>
+                        </Grid>
+                    </Grid>
                     <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
                         <Grid item xs={4} sm={4} md={4}>
 
@@ -151,29 +207,7 @@ export default function Home(props) {
 
                         </Grid>
                     </Grid>
-                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <div className="polygon1"/>
-                        </Grid>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <div className="polygon2"/>
-                        </Grid>
-                        <Grid item xs={4} sm={4} md={4}>
-                            <div className="polygon3"/>
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={{xs: 1, md: 6}} columns={{xs: 4, sm: 8, md: 12}}>
-                        <Grid item xs={4} sm={4} md={4}>
-
-                        </Grid>
-                        <Grid item xs={4} sm={4} md={4}>
-
-                        </Grid>
-                        <Grid item xs={4} sm={4} md={4}>
-
-                        </Grid>
-                    </Grid>
-                </div>
+                </Box>
                 <div className="skew-c"/>
                 <div className="colour-block blockStat">
                     <h2>Latest Match</h2>
