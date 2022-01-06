@@ -21,15 +21,15 @@ export default function Public() {
         <Routes>
             <Route path="/" element={<Index/>}>
                 <Route index element={<HomePage/>}/>
-                <Route path="/auth" element={<AuthPage/>}/>
-                <Route path="/signup" element={<SignupPage/>}/>
-                <Route path="/verifyAccount/:token" element={<ConfirmAccountPage/>}/>
-                <Route path="/verifyAccount" element={<ConfirmAccountPage/>}/>
-                <Route path="/404" element={<NoFoundPage/>}/>
-                <Route path="/*" element={<NoFoundPage/>}/>
+                <Route path="auth" element={<AuthPage/>}/>
+                <Route path="signup" element={<SignupPage/>}/>
+                <Route path="verifyAccount/:token" element={<ConfirmAccountPage/>}/>
+                <Route path="verifyAccount" element={<ConfirmAccountPage/>}/>
+                <Route path="404" element={<NoFoundPage/>}/>
+                <Route path="*" element={<NoFoundPage/>}/>
             </Route>
-            <Route path="/member" element={<RequiredAuth/>}/>
-            <Route path="/admin" element={<RequiredAuth/>}/>
+            <Route path="member" element={<RequiredAuth/>}/>
+            <Route path="admin" element={<RequiredAuth/>}/>
 
         </Routes>
     )
