@@ -287,7 +287,7 @@ export default function GameDatagrid() {
             )
         } else {
             return (
-                <Avatar src={"http://localhost:8080/Upload/Game/default.gif"} alt={params.value}/>
+                <Avatar src={"http://localhost:5000/Upload/Game/default.gif"} alt={params.value}/>
             )
         }
     }

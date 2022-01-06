@@ -438,7 +438,7 @@ export default function EventDatagrid() {
         } else {
             return (
                 <Avatar
-                    src={"http://localhost:8080/Upload/Event/default.gif"}
+                    src={"http://localhost:5000/Upload/Event/default.gif"}
                     alt={params.value}
                     title={"avatar de " + params.row.event_name}
                     onClick={() => {
