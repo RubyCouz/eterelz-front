@@ -350,7 +350,7 @@ export default function AuthNavbar(props) {
                             <IconButton aria-label="show 17 new notifications" color="inherit">
                                 <Avatar
                                     alt={"profilPic de " + data.user.user_login}
-                                    src={"http://localhost:8080/Upload/ProfilePic/" + data.user.user_avatar}/>
+                                    src={"http://localhost:5000/Upload/ProfilePic/" + data.user.user_avatar}/>
                             </IconButton>
                             }
                         </div>

@@ -277,7 +277,7 @@ export default function GameDatagrid() {
         if (params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={"http://localhost:8080/Upload/Game/" + params.value}
+                    src={"http://localhost:5000/Upload/Game/" + params.value}
                     alt={params.value}
                     title={"Jaquette de " + params.row.game_name}
                     onClick={() => {

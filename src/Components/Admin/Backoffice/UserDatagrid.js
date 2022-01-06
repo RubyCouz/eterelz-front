@@ -453,7 +453,7 @@ export default function UserDatagrid() {
         if(params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={"http://localhost:8080/Upload/ProfilePic/" + params.value}
+                    src={"http://localhost:5000/Upload/ProfilePic/" + params.value}
                     alt={params.value}
                     title={"avatar de " + params.row.user_login}
                     onClick={() => {

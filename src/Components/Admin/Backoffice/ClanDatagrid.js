@@ -413,7 +413,7 @@ export default function ClanDatagrid() {
             console.log(params.value)
             return (
                 <Avatar
-                    src={"http://localhost:8080/Upload/Clan/" + params.value}
+                    src={"http://localhost:5000/Upload/Clan/" + params.value}
                     alt={params.value}
                     title={"Bannière de " + params.row.clanName}
                     onClick={() => {
