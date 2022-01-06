@@ -448,8 +448,8 @@ export default function ClanDatagrid() {
             </IconButton>
         </div>
     }
-    const addClan = () => {
-        createClan({
+    const addClan = async () => {
+        await createClan({
             variables: {
                 createClan: {
                     clan_name: ref.clanName.current.value,
