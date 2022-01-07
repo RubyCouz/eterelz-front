@@ -413,7 +413,7 @@ export default function UserDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', 'http://localhost:5000/upload/profilePic/' + id)
+            req.open('POST', 'https://rubycouz.cc/upload/profilePic/' + id)
             req.send(formData)
         });
     }
@@ -453,7 +453,7 @@ export default function UserDatagrid() {
         if(params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={"http://localhost:5000/Upload/ProfilePic/" + params.value}
+                    src={"https://rubycouz.cc/Upload/ProfilePic/" + params.value}
                     alt={params.value}
                     title={"avatar de " + params.row.user_login}
                     onClick={() => {
@@ -463,7 +463,7 @@ export default function UserDatagrid() {
         } else {
             return (
                 <Avatar
-                    src={"http://localhost:5000/Upload/ProfilePic/default.gif"}
+                    src={"https://rubycouz.cc/Upload/ProfilePic/default.gif"}
                     alt={params.value}
                     title={"avatar de " + params.row.user_login}
                     onClick={() => {
@@ -542,7 +542,6 @@ export default function UserDatagrid() {
             }
         </div>
     }
-
     // création utilisateur
     const createUserProfil = () => {
         createdByAdmin({

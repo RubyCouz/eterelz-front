@@ -277,7 +277,7 @@ export default function GameDatagrid() {
         if (params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={"http://localhost:5000/Upload/Game/" + params.value}
+                    src={"https://rubycouz.cc/Upload/Game/" + params.value}
                     alt={params.value}
                     title={"Jaquette de " + params.row.game_name}
                     onClick={() => {
@@ -287,7 +287,7 @@ export default function GameDatagrid() {
             )
         } else {
             return (
-                <Avatar src={"http://localhost:5000/Upload/Game/default.gif"} alt={params.value}/>
+                <Avatar src={"https://rubycouz.cc/Upload/Game/default.gif"} alt={params.value}/>
             )
         }
     }
@@ -381,7 +381,7 @@ export default function GameDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', 'http://localhost:5000/upload/game/' + id)
+            req.open('POST', 'https://rubycouz.cc/upload/game/' + id)
             req.send(formData)
         });
     }

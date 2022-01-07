@@ -373,7 +373,7 @@ export default function ClanDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', 'http://localhost:5000/upload/clan/' + id)
+            req.open('POST', 'https://rubycouz.cc/upload/clan/' + id)
             req.send(formData)
         })
     }
@@ -413,7 +413,7 @@ export default function ClanDatagrid() {
             console.log(params.value)
             return (
                 <Avatar
-                    src={"http://localhost:5000/Upload/Clan/" + params.value}
+                    src={"https://rubycoue.cc/Upload/Clan/" + params.value}
                     alt={params.value}
                     title={"Bannière de " + params.row.clanName}
                     onClick={() => {
@@ -423,7 +423,7 @@ export default function ClanDatagrid() {
         } else {
             return (
                 <Avatar
-                    src={"http://localhost:5000/Upload/Clan/default.gif"}
+                    src={"https://rubycouz.cc/Upload/Clan/default.gif"}
                     alt={params.value}
                     title={"Bannière de " + params.row.clanName}
                     onClick={() => {
