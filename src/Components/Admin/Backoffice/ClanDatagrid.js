@@ -373,7 +373,7 @@ export default function ClanDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', 'http://localhost:8080/upload/clan/' + id)
+            req.open('POST', 'http://localhost:5000/upload/clan/' + id)
             req.send(formData)
         })
     }

@@ -381,7 +381,7 @@ export default function GameDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', 'http://localhost:8080/upload/game/' + id)
+            req.open('POST', 'http://localhost:5000/upload/game/' + id)
             req.send(formData)
         });
     }

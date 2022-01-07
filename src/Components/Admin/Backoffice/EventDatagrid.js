@@ -389,7 +389,7 @@ export default function EventDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', 'http://localhost:8080/upload/event/' + id)
+            req.open('POST', 'http://localhost:5000/upload/event/' + id)
             req.send(formData)
         })
     }
