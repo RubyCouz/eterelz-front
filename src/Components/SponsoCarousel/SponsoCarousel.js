@@ -30,12 +30,6 @@ const items = sponsoUrl.map(( url, index, key) => {
     return (
         <div className="item sponsoItem " data-value="1">
             <a href={url} target="_blanked" title={url}>
-                {/*<img*/}
-                {/*    src={sponsoPic[index]}*/}
-                {/*    alt={sponsoPic[index]}*/}
-                {/*    title={sponsoPic[index]}*/}
-                {/*    className="sponsoPic"*/}
-                {/*/>*/}
                 <svg id={"spritesvg1"} viewBox="0 0 34 10" className="sponsoPic">
                     <use xlinkHref={"./img/sponso/sponso.svg#" + sponsoPic[index]}/>
                 </svg>

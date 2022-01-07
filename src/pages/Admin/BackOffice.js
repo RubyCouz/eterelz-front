@@ -50,56 +50,54 @@ export default function BackOffice() {
     };
 
     return (
-        <>
-            <Box
-                sx={{bgcolor: 'background.paper', display: 'flex', height: 600}}
-            >
-                <Grid container spacing={2}>
-                    <Grid item xs={1} md={1} lg={1}>
-                        <Tabs
-                            orientation="vertical"
-                            variant="scrollable"
-                            value={value}
-                            onChange={handleChange}
-                            aria-label="Vertical tabs example"
-                            sx={{borderRight: 1, borderColor: 'divider', height: 600}}
-                        >
-                            <Tab label="Utilisateurs" {...a11yProps(0)} />
-                            <Tab label="Jeux" {...a11yProps(1)} />
-                            <Tab label="Evènement" {...a11yProps(2)} />
-                            <Tab label="Clan" {...a11yProps(3)} />
-                            {/*<Tab label="Item Five" {...a11yProps(4)} />*/}
-                            {/*<Tab label="Item Six" {...a11yProps(5)} />*/}
-                            {/*<Tab label="Item Seven" {...a11yProps(6)} />*/}
-                        </Tabs>
-                    </Grid>
-                    <Grid item xs={11} md={11} lg={11}>
-                        <TabPanel value={value} index={0}>
-                            <UserDatagrid/>
-                        </TabPanel>
-                        <TabPanel value={value} index={1}>
-                            <GameDatagrid/>
-                        </TabPanel>
-                        <TabPanel value={value} index={2}>
-                            <EventDatagrid/>
-                        </TabPanel>
-                        <TabPanel value={value} index={3}>
-                            <ClanDatagrid/>
-                        </TabPanel>
-                        {/*<TabPanel value={value} index={4}>*/}
-                        {/*    Item Five*/}
-                        {/*</TabPanel>*/}
-                        {/*<TabPanel value={value} index={5}>*/}
-                        {/*    Item Six*/}
-                        {/*</TabPanel>*/}
-                        {/*<TabPanel value={value} index={6}>*/}
-                        {/*    Item Seven*/}
-                        {/*</TabPanel>*/}
-                    </Grid>
+        <Box
+            sx={{display: 'flex', height: 600, marginTop: 2}}
+        >
+            <Grid container spacing={2}>
+                <Grid item xs={1} md={1} lg={1}>
+                    <Tabs
+                        orientation="vertical"
+                        variant="scrollable"
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="Vertical tabs example"
+                        sx={{borderRight: 1, borderColor: 'divider', height: 600}}
+                    >
+                        <Tab label="Utilisateurs" {...a11yProps(0)} />
+                        <Tab label="Jeux" {...a11yProps(1)} />
+                        <Tab label="Evènement" {...a11yProps(2)} />
+                        <Tab label="Clan" {...a11yProps(3)} />
+                        {/*<Tab label="Item Five" {...a11yProps(4)} />*/}
+                        {/*<Tab label="Item Six" {...a11yProps(5)} />*/}
+                        {/*<Tab label="Item Seven" {...a11yProps(6)} />*/}
+                    </Tabs>
                 </Grid>
+                <Grid item xs={11} md={11} lg={11}>
+                    <TabPanel value={value} index={0}>
+                        <UserDatagrid/>
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        <GameDatagrid/>
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        <ClanDatagrid/>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <EventDatagrid/>
+                    </TabPanel>
+                    {/*<TabPanel value={value} index={4}>*/}
+                    {/*    Item Five*/}
+                    {/*</TabPanel>*/}
+                    {/*<TabPanel value={value} index={5}>*/}
+                    {/*    Item Six*/}
+                    {/*</TabPanel>*/}
+                    {/*<TabPanel value={value} index={6}>*/}
+                    {/*    Item Seven*/}
+                    {/*</TabPanel>*/}
+                </Grid>
+            </Grid>
 
 
-            </Box>
-        </>
+        </Box>
     )
 }
