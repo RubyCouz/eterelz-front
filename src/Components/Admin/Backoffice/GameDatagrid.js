@@ -367,6 +367,7 @@ export default function GameDatagrid() {
         }
     }
     const sendRequest = (file, id) => {
+        console.log(file)
         return new Promise(async (resolve, reject) => {
             const req = new XMLHttpRequest()
             req.upload.addEventListener('progress', event => {
@@ -387,6 +388,7 @@ export default function GameDatagrid() {
         });
     }
     const addGame = () => {
+        console.log(state.selectedFile)
         createGame({
             variables: {
                 createGame: {
@@ -445,6 +447,7 @@ export default function GameDatagrid() {
         }
         if(state.id !== '' && state.selectedFile !== null) {
             const promises = []
+            console.log(state.selectedFile)
             promises.push(sendRequest(state.selectedFile, state.id))
         }
     }, [data, state.id, state.selectedFile])
