@@ -449,12 +449,6 @@ export default function ClanDatagrid() {
         </div>
     }
     const addClan = async () => {
-        console.log(ref.clanName.current.value)
-        console.log(ref.clanDesc.current.value)
-        console.log(ref.clanDiscord.current.value)
-        console.log(ref.clanPopulation.current.value)
-        console.log(ref.clanRecrut.current.value)
-        console.log(ref.clanActivity.current.value)
         await createClan({
             variables: {
                 createClan: {
