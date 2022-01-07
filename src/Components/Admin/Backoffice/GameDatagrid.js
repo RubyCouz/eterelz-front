@@ -382,6 +382,7 @@ export default function GameDatagrid() {
             const formData = new FormData()
             await formData.append("file", file, file.name)
             await req.open('POST', 'https://rubycouz.cc/upload/game/' + id)
+            console.log(formData)
             await req.send(formData)
         });
     }
