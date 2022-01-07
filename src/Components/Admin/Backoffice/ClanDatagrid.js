@@ -410,7 +410,6 @@ export default function ClanDatagrid() {
     }
     const RenderPic = ({params}) => {
         if (params.value !== '' && params.value !== null) {
-            console.log(params.value)
             return (
                 <Avatar
                     src={"https://rubycoue.cc/Upload/Clan/" + params.value}

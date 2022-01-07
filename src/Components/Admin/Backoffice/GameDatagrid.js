@@ -367,7 +367,7 @@ export default function GameDatagrid() {
         }
     }
     const sendRequest = (file, id) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const req = new XMLHttpRequest()
             req.upload.addEventListener('progress', event => {
                 console.log('in progress')
@@ -380,9 +380,9 @@ export default function GameDatagrid() {
                 console.log('error')
             })
             const formData = new FormData()
-            formData.append("file", file, file.name)
-            req.open('POST', 'https://rubycouz.cc/upload/game/' + id)
-            req.send(formData)
+            await formData.append("file", file, file.name)
+            await req.open('POST', 'https://rubycouz.cc/upload/game/' + id)
+            await req.send(formData)
         });
     }
     const addGame = () => {
