@@ -79,11 +79,11 @@ export default function BackOffice() {
                     <TabPanel value={value} index={1}>
                         <GameDatagrid/>
                     </TabPanel>
-                    <TabPanel value={value} index={3}>
-                        <ClanDatagrid/>
-                    </TabPanel>
                     <TabPanel value={value} index={2}>
                         <EventDatagrid/>
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        <ClanDatagrid/>
                     </TabPanel>
                     {/*<TabPanel value={value} index={4}>*/}
                     {/*    Item Five*/}
