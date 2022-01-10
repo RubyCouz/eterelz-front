@@ -83,3 +83,13 @@ const events = [
     },
 ]
 
+
+voir redirection invitation user
+
+ajout de role : superadmin, admin, modo
+
+ajout table footer
+
+FAQ
+
+portail

@@ -11,6 +11,7 @@
     transform: scale(1.1);
     transition-duration: 1.5s;
 }
+
 .sponsoPic {
     height: 10vh;
 }
@@ -18,12 +19,15 @@
 .alice-carousel__stage-item {
     width: 10vw;
 }
+
 .mrWhite0 {
     fill: url(#mrWhiteGrad);
 }
+
 #mrWhite:hover .mrWhite0 {
     fill: white;
 }
+
 .mrWhite1 {
     fill: none;
     stroke: #000000;
@@ -31,6 +35,7 @@
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+
 .twitch3 {
     fill: #ffffff;
 }
@@ -46,6 +51,7 @@
 #twitch:hover .twitch0 {
     fill: rebeccapurple;
 }
+
 .bg-hl {
     fill: #ffffff;
 }
@@ -67,8 +73,8 @@
 }
 
 .steam {
-     fill: url(#steamGrad);
- }
+    fill: url(#steamGrad);
+}
 
 .steam1 {
     fill: #ffffff;
@@ -77,6 +83,7 @@
 #steam:hover .steam {
     fill: #000000;
 }
+
 .discord {
     fill: url(#discordGrad);
 }
@@ -100,6 +107,17 @@
 #blizzard:hover #blizzard2 {
     fill: #017AFF;
 }
+
 #blizzard:hover #blizzard1 {
     fill: #ffffff;
+}
+
+@media (max-width: 960px) {
+    .sponsoItem {
+        width: 50vw;
+    }
+
+    .sponsoPic {
+        height: 50px;
+    }
 }

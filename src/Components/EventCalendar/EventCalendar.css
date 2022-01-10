@@ -1,0 +1,12 @@
+.eventCalendar {
+    height: 500px;
+    margin: 20px;
+    width: 100%;
+}
+@media(max-width: 620px) {
+    .eventCalendar {
+        height: 500px;
+
+        width: 80vw;
+    }
+}

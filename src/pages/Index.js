@@ -52,6 +52,7 @@ export default function Index(props) {
                 <Navbar/>
                 <Toolbar id="back-to-top-anchor"/>
             </Box>
+
             <Outlet/>
             <ScrollTop {...props}>
                 <Fab color="secondary" size="small" aria-label="scroll back to top">

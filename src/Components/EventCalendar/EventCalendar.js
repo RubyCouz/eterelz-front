@@ -7,6 +7,7 @@ import getDay from 'date-fns/getDay'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import {HOMEEVENT} from '../../Queries/EventQueries'
 import {useQuery} from '@apollo/client'
+import './EventCalendar.css'
 
 const locales = {
     'fr-FR': require('date-fns/locale/fr')
@@ -45,16 +46,14 @@ export default function EventCalendar() {
     },
         [data])
     return (
-        <div>
             <Calendar
                 localizer={localizer}
                 events={events}
                 startAccessor="start"
                 endAccessor="end"
-                style={{height: 500, margin: "50px"}}
                 popup={true}
                 showMultiDayTimes={true}
+                className="eventCalendar"
             />
-        </div>
     )
 }

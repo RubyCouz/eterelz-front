@@ -382,7 +382,8 @@ export default function GameDatagrid() {
             })
             const formData = new FormData()
             await formData.append("file", file, file.name)
-            await req.open('POST', 'https://rubycouz.cc/upload/game/' + id)
+            // await req.open('POST', 'https://rubycouz.cc/upload/game/' + id)
+            await req.open('POST', 'http://localhost:5000/upload/game/' + id)
             console.log(formData)
             await req.send(formData)
         });
@@ -448,6 +449,7 @@ export default function GameDatagrid() {
         if(state.id !== '' && state.selectedFile !== null) {
             const promises = []
             console.log(state.selectedFile)
+            console.log(state.id)
             promises.push(sendRequest(state.selectedFile, state.id))
         }
     }, [data, state.id, state.selectedFile])

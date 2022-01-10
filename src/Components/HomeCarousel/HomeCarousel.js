@@ -2,6 +2,7 @@ import React from 'react'
 import './HomeCarousel.css'
 import {Carousel} from 'react-responsive-carousel'
 import Card from '../Card/Card'
+import {Box} from "@mui/material";
 // import IconButton from "@mui/material/IconButton";
 
 // function PlayArrowIcon() {
@@ -19,13 +20,14 @@ export default function HomeCarousel(props) {
             dynamicHeight={true}
             stopOnHover={true}
             showThumbs={false}
+            className="carousel"
         >
             <div className="pic">
                 <img src="./img/carousel/hots.jpg" alt="pic" className="gamePic"/>
                 <div className="legend">
                     <p className="titleSlide">Heroes of the Storm</p>
                     <p className="textSlide">M.O.B.A</p>
-                    <div className="teamCard">
+                    <Box className="teamCard" sx={{ display: {xs: 'none', md: 'block'}}}>
                         <Card
                             moreVertIconId="more1"
                             menuID="menu1"
@@ -79,7 +81,7 @@ export default function HomeCarousel(props) {
                             bgUrl="./img/background/bg_eterelz.jpg"
                             opacity="0.5"
                         />
-                    </div>
+                    </Box>
                 </div>
             </div>
             <div className="pic">
@@ -87,7 +89,7 @@ export default function HomeCarousel(props) {
                 <div className="legend">
                     <p className="titleSlide">Warhammer 40'000 : Darktide</p>
                     <p className="textSlide">M.M.O.F.P.S</p>
-                    <div className="teamCard">
+                    <Box className="teamCard" sx={{ display: {xs: 'none', md: 'block'}}}>
                         <Card
                             moreVertIconId="more5"
                             menuID="menu5"
@@ -116,7 +118,7 @@ export default function HomeCarousel(props) {
                             bgUrl="./img/background/bg_eterelz.jpg"
                             opacity="0.5"
                         />
-                    </div>
+                    </Box>
                 </div>
             </div>
             <div className="pic">
@@ -124,7 +126,7 @@ export default function HomeCarousel(props) {
                 <div className="legend">
                     <p className="titleSlide">Battlefield 2042</p>
                     <p className="textSlide">M.M.O.F.P.S</p>
-                    <div className="teamCard">
+                    <Box className="teamCard" sx={{ display: {xs: 'none', md: 'block'}}}>
                         <Card
                             moreVertIconId="more7"
                             menuID="menu7"
@@ -149,7 +151,7 @@ export default function HomeCarousel(props) {
                             bgUrl="./img/background/bg_eterelz.jpg"
                             opacity="0.5"
                         />
-                    </div>
+                    </Box>
                 </div>
             </div>
             <div className="pic">
@@ -157,7 +159,7 @@ export default function HomeCarousel(props) {
                 <div className="legend">
                     <p className="titleSlide">Naraka</p>
                     <p className="textSlide">Battle Royale</p>
-                    <div className="teamCard">
+                    <Box className="teamCard" sx={{ display: {xs: 'none', md: 'block'}}}>
                         <Card
                             moreVertIconId="more9"
                             menuID="menu9"
@@ -171,7 +173,7 @@ export default function HomeCarousel(props) {
                             bgUrl="./img/background/bg_eterelz.jpg"
                             opacity="0.5"
                         />
-                    </div>
+                    </Box>
                 </div>
             </div>
             <div className="pic">
@@ -179,7 +181,7 @@ export default function HomeCarousel(props) {
                 <div className="legend">
                     <p className="titleSlide">Halo</p>
                     <p className="textSlide">M.M.O.F.P.S</p>
-                    <div className="teamCard">
+                    <Box className="teamCard" sx={{ display: {xs: 'none', md: 'block'}}}>
                         <Card
                             moreVertIconId="more10"
                             menuID="menu10"
@@ -206,7 +208,7 @@ export default function HomeCarousel(props) {
                             bgUrl="./img/background/bg_eterelz.jpg"
                             opacity="0.5"
                         />
-                    </div>
+                    </Box>
                 </div>
             </div>
             <div className="pic">
@@ -214,7 +216,7 @@ export default function HomeCarousel(props) {
                 <div className="legend">
                     <p className="titleSlide">Destiny</p>
                     <p className="textSlide">M.M.O.F.P.S</p>
-                    <div className="teamCard">
+                    <Box className="teamCard" sx={{ display: {xs: 'none', md: 'block'}}}>
                         <Card
                             moreVertIconId="more11"
                             menuID="menu11"
@@ -228,7 +230,7 @@ export default function HomeCarousel(props) {
                             bgUrl="./img/background/bg_eterelz.jpg"
                             opacity="0.5"
                         />
-                    </div>
+                    </Box>
                 </div>
             </div>
             <div className="pic">
@@ -236,7 +238,7 @@ export default function HomeCarousel(props) {
                 <div className="legend">
                     <p className="titleSlide">Dofus</p>
                     <p className="textSlide">M.M.O.R.P.G</p>
-                    <div className="teamCard">
+                    <Box className="teamCard" sx={{ display: {xs: 'none', md: 'block'}}}>
                         <Card
                             moreVertIconId="more12"
                             menuID="menu12"
@@ -270,7 +272,7 @@ export default function HomeCarousel(props) {
                             bgUrl="./img/background/bg_eterelz.jpg"
                             opacity="0.5"
                         />
-                    </div>
+                    </Box>
                 </div>
             </div>
             <div className="pic">
@@ -278,7 +280,7 @@ export default function HomeCarousel(props) {
                 <div className="legend">
                     <p className="titleSlide">League of Legends</p>
                     <p className="textSlide">M.O.B.A</p>
-                    <div className="teamCard">
+                    <Box className="teamCard" sx={{ display: {xs: 'none', md: 'block'}}}>
                         <Card
                             moreVertIconId="more15"
                             menuID="menu15"
@@ -302,7 +304,7 @@ export default function HomeCarousel(props) {
                             bgUrl="./img/background/bg_eterelz.jpg"
                             opacity="0.5"
                         />
-                    </div>
+                    </Box>
                 </div>
             </div>
         </Carousel>
