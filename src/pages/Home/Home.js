@@ -17,6 +17,7 @@ import HomeStream from '../../Components/HomeStream/HomeStream'
 import HomeMatches from '../../Components/HomeMatches/HomeMatches'
 import {useDocTitle} from '../../Hook/useDocTitle'
 
+console.log(window.location)
 export default function Home(props) {
     useDocTitle('EterelZ HomePage')
     const [expanded, setExpanded] = React.useState(false);
