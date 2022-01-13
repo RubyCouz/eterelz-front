@@ -31,9 +31,28 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import EventNoteTwoToneIcon from '@mui/icons-material/EventNoteTwoTone'
 import Avatar from '@mui/material/Avatar'
 import {USERBYID} from '../../Queries/UserQueries'
-import {useQuery} from "@apollo/client";
+import {useQuery} from '@apollo/client'
+import {styled} from '@mui/material/styles'
+import {Box} from '@mui/material'
+import {SocketContext} from '../../context/socket-context'
 
 const useStyles = makeStyles((theme) => ({
+    bannerProfil: {
+        width: '100%',
+        height: 'auto',
+        position: 'relative'
+    },
+    avatar: {
+        position: "absolute !important",
+        top: 70,
+        left: 7
+    },
+    avatarPic: {
+        width: 60,
+        height: 60,
+
+    },
+    drawerList: {},
     root: {
         position: 'fixed',
         bottom: theme.spacing(2),
@@ -106,9 +125,37 @@ const useStyles = makeStyles((theme) => ({
     list: {
         width: 250,
     },
-}));
-
+}))
+const StyledBadge = styled(Badge)(({theme}) => ({
+    '& .MuiBadge-badge': {
+        backgroundColor: '#44b700',
+        color: '#44b700',
+        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+        '&::after': {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            animation: 'ripple 1.2s infinite ease-in-out',
+            border: '1px solid currentColor',
+            content: '""',
+        },
+    },
+    '@keyframes ripple': {
+        '0%': {
+            transform: 'scale(.8)',
+            opacity: 1,
+        },
+        '100%': {
+            transform: 'scale(2.4)',
+            opacity: 0,
+        },
+    },
+}))
 export default function AuthNavbar(props) {
+    const socket = useContext(SocketContext)
     const auth = useContext(AuthContext)
     const id = auth.playload.userId
     const classes = useStyles()
@@ -118,12 +165,8 @@ export default function AuthNavbar(props) {
             variables: {id}
         }
     )
+    const [offline, setOffline] = useState(false)
     const [user, setUser] = useState('')
-    useEffect(() => {
-        if (data !== undefined) {
-            setUser(data)
-        }
-    }, [data])
     const [state, setState] = useState({
         left: false
     })
@@ -143,11 +186,33 @@ export default function AuthNavbar(props) {
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
         >
-            <div className={classes.drawerHeader}>
-
-            </div>
+            {
+                user.user !== undefined &&
+                <Box
+                    className={classes.drawerHeader}
+                >
+                    <img
+                        src={"http://localhost:5000/Upload/Users/Banner/" + user.user.user_banner}
+                        alt={"Bannière de profil de" + user.user.user_login}
+                        title={"Bannière de profil de" + user.user.user_login}
+                        className={classes.bannerProfil}
+                    />
+                        <StyledBadge
+                            overlap="circular"
+                            anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                            variant="dot"
+                            className={classes.avatar}
+                        >
+                            <Avatar
+                                alt={"Avatar de " + user.user.user_login}
+                                src={"http://localhost:5000/Upload/Users/Avatar/" + user.user.user_avatar}
+                                className={classes.avatarPic}
+                            />
+                        </StyledBadge>
+                </Box>
+            }
             <Divider/>
-            <List color="secondary">
+            <List color="secondary" className={classes.drawerList}>
                 <ListItem
                     button
                     key="dashboard"
@@ -234,7 +299,8 @@ export default function AuthNavbar(props) {
                 <Divider/>
                 <ListItem
                     button key="logout"
-                    onClick={auth.logout}
+                    onClick={logout}
+                    // onClick={auth.logout}
                     className={classes.listItem}
                     component={NavLink}
                     to="/"
@@ -245,20 +311,18 @@ export default function AuthNavbar(props) {
             </List>
         </div>
     )
-
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+    const logout = () => {
+        setOffline(true)
+    }
     const handleMobileMenuClose = () => {
         setMobileMoreAnchorEl(null);
-    };
-
+    }
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
-    };
-
-    const mobileMenuId = 'primary-search-account-menu-mobile';
+    }
+    const mobileMenuId = 'primary-search-account-menu-mobile'
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
@@ -286,8 +350,20 @@ export default function AuthNavbar(props) {
                 <p>Notifications</p>
             </MenuItem>
         </Menu>
-    );
+    )
+    useEffect(() => {
+        if (data !== undefined) {
+            setUser(data)
+        }
+    }, [data])
 
+    useEffect(() =>{
+        console.log(offline)
+        if(offline) {
+            socket.emit('isOffline', {userId: id})
+            auth.logout()
+        }
+    }, [offline, socket, id, auth])
     return (
         <>
             <div className={classes.grow}>
@@ -346,13 +422,6 @@ export default function AuthNavbar(props) {
                                     <NotificationsIcon/>
                                 </Badge>
                             </IconButton>
-                            {user &&
-                            <IconButton aria-label="show 17 new notifications" color="inherit">
-                                <Avatar
-                                    alt={"profilPic de " + data.user.user_login}
-                                    src={"http://localhost:5000/Upload/ProfilePic/" + data.user.user_avatar}/>
-                            </IconButton>
-                            }
                         </div>
                         <div className={classes.sectionMobile}>
                             <IconButton

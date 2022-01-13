@@ -43,17 +43,20 @@ function TabPanel(props) {
         </div>
     );
 }
+
 TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
 };
+
 function a11yProps(index) {
     return {
         id: `full-width-tab-${index}`,
         'aria-controls': `full-width-tabpanel-${index}`,
     };
 }
+
 const useStyles = makeStyles({
         root: {
             width: '100%'
@@ -143,7 +146,6 @@ const useStyles = makeStyles({
 
 export default function Dashboard(callbackfn, thisArg) {
     useDocTitle('EterelZ Dashboard')
-
     // const theme = useTheme();
 // const auth = useContext(AuthContext)
     let classes = useStyles()
@@ -223,7 +225,6 @@ export default function Dashboard(callbackfn, thisArg) {
     // const handleClose = () => {
     //     setOpen(false);
     // };
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };

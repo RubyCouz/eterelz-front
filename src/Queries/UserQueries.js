@@ -38,8 +38,10 @@ export const USER_QUERY = gql`
         user_email
         user_role
         user_avatar
+        user_banner
         createdAt
         user_isActive
+        user_isOnline
         user_discord
         user_address
         user_zip
@@ -110,7 +112,9 @@ query USER( $id: ID!){
     user(_id: $id ){
       _id
       user_avatar
+      user_banner
       user_login
+      user_isOnline
     }
   }
 `

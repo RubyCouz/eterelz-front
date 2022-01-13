@@ -30,7 +30,6 @@ export default function Public() {
             </Route>
             <Route path="member" element={<RequiredAuth/>}/>
             <Route path="admin" element={<RequiredAuth/>}/>
-
         </Routes>
     )
 }

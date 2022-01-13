@@ -146,6 +146,8 @@ const formValidate = (input, value) => {
         return templateRegex[input].regex.test(value)
     }
 }
+const host = "http://localhost:5000"
+// const host = "https://rubycouz.cc"
 export default function GameDatagrid() {
     const columns: GridColDef[] = [
         {
@@ -277,7 +279,7 @@ export default function GameDatagrid() {
         if (params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={"https://rubycouz.cc/Upload/Game/" + params.value}
+                    src={host + "/Upload/Game/" + params.value}
                     alt={params.value}
                     title={"Jaquette de " + params.row.game_name}
                     onClick={() => {
@@ -287,7 +289,7 @@ export default function GameDatagrid() {
             )
         } else {
             return (
-                <Avatar src={"https://rubycouz.cc/Upload/Game/default.gif"} alt={params.value}/>
+                <Avatar src={host + "/Upload/Game/default.gif"} alt={params.value}/>
             )
         }
     }
@@ -367,7 +369,6 @@ export default function GameDatagrid() {
         }
     }
     const sendRequest = (file, id) => {
-        console.log(file)
         return new Promise(async (resolve, reject) => {
             const req = new XMLHttpRequest()
             req.upload.addEventListener('progress', event => {
@@ -382,8 +383,7 @@ export default function GameDatagrid() {
             })
             const formData = new FormData()
             await formData.append("file", file, file.name)
-            // await req.open('POST', 'https://rubycouz.cc/upload/game/' + id)
-            await req.open('POST', 'http://localhost:5000/upload/game/' + id)
+            await req.open('POST', host + '/upload/game/' + id)
             console.log(formData)
             await req.send(formData)
         });
@@ -448,8 +448,6 @@ export default function GameDatagrid() {
         }
         if(state.id !== '' && state.selectedFile !== null) {
             const promises = []
-            console.log(state.selectedFile)
-            console.log(state.id)
             promises.push(sendRequest(state.selectedFile, state.id))
         }
     }, [data, state.id, state.selectedFile])

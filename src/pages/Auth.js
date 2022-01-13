@@ -11,6 +11,7 @@ import {LOGIN} from '../Queries/UserQueries'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import {useDocTitle} from '../Hook/useDocTitle'
+import {SocketContext} from '../context/socket-context'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,6 +77,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 export default function Auth() {
     useDocTitle('EterelZ Connexion')
+    const socket = useContext(SocketContext)
+    const context = useContext(AuthContext)
     let classes = useStyles()
     const email = useRef('')
     const password = useRef('')
@@ -91,7 +94,6 @@ export default function Auth() {
     })
     const [snackbar, setSnackbar] = useState(null)
     const handleCloseSnackbar = () => setSnackbar(null)
-    const context = useContext(AuthContext)
     const [login, {error}] = useLazyQuery(
         LOGIN,
         {
@@ -101,6 +103,7 @@ export default function Auth() {
             },
             errorPolicy: 'all',
             onCompleted: data => {
+                socket.emit('isOnline', {token: data.login.token})
                 setSnackbar({children: 'Connexion ok !!!', severity: 'success'});
                 context.login()
             },
@@ -119,7 +122,6 @@ export default function Auth() {
         setPanel1(!panel1)
         setPanel2(!panel2)
     }
-
     const handleInputChange = async (event) => {
         const input = event.target.name
         const value = event.target.value
@@ -131,7 +133,6 @@ export default function Auth() {
             [input + 'Message']: response
         })
     }
-
     const connectUser = async (event) => {
         if (checkForm.passwordValue === '' || checkForm.emailValue === '') {
             if (checkForm.emailValue === '') {
@@ -166,7 +167,6 @@ export default function Auth() {
             }
         }
     }
-
     return (
         <Box sx={{flexGrow: 1}}>
             <Grid

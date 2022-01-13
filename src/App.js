@@ -1,14 +1,15 @@
 import React, {Suspense, useState, useEffect} from 'react'
 import Loading from './pages/Loading'
-import AuthContext from "./context/auth-context";
-import AvatarContext from "./context/avatar-context";
-import {ApolloProvider} from "@apollo/client";
-import {graphqlConfig} from "./context/apollo-context";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import LoadingPage from "./pages/Loading";
-import Routeur from "./Routeurs/Routeur";
-import useAuth from "./Hook/useAuth";
+import AuthContext from './context/auth-context'
+import AvatarContext from './context/avatar-context'
+import {ApolloProvider} from '@apollo/client'
+import {graphqlConfig} from './context/apollo-context'
+import {createTheme, ThemeProvider} from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import LoadingPage from './pages/Loading'
+import Routeur from './Routeurs/Routeur'
+import useAuth from './Hook/useAuth'
+import {socket, SocketContext} from './context/socket-context'
 
 
 // const Index = lazy(() => import('./pages/Index'))
@@ -47,29 +48,31 @@ export default function App() {
                 logout: logout
             }}
         >
-            <AvatarContext.Provider
-                value = {{
-                    avatar: avatar,
-                    setAvatar: setAvatar,
-                }}
-            >
-                <ApolloProvider
-                    client={graphqlConfig}
+            <SocketContext.Provider value={socket}>
+                <AvatarContext.Provider
+                    value = {{
+                        avatar: avatar,
+                        setAvatar: setAvatar,
+                    }}
                 >
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline/>
-                        {
-                            loading ?
-                                <LoadingPage />
-                                :
-                                <Suspense fallback={<Loading/>}>
-                                    {crate}
-                                    <Routeur/>
-                                </Suspense>
-                        }
-                    </ThemeProvider>
-                </ApolloProvider>
-            </AvatarContext.Provider>
+                    <ApolloProvider
+                        client={graphqlConfig}
+                    >
+                        <ThemeProvider theme={theme}>
+                            <CssBaseline/>
+                            {
+                                loading ?
+                                    <LoadingPage />
+                                    :
+                                    <Suspense fallback={<Loading/>}>
+                                        {crate}
+                                        <Routeur/>
+                                    </Suspense>
+                            }
+                        </ThemeProvider>
+                    </ApolloProvider>
+                </AvatarContext.Provider>
+            </SocketContext.Provider>
         </AuthContext.Provider>
 
 

@@ -39,6 +39,7 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "^3.4.4",
     "react-swipeable-views": "^0.14.0",
+    "socket.io-client": "^4.4.1",
     "web-vitals": "^1.1.2",
     "xtypejs": "^0.7.1"
   },

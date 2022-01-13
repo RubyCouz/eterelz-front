@@ -152,6 +152,8 @@ const formValidate = (input, value) => {
         return templateRegex[input].regex.test(value)
     }
 }
+const host = "http://localhost:5000"
+// const host = "https://rubycouz.cc"
 export default function EventDatagrid() {
     const columns: GridColDef[] = [
         {
@@ -389,7 +391,7 @@ export default function EventDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', 'https://rubycouz.cc/upload/event/' + id)
+            req.open('POST', host + '/upload/event/' + id)
             req.send(formData)
         })
     }
@@ -428,7 +430,7 @@ export default function EventDatagrid() {
         if(params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={"https://rubycouz.cc/Upload/Event/" + params.value}
+                    src={host + "/Upload/Event/" + params.value}
                     alt={params.value}
                     title={"Affiche de " + params.row.event_name}
                     onClick={() => {
@@ -438,7 +440,7 @@ export default function EventDatagrid() {
         } else {
             return (
                 <Avatar
-                    src={"https://rubycouz.cc/Upload/Event/default.gif"}
+                    src={host + "/Upload/Event/default.gif"}
                     alt={params.value}
                     title={"avatar de " + params.row.event_name}
                     onClick={() => {

@@ -31,9 +31,10 @@ import Typography from '@mui/material/Typography'
 import AuthContext from '../../../context/auth-context'
 import Alert from '@mui/material/Alert'
 import templateRegex from '../../../Data/template-regex'
-import Avatar from '@mui/material/Avatar'
 import UpdatePicForm from './Form/UpdatePicForm'
-
+import RenderPic from '../../RenderPic/RenderPic'
+import IsOnline from '../../IsOnline/IsOnline'
+import {io} from "socket.io-client";
 const style = {
     position: 'absolute',
     top: '50%',
@@ -139,6 +140,7 @@ const initRows = (data) => {
         const userData = {
             id: user._id,
             user_avatar: user.user_avatar,
+            user_banner: user.user_banner,
             user_login: user.user_login,
             user_email: user.user_email,
             user_discord: user.user_discord,
@@ -147,6 +149,7 @@ const initRows = (data) => {
             user_zip: user.user_zip,
             user_city: user.user_city,
             user_state: user.user_state,
+            user_isOnline: user.user_isOnline ? '#44b700' : '#ff0000',
             createdAt: formatDate(user.createdAt),
             updatedAt: formatDate(user.updatedAt),
             user_isActive: user.user_isActive,
@@ -164,7 +167,11 @@ const formValidate = (input, value) => {
         return templateRegex[input].regex.test(value.toLowerCase())
     }
 }
+const host = "http://localhost:5000"
+// const host = "https://rubycouz.cc"
 export default function UserDatagrid() {
+    const socket = io('http://localhost:5000')
+
     const auth = useContext(AuthContext)
     const columns: GridColDef[] = [
         {
@@ -173,13 +180,40 @@ export default function UserDatagrid() {
             flex: 1,
             align: "center",
             renderCell: ((params) => {
+                socket.on('online', function(data) {
+                    // TODO à finir check connection real time
+                })
+                return (
+                    <div style={{cursor: "pointer"}}>
+                       <IsOnline
+                           isOnline={params.row.user_isOnline}
+                           host={host}
+                           params={params}
+                           userId={params.id}
+                           folder="Users/Avatar"
+                           handleModalPic={handleModalPic}
+                           title={"Avatar de " + params.row.user_login}
+                       />
+                    </div>
+                )
+
+            })
+        },
+        {
+            field: 'user_banner',
+            headerName: 'Bannière',
+            flex: 1,
+            align: "center",
+            renderCell: ((params) => {
                 return (
                     <div style={{cursor: "pointer"}}>
                         <RenderPic
+                            host={host}
                             params={params}
                             userId={params.id}
-                            picture={params.value}
-                            login={params.row.user_login}
+                            folder="Users/Banner"
+                            handleModalPic={handleModalPic}
+                            title={"Bannière de " + params.row.user_login}
                         />
                     </div>
                 )
@@ -368,18 +402,31 @@ export default function UserDatagrid() {
             selectedFile: event.target.files[0]
         })
     }
-
     const updatePic = async (params) => {
+        console.log(params)
+        let update = {}
         const promises = []
-        promises.push(sendRequest(state.selectedFile, params.id))
+        switch (params.field) {
+            case 'user_avatar':
+                update = {
+                    user_avatar: state.selectedFile.name
+                }
+                break
+            case 'user_banner':
+                update = {
+                    user_banner: state.selectedFile.name
+                }
+                break
+            default:
+                return
+        }
         try {
+            promises.push(sendRequest(state.selectedFile, params.id, params.field))
             await Promise.all(promises)
             // Make the HTTP request to save in the backend
             const response = await updateProfil({
                 id: params.id,
-                update: {
-                    user_avatar: state.selectedFile.name,
-                }
+                update: update
             })
             setSnackbar({children: 'Modification du profil enregistrée !!!', severity: 'success'})
             setRows((prev) =>
@@ -396,9 +443,10 @@ export default function UserDatagrid() {
      * envoie de la requête vers le serveur, gestion de chargement et des erreurs
      * @param file
      * @param id
+     * @param folder
      * @returns {Promise<unknown>}
      */
-    const sendRequest = (file, id) => {
+    const sendRequest = (file, id, folder) => {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest()
             req.upload.addEventListener('progress', event => {
@@ -413,8 +461,18 @@ export default function UserDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', 'https://rubycouz.cc/upload/profilePic/' + id)
+            switch (folder) {
+                case 'user_avatar':
+                    req.open('POST', host + '/upload/users/avatar/' + id)
+                    break
+                case 'user_banner':
+                    req.open('POST', host + '/upload/users/banner/' + id)
+                    break
+                default:
+                    return
+            }
             req.send(formData)
+
         });
     }
     const handleCloseSnackbar = () => setSnackbar(null)
@@ -449,30 +507,6 @@ export default function UserDatagrid() {
             user: '',
         })
     }
-    const RenderPic = ({params}) => {
-        if(params.value !== '' && params.value !== null) {
-            return (
-                <Avatar
-                    src={"https://rubycouz.cc/Upload/ProfilePic/" + params.value}
-                    alt={params.value}
-                    title={"avatar de " + params.row.user_login}
-                    onClick={() => {
-                        handleModalPic(params)
-                    }}/>
-            )
-        } else {
-            return (
-                <Avatar
-                    src={"https://rubycouz.cc/Upload/ProfilePic/default.gif"}
-                    alt={params.value}
-                    title={"avatar de " + params.row.user_login}
-                    onClick={() => {
-                        handleModalPic(params)
-                    }}/>
-            )
-        }
-
-    }
     // sélection icon actif ou non
     const IsActiveIcon = ({index, bool}) => {
         if (bool) {
@@ -506,8 +540,6 @@ export default function UserDatagrid() {
                                 severity: 'success',
                                 alert_message: 'Modification effectuée'
                             })
-                            // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
-
                         },
                         onError: (({networkError}) => {
                             if (networkError) {
@@ -517,7 +549,6 @@ export default function UserDatagrid() {
                                         severity: 'error',
                                         alert_message: message
                                     })
-                                    // handleClick(SlideTransition, {vertical: 'bottom', horizontal: 'center'})
                                     return null
                                 })
                             }
@@ -626,7 +657,7 @@ export default function UserDatagrid() {
                     />
                     {!!snackbar && (
                         <Snackbar
-                            open anchorOrigin={{ vertical, horizontal }}
+                            open anchorOrigin={{vertical, horizontal}}
                             onClose={handleCloseSnackbar}
                             autoHideDuration={6000}
                         >
@@ -720,7 +751,9 @@ export default function UserDatagrid() {
                                 xs={12} md={12} lg={12}
                             >
                                 <Box sx={style}>
-                                    <h1>Modification de l'avatar de {state.params.row.user_login}</h1>
+                                    <h1>Modification de
+                                        {state.params.field === 'user_avatar' ? ' l\'avatar ' : ' la bannière '}
+                                        de {state.params.row.user_login}</h1>
                                     <UpdatePicForm
                                         handleCloseModal={handleCloseModal}
                                         onfileChange={onFileChange}
