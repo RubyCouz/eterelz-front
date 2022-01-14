@@ -5,7 +5,6 @@ import Badge from '@mui/material/Badge'
 import {SocketContext} from '../../context/socket-context'
 
 const statusColor = (status) => {
-    console.log(status)
     let color
     status ? color = '#44b700' : color = '#ff0000'
     return color
