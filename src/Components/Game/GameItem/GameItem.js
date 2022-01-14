@@ -1,6 +1,7 @@
 import React from 'react'
 import './GameItem.css'
 import {Grid} from "@mui/material";
+import {HOST} from '../../../config'
 
 export default function GameItem(props) {
     return (
@@ -15,7 +16,7 @@ export default function GameItem(props) {
         <img
             key={props.key}
             data-id={props.key}
-            src={"http://localhost:8080/Upload/Game/" + props.game_pic}
+            src={HOST + "/Upload/Game/" + props.game_pic}
             alt={"Jaquette de " + props.game_name} title={props.game_name}
             className="thumbnail"
             onClick={props.onGameClick}

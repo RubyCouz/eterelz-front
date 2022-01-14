@@ -21,7 +21,7 @@ import Alert from '@mui/material/Alert'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import UpdatePicForm from './Form/UpdatePicForm'
-
+import {HOST} from '../../../config'
 const style = {
     position: 'absolute',
     top: '50%',
@@ -146,8 +146,6 @@ const formValidate = (input, value) => {
         return templateRegex[input].regex.test(value)
     }
 }
-const host = "http://localhost:5000"
-// const host = "https://rubycouz.cc"
 export default function GameDatagrid() {
     const columns: GridColDef[] = [
         {
@@ -279,7 +277,7 @@ export default function GameDatagrid() {
         if (params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={host + "/Upload/Game/" + params.value}
+                    src={HOST + "/Upload/Game/" + params.value}
                     alt={params.value}
                     title={"Jaquette de " + params.row.game_name}
                     onClick={() => {
@@ -289,7 +287,7 @@ export default function GameDatagrid() {
             )
         } else {
             return (
-                <Avatar src={host + "/Upload/Game/default.gif"} alt={params.value}/>
+                <Avatar src={HOST + "/Upload/Game/default.gif"} alt={params.value}/>
             )
         }
     }
@@ -383,7 +381,7 @@ export default function GameDatagrid() {
             })
             const formData = new FormData()
             await formData.append("file", file, file.name)
-            await req.open('POST', host + '/upload/game/' + id)
+            await req.open('POST', HOST + '/upload/game/' + id)
             console.log(formData)
             await req.send(formData)
         });

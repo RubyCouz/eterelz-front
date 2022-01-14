@@ -1,13 +1,29 @@
-import React from 'react'
-import RenderPic from "../RenderPic/RenderPic";
-import styled from "@emotion/styled";
-import Badge from "@mui/material/Badge";
+import React, {useContext, useEffect, useState} from 'react'
+import RenderPic from '../RenderPic/RenderPic'
+import styled from '@emotion/styled'
+import Badge from '@mui/material/Badge'
+import {SocketContext} from '../../context/socket-context'
 
+const statusColor = (status) => {
+    console.log(status)
+    let color
+    status ? color = '#44b700' : color = '#ff0000'
+    return color
+}
 export default function IsOnline(props) {
+    const socket = useContext(SocketContext)
+    const [state, setState] = useState({
+        id: null,
+        status: null
+    })
     const StyledBadge = styled(Badge)(({theme}) => ({
         '& .MuiBadge-badge': {
-            backgroundColor: props.isOnline,
-            color: props.isOnline,
+            backgroundColor: `${
+                state.id === props.userId ? statusColor(state.status) : statusColor(props.isOnline)                    
+            }`,
+            color: `${
+                state.id === props.userId ? statusColor(state.status) : statusColor(props.isOnline)
+            }`,
             boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
             '&::after': {
                 position: 'absolute',
@@ -31,13 +47,22 @@ export default function IsOnline(props) {
                 opacity: 0,
             },
         },
-    }));
+    }))
+    useEffect(() => {
+        return socket.on('isOnline', (userData) => {
+            setState({
+                id: userData.userId,
+                status: userData.isOnline
+            })
+            return StyledBadge
+        })
+    }, [socket, StyledBadge])
+
     return (
         <StyledBadge
             overlap="circular"
             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
             variant="dot"
-            // className={classes.avatar}
         >
             <RenderPic
                 host={props.host}

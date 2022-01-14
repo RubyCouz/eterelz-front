@@ -35,6 +35,7 @@ import {useQuery} from '@apollo/client'
 import {styled} from '@mui/material/styles'
 import {Box} from '@mui/material'
 import {SocketContext} from '../../context/socket-context'
+import {HOST} from '../../config'
 
 const useStyles = makeStyles((theme) => ({
     bannerProfil: {
@@ -191,12 +192,21 @@ export default function AuthNavbar(props) {
                 <Box
                     className={classes.drawerHeader}
                 >
+                    {user.user.user_banner !== null ?
                     <img
-                        src={"http://localhost:5000/Upload/Users/Banner/" + user.user.user_banner}
-                        alt={"Bannière de profil de" + user.user.user_login}
-                        title={"Bannière de profil de" + user.user.user_login}
+                        src={HOST + "/Upload/Users/Banner/" + user.user.user_banner}
+                        alt={"Bannière de profil de " + user.user.user_login}
+                        title={"Bannière de profil de " + user.user.user_login}
                         className={classes.bannerProfil}
-                    />
+                        /> :
+                        <img
+                            src={HOST+ "/Upload/Users/Banner/default1.jpg"}
+                            alt={"Bannière de profil de" + user.user.user_login}
+                            title={"Bannière de profil de" + user.user.user_login}
+                            className={classes.bannerProfil}
+                        />
+                    }
+
                         <StyledBadge
                             overlap="circular"
                             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
@@ -205,13 +215,12 @@ export default function AuthNavbar(props) {
                         >
                             <Avatar
                                 alt={"Avatar de " + user.user.user_login}
-                                src={"http://localhost:5000/Upload/Users/Avatar/" + user.user.user_avatar}
+                                src={HOST + "/Upload/Users/Avatar/" + user.user.user_avatar}
                                 className={classes.avatarPic}
                             />
                         </StyledBadge>
                 </Box>
             }
-            <Divider/>
             <List color="secondary" className={classes.drawerList}>
                 <ListItem
                     button
@@ -299,11 +308,11 @@ export default function AuthNavbar(props) {
                 <Divider/>
                 <ListItem
                     button key="logout"
-                    onClick={logout}
+                    onClick={() => setOffline(true)}
                     // onClick={auth.logout}
                     className={classes.listItem}
-                    component={NavLink}
-                    to="/"
+                    // component={NavLink}
+                    // to="/"
                 >
                     <ListItemIcon><ExitToAppTwoToneIcon/></ListItemIcon>
                     <ListItemText primary="Déconnexion"/>
@@ -313,9 +322,6 @@ export default function AuthNavbar(props) {
     )
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
-    const logout = () => {
-        setOffline(true)
-    }
     const handleMobileMenuClose = () => {
         setMobileMoreAnchorEl(null);
     }
@@ -351,6 +357,8 @@ export default function AuthNavbar(props) {
             </MenuItem>
         </Menu>
     )
+
+    // useEffect(() => {    document.title = `You clicked ${count} times`;  });
     useEffect(() => {
         if (data !== undefined) {
             setUser(data)
@@ -358,9 +366,8 @@ export default function AuthNavbar(props) {
     }, [data])
 
     useEffect(() =>{
-        console.log(offline)
         if(offline) {
-            socket.emit('isOffline', {userId: id})
+            socket.emit('offline', {userId: id})
             auth.logout()
         }
     }, [offline, socket, id, auth])
@@ -397,6 +404,12 @@ export default function AuthNavbar(props) {
                                 className={classes.logo}
                             />
                         </NavLink>
+                        {/*<div>*/}
+                        {/*    <p>You clicked {count} times</p>*/}
+                        {/*    <button onClick={() => setCount(count + 1)}>*/}
+                        {/*        Click me*/}
+                        {/*    </button>*/}
+                        {/*</div>*/}
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>
                                 <SearchIcon/>

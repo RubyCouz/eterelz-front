@@ -22,7 +22,7 @@ import Alert from '@mui/material/Alert'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import UpdatePicForm from './Form/UpdatePicForm'
-
+import {HOST} from '../../../config'
 const style = {
     position: 'absolute',
     top: '50%',
@@ -152,8 +152,6 @@ const formValidate = (input, value) => {
         return templateRegex[input].regex.test(value)
     }
 }
-const host = "http://localhost:5000"
-// const host = "https://rubycouz.cc"
 export default function EventDatagrid() {
     const columns: GridColDef[] = [
         {
@@ -391,7 +389,7 @@ export default function EventDatagrid() {
             })
             const formData = new FormData()
             formData.append("file", file, file.name)
-            req.open('POST', host + '/upload/event/' + id)
+            req.open('POST', HOST + '/upload/event/' + id)
             req.send(formData)
         })
     }
@@ -430,7 +428,7 @@ export default function EventDatagrid() {
         if(params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={host + "/Upload/Event/" + params.value}
+                    src={HOST + "/Upload/Event/" + params.value}
                     alt={params.value}
                     title={"Affiche de " + params.row.event_name}
                     onClick={() => {
@@ -440,7 +438,7 @@ export default function EventDatagrid() {
         } else {
             return (
                 <Avatar
-                    src={host + "/Upload/Event/default.gif"}
+                    src={HOST + "/Upload/Event/default.gif"}
                     alt={params.value}
                     title={"avatar de " + params.row.event_name}
                     onClick={() => {

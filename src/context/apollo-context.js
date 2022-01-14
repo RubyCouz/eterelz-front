@@ -2,10 +2,9 @@ import {
     ApolloClient,
     InMemoryCache
 } from '@apollo/client'
-
+import {HOST} from '../config'
 export const graphqlConfig = new ApolloClient({
-    // uri: 'https://rubycouz.cc/api',
-    uri: 'http://localhost:5000/api',
+    uri: `${HOST}/api`,
     credentials: 'include',
     cache: new InMemoryCache(),
     fetchOptions: {

@@ -34,7 +34,7 @@ import templateRegex from '../../../Data/template-regex'
 import UpdatePicForm from './Form/UpdatePicForm'
 import RenderPic from '../../RenderPic/RenderPic'
 import IsOnline from '../../IsOnline/IsOnline'
-import {io} from "socket.io-client";
+import {HOST} from '../../../config'
 const style = {
     position: 'absolute',
     top: '50%',
@@ -149,7 +149,7 @@ const initRows = (data) => {
             user_zip: user.user_zip,
             user_city: user.user_city,
             user_state: user.user_state,
-            user_isOnline: user.user_isOnline ? '#44b700' : '#ff0000',
+            user_isOnline: user.user_isOnline,
             createdAt: formatDate(user.createdAt),
             updatedAt: formatDate(user.updatedAt),
             user_isActive: user.user_isActive,
@@ -167,11 +167,7 @@ const formValidate = (input, value) => {
         return templateRegex[input].regex.test(value.toLowerCase())
     }
 }
-const host = "http://localhost:5000"
-// const host = "https://rubycouz.cc"
 export default function UserDatagrid() {
-    const socket = io('http://localhost:5000')
-
     const auth = useContext(AuthContext)
     const columns: GridColDef[] = [
         {
@@ -180,14 +176,11 @@ export default function UserDatagrid() {
             flex: 1,
             align: "center",
             renderCell: ((params) => {
-                socket.on('online', function(data) {
-                    // TODO à finir check connection real time
-                })
                 return (
                     <div style={{cursor: "pointer"}}>
                        <IsOnline
                            isOnline={params.row.user_isOnline}
-                           host={host}
+                           host={HOST}
                            params={params}
                            userId={params.id}
                            folder="Users/Avatar"
@@ -208,7 +201,7 @@ export default function UserDatagrid() {
                 return (
                     <div style={{cursor: "pointer"}}>
                         <RenderPic
-                            host={host}
+                            host={HOST}
                             params={params}
                             userId={params.id}
                             folder="Users/Banner"
@@ -463,10 +456,10 @@ export default function UserDatagrid() {
             formData.append("file", file, file.name)
             switch (folder) {
                 case 'user_avatar':
-                    req.open('POST', host + '/upload/users/avatar/' + id)
+                    req.open('POST', HOST + '/upload/users/avatar/' + id)
                     break
                 case 'user_banner':
-                    req.open('POST', host + '/upload/users/banner/' + id)
+                    req.open('POST', HOST + '/upload/users/banner/' + id)
                     break
                 default:
                     return

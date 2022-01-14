@@ -103,7 +103,7 @@ export default function Auth() {
             },
             errorPolicy: 'all',
             onCompleted: data => {
-                socket.emit('isOnline', {token: data.login.token})
+                socket.emit('online', {token: data.login.token})
                 setSnackbar({children: 'Connexion ok !!!', severity: 'success'});
                 context.login()
             },

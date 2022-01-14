@@ -21,6 +21,7 @@ import Alert from '@mui/material/Alert'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import UpdatePicForm from './Form/UpdatePicForm'
+import {HOST} from '../../../config'
 
 const style = {
     position: 'absolute',
@@ -150,8 +151,6 @@ const formValidate = (input, value) => {
         return templateRegex[input].regex.test(value.toLowerCase())
     }
 }
-const host = "http://localhost:5000"
-// const host = "https://rubycouz.cc"
 export default function ClanDatagrid() {
     const columns: GridColDef[] = [
         {
@@ -374,7 +373,7 @@ export default function ClanDatagrid() {
             })
             const formData = new FormData()
             formData.append('file', file, file.name)
-            req.open('POST', host + '/upload/clan/' + id)
+            req.open('POST', HOST + '/upload/clan/' + id)
             req.send(formData)
         })
     }
@@ -413,7 +412,7 @@ export default function ClanDatagrid() {
         if (params.value !== '' && params.value !== null) {
             return (
                 <Avatar
-                    src={host + "/Upload/Clan/" + params.value}
+                    src={HOST + "/Upload/Clan/" + params.value}
                     alt={params.value}
                     title={"Bannière de " + params.row.clanName}
                     onClick={() => {
@@ -423,7 +422,7 @@ export default function ClanDatagrid() {
         } else {
             return (
                 <Avatar
-                    src={host + "/Upload/Clan/default.gif"}
+                    src={HOST + "/Upload/Clan/default.gif"}
                     alt={params.value}
                     title={"Bannière de " + params.row.clanName}
                     onClick={() => {
