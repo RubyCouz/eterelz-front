@@ -202,7 +202,7 @@ export default function AuthNavbar(props) {
                         <img
                             src={HOST+ "/Upload/Users/Banner/default1.jpg"}
                             alt={"Bannière de profil de" + user.user.user_login}
-                            title={"Bannière de profil de" + user.user.user_login}
+                            title={"Bannière de profil de " + user.user.user_login}
                             className={classes.bannerProfil}
                         />
                     }
