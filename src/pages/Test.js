@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-
+console.log('test')
 class Test extends Component {
     render() {
         return(
