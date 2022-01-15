@@ -26,4 +26,6 @@ jobs:
                  exports.SOCKET_HOST = 'https://rubycouz.cc';" > src/config.js
     - run: npm install
     - run: npm run build --if-present
+    - run: rm -rf /var/www/rubycouz.cc/html
+    - run: mkdir /var/www/rubycouz.cc/html
     - run: cp -r /root/actions-runner-app/app/eterelz-front/eterelz-front/build/* /var/www/rubycouz.cc/html/
