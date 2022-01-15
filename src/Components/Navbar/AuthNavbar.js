@@ -192,33 +192,37 @@ export default function AuthNavbar(props) {
                 <Box
                     className={classes.drawerHeader}
                 >
-                    {user.user.user_banner !== null ?
-                    <img
-                        src={HOST + "/Upload/Users/Banner/" + user.user.user_banner}
-                        alt={"Bannière de profil de " + user.user.user_login}
-                        title={"Bannière de profil de " + user.user.user_login}
-                        className={classes.bannerProfil}
+                    {user.user.user_banner !== null &&
+                    user.user.user_banner !== undefined &&
+                    user.user.user_banner !== '' ?
+                        <img
+                            src={HOST + "/Upload/Users/Banner/" + user.user.user_banner}
+                            alt={"Bannière de profil de " + user.user.user_login}
+                            title={"Bannière de profil de " + user.user.user_login}
+                            className={classes.bannerProfil}
                         /> :
                         <img
-                            src={HOST+ "/Upload/Users/Banner/default1.jpg"}
+                            src={HOST + "/Upload/Users/Banner/default1.jpg"}
                             alt={"Bannière de profil de" + user.user.user_login}
                             title={"Bannière de profil de " + user.user.user_login}
                             className={classes.bannerProfil}
                         />
                     }
 
-                        <StyledBadge
-                            overlap="circular"
-                            anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                            variant="dot"
-                            className={classes.avatar}
-                        >
-                            <Avatar
-                                alt={"Avatar de " + user.user.user_login}
-                                src={HOST + "/Upload/Users/Avatar/" + user.user.user_avatar}
-                                className={classes.avatarPic}
-                            />
-                        </StyledBadge>
+                    <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                        variant="dot"
+                        className={classes.avatar}
+                    >
+                        <Avatar
+                            alt={"Avatar de " + user.user.user_login}
+                            src={HOST + "/Upload/Users/Avatar/" + (user.user.user_avatar !== '' &&
+                            user.user.user_avatar !== null &&
+                            user.user.user_avatar !== undefined ? user.user.user_avatar : 'default.gif')}
+                            className={classes.avatarPic}
+                        />
+                    </StyledBadge>
                 </Box>
             }
             <List color="secondary" className={classes.drawerList}>
@@ -365,8 +369,8 @@ export default function AuthNavbar(props) {
         }
     }, [data])
 
-    useEffect(() =>{
-        if(offline) {
+    useEffect(() => {
+        if (offline) {
             socket.emit('offline', {userId: id})
             auth.logout()
         }
